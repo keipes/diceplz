@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
-import weapons from './assets/weapons.json'
+import WeaponSelector from './WeaponSelector'
+import weaponData from './assets/weapons.json'
 import { Line } from 'react-chartjs-2'
 
 
@@ -16,9 +17,9 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-  Title,
-  Tooltip,
-  Legend,
+  // Title,
+  // Tooltip,
+  // Legend,
 } from 'chart.js';
 // import { Line } from 'react-chartjs-2';
 // import faker from 'faker';
@@ -36,42 +37,90 @@ ChartJS.register(
 
 
 
+
+// const weaponsMap = {};
+// for (const category of Object.keys(weaponData)) {
+//   // console.log(key);
+//   // console.log(category);
+//   let weapons = weaponData[category];
+//   for (let i = 0; i < weapons.length; i++) {
+//     let weapon = weapons[i];
+//     // console.log(weapon.name);
+//     // store a flattened version of the weapon data so we can retrieve weapon data with only a name,
+//     // rather than a name and a category
+//     weaponsMap[weapon.name] = weapon;
+//   }
+// }
+
+
 function App() {
-  // const [count, setCount] = useState(0)
 
   const [selectedWeapon, setSelectedWeapon] = useState('G57'); // Declare a state variable...
 
-  // console.log(weapons)
-  console.log(selectedWeapon)
 
-  const weaponNames = [];
-  for (const key of Object.keys(weapons)) {
-    // console.log(key);
-    weaponNames.push(key);
-  }
+  const [selectedWeapons, setSelectedWeapons] = useState({'G57': true, 'AEK-971': true});
 
-  const weapon = weapons[selectedWeapon];
-  // console.log(weapons)
-  // console.log(weapons[selectedWeapon])
-
+  const datasets = [];
   const labels = [];
-  const data = [];
-  for (let index = 0; index < weapon.damage.length; index = index + 2) {
-    // const element = array[index];
-    data.push(weapon.damage[index])
-    labels.push(weapon.damage[index + 1])
+
+  // const weaponNames = [];
+  for (const category of Object.keys(weaponData)) {
+    // weaponNames.push(category);
+    let weapons = weaponData[category];
+    for (let i = 0; i < weapons.length; i++) {
+      let weapon = weapons[i];
+
+      if (selectedWeapons[weapon.name]) {
+        console.log("selected " + weapon.name);
+        const data = [];
+        let range = 0;
+        let damage = 0;
+        for (let index = 0; index < weapon.damage.length; index = index + 2) {
+          range = weapon.damage[index + 1]
+          damage = weapon.damage[index]
+          data.push(damage)
+          labels.push(range)
+        }
+        if (damage > 0) {
+          data.push(damage)
+          labels.push(100)
+        }
+
+        datasets.push({
+          label: 'Gun',
+          data: data,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        })
+      }
+      // console.log(weapon.name);
+      // store a flattened version of the weapon data so we can retrieve weapon data with only a name,
+      // rather than a name and a category
+      // weaponsMap[weapon.name] = weapon;
+    }
   }
+  console.log(datasets.length);
+
+  // const weapon = weaponData["Sidearms"][0];
+  // const labels = [];
+  // const data = [];
+  // let range = 0;
+  // let damage = 0;
+  // for (let index = 0; index < weapon.damage.length; index = index + 2) {
+  //   range = weapon.damage[index + 1]
+  //   damage = weapon.damage[index]
+  //   data.push(damage)
+  //   labels.push(range)
+  // }
+  // if (damage > 0) {
+  //   data.push(damage)
+  //   labels.push(100)
+  // }
   const chartData = {
-    // labels: [0, 29, 40],
-    labels: labels,
-    datasets: [{
-      label: 'Gun',
-      // data: [30, 20, 15],
-      data: data,
-      fill: false,
-      borderColor: 'rgb(75, 192, 192)',
-      tension: 0.1
-    }]
+    // labels: labels,
+    labels: [0, 20, 40, 100],
+    datasets: datasets
   }
 
   
@@ -81,32 +130,29 @@ function App() {
         grid: {
           color: 'rgba(75, 192, 192, 0.2)',
         },
-        min: 0
+        min: 0,
       },
       x: {
         grid: {
           color: 'rgba(75, 192, 192, 0.2)',
         },
-        min: 0
+        min: 0,
       }
     }
   }
   return (
     <>
       <div>
-      <select name="weapons" id="weapons" onChange={e => setSelectedWeapon(e.target.value)} value={selectedWeapon}>
-        {weaponNames.map(name => (<option value={name}>{name}</option>))}
-        {/* <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="mercedes">Mercedes</option>
-        <option value="audi">Audi</option> */}
-      </select>
-      <div className="chart-container">
-        <Line data={chartData} options={options}/>
+        <div className="chart-container">
+          <Line data={chartData} options={options}/>
+        </div>
+        <div className="weapon-selector">
+          <WeaponSelector selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons}/>
         </div>
       </div>
     </>
   )
 }
+
 
 export default App
