@@ -35,7 +35,9 @@ function WeaponCategory(props: WeaponCategoryProps) {
   return (
     <div className="weapon-category">
       <h3>{props.title}</h3>
-      {weaponElements}
+      <div className="weapon-category-weapons">
+        {weaponElements}
+      </div>
       {/* <Weapon name="gunny gun"/> */}
     </div>
   )
