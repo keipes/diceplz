@@ -1,20 +1,26 @@
 import { Line } from 'react-chartjs-2'
 import StringHue from './StringColor.ts'
-import { DamageMultiplier } from './Values.ts';
+import { DamageMultiplier, PlayerHealth } from './Values.ts'
 
 interface WeaponData {
     damage: [number],
-    name: string
+    name: string,
+    rpm: [number]
 }
 
-interface DamageChartProps {
+interface TTKChartProps {
     selectedWeapons: {string: boolean},
     highestRangeSeen: number,
     requiredRanges: [number],
     selectedWeaponsData: [WeaponData]
 }
 
-function DamageChart(props: DamageChartProps) {
+const damageToTTK = function(weapon: WeaponData, damage: number) {
+    const btk = Math.ceil(PlayerHealth / damage);
+    return Math.round((1000 / (weapon.rpm[0] / 60)) * (btk - 1));
+}
+
+function TTKChart(props: TTKChartProps) {
     const highestRangeSeen = props.highestRangeSeen;
     const requiredRanges = props.requiredRanges;
     const selectedWeaponsData = props.selectedWeaponsData;
@@ -29,28 +35,28 @@ function DamageChart(props: DamageChartProps) {
       for (let index = 0; index < weapon.damage.length; index = index + 2) {
         range = weapon.damage[index + 1]
         damage = weapon.damage[index] * DamageMultiplier;
-        damage = Math.round(damage * 100) / 100;
         for (let i = lastRange + 1; i < range; i++) {
           if (requiredRanges[i]) {
-            data.push(lastDamage);
+
+            data.push(damageToTTK(weapon, lastDamage));
           } else {
             data.push(null);
           }
         }
         lastDamage = damage;
         lastRange = range;
-        data.push(damage);
+        data.push(damageToTTK(weapon, damage));
       }
       if (damage > 0) {
         for (let i = range + 1; i < highestRangeSeen; i++) {
           if (requiredRanges[i]) {
-            data.push(damage);
+            data.push(damageToTTK(weapon, damage));
           } else {
             data.push(null);
           }
         }
         if (range != highestRangeSeen) {
-          data.push(damage);
+          data.push(damageToTTK(weapon, damage));
         }
       }
       datasets.push({
@@ -113,7 +119,7 @@ function DamageChart(props: DamageChartProps) {
         y: {
           title: {
             display: true,
-            text: 'damage'
+            text: 'ms'
           },
           grid: {
             color: 'rgba(75, 192, 192, 0.2)',
@@ -134,7 +140,7 @@ function DamageChart(props: DamageChartProps) {
     }
     return (
         <div>
-            <h2>Damage</h2>
+            <h2>Single Fire TTK</h2>
             <div className="chart-container">
             <Line data={chartData} options={options}/>
             </div>
@@ -144,4 +150,4 @@ function DamageChart(props: DamageChartProps) {
 }
 
 
-export default DamageChart
+export default TTKChart
