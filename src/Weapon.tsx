@@ -37,48 +37,36 @@ function Weapon(props: WeaponProps) {
   const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
   const clickHandler = (o) => {
     const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
-    // let newSelectedWeapons = {};
     if (!newSelectedWeapons.delete(props.name)) {
       newSelectedWeapons.set(props.name, {
         ammoType: selectedAmmo,
         barrelType: selectedBarrel
       });
     }
-    // if (newSelectedWeapons.has(props.name)) {
-
-    // } else {
-    //   newSelectedWeapons.set(props.name, {
-    //     ammoType: selectedAmmo,
-    //     barrelType: selectedBarrel
-    //   });
-    // }
-    // let add = true;
-    // for (const [name, selections] of props.selectedWeapons) {
-    //   if (name == props.name) {
-    //       add = false;
-    //   } else {
-    //       // newSelectedWeapons[name] = selections;
-    //       newSelectedWeapons.set(name, selections);
-    //   }
-    // }
-    // if (add) {
-    //     // newSelectedWeapons[props.name] = {
-    //     //   ammoType: selectedAmmo,
-    //     //   barrelType: selectedBarrel
-    //     // };
-    //     newSelectedWeapons.set(props.name, {
-    //       ammoType: selectedAmmo,
-    //       barrelType: selectedBarrel
-    //     });
-    // }
     props.setSelectedWeapons(newSelectedWeapons);
   }
 
   function barrelChangeHandler(e) {
     setSelectedBarrel(e.target.value);
+    if (props.selectedWeapons.has(props.name)) {
+      const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
+      newSelectedWeapons.set(props.name, {
+        ammoType: selectedAmmo,
+        barrelType: e.target.value
+      });
+      props.setSelectedWeapons(newSelectedWeapons);
+    }
   }
   function ammoChangeHandler(e) {
     setSelectedAmmo(e.target.value);
+    if (props.selectedWeapons.has(props.name)) {
+      const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
+      newSelectedWeapons.set(props.name, {
+        ammoType: e.target.value,
+        barrelType: selectedBarrel
+      });
+      props.setSelectedWeapons(newSelectedWeapons);
+    }
   }
   let className = "weapon";
   let style = {};
