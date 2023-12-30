@@ -14,10 +14,25 @@ function Weapon(props: WeaponProps) {
   const weapon = GetWeaponByName(props.name);
   let selectedBarrelInitial = '';
   let selectedAmmoInitial = '';
-  if (weapon.stats.length > 0) {
+  for (const stat of weapon.stats) {
+    if (stat.barrelType == 'Factory') {
+      selectedBarrelInitial = 'Factory';
+    }
+    if (stat.ammoType == 'Standard') {
+      selectedAmmoInitial = 'Standard';
+    }
+    if (stat.ammoType == 'Standard Bolts') {
+      selectedAmmoInitial = 'Standard';
+    }
+  }
+  // fall back to initial if none exists
+  if (selectedBarrelInitial == '' && weapon.stats.length > 0) {
     selectedBarrelInitial = weapon.stats[0].barrelType;
+  }
+  if (selectedAmmoInitial == '' && weapon.stats.length > 0) {
     selectedAmmoInitial = weapon.stats[0].ammoType;
   }
+
   const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
   const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
   const clickHandler = (o) => {
@@ -25,9 +40,6 @@ function Weapon(props: WeaponProps) {
     // let newSelectedWeapons = {};
     let add = true;
     for (const [name, selections] of props.selectedWeapons) {
-      console.log('...');
-      console.log(name);
-      console.log(selections);
       if (name == props.name) {
           add = false;
       } else {

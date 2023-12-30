@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 import './App.css'
 import WeaponSelector from './WeaponSelector'
 import DamageChart from './DamageChart.tsx'
@@ -71,7 +71,7 @@ function App() {
   }
   let remainder = highestRangeSeen % 10;
   highestRangeSeen += (10 - remainder);
-  function changeLocalStorage(e) {
+  function changeLocalStorage(_: SyntheticEvent) {
     if (useLocalStorage) {
       // disabling storage, so clear all stored data
       localStorage.clear();
@@ -85,11 +85,13 @@ function App() {
     <>
       <div>
         <h1>BF2042 Weapon Stats</h1>
-        <div>
-          <label>
-            <input type="checkbox" checked={useLocalStorage} onChange={changeLocalStorage}/>
-            Use local storage to persist my selections.
-          </label>
+        <div className='disclosure'>
+          <p>Weapon stats are from <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">Sorrow's Scribbles</a> as of patch 6.2.0</p>
+          <p>Shotgun damage doesn't consider number of pellets yet.</p>
+        </div>
+        <div className="value-config">
+          <label for="health-multiplier">Soldier Max Health Multiplier:</label>
+          <input type="number" id="health-multiplier" name="health-multiplier" min="0.1" max="10" value="1" />
         </div>
         <div className="weapon-selector">
           <WeaponSelector selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons}/>

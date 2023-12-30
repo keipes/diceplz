@@ -1,10 +1,11 @@
 import './WeaponSelector.css'
 import weaponData from './assets/weapons.json'
 import WeaponCategory from './WeaponCategory'
+import { WeaponSelections } from './App';
 
 
 interface WeaponSelectorProps {
-    selectedWeapons: {string: boolean},
+    selectedWeapons: Map<string, WeaponSelections>,
     setSelectedWeapons: Function
 }
 

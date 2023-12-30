@@ -12,3 +12,7 @@
   width:80vw;
   max-width: 1280px;
 }
+
+.disclosure > p {
+  margin: 0;
+}

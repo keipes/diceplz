@@ -2,6 +2,7 @@ import { Line } from 'react-chartjs-2'
 import StringHue from './StringColor.ts'
 import { DamageMultiplier, PlayerHealth } from './Values.ts'
 import { WeaponStats } from './WeaponData.ts'
+import { WeaponSelections } from './App.tsx'
 
 interface WeaponData {
     damage: [number],
@@ -10,7 +11,7 @@ interface WeaponData {
 }
 
 interface TTKChartProps {
-    selectedWeapons: {string: boolean},
+    selectedWeapons: Map<string, WeaponSelections>,
     highestRangeSeen: number,
     requiredRanges: [number],
     selectedWeaponsData: [WeaponStats],
