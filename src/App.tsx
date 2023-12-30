@@ -1,11 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import WeaponSelector from './WeaponSelector'
-import weaponData from './assets/weapons.json'
 import DamageChart from './DamageChart.tsx'
 import TTKChart from './TTKChart.tsx';
-import TTKChartBurst from './TTKChartBurst.tsx';
-import TTKChartFullAuto from './TTKChartAuto.tsx';
 
 import {
   Chart as ChartJS,
@@ -17,6 +14,7 @@ import {
   Tooltip,
   // Legend,
 } from 'chart.js';
+import { GetCategoryWeapons, WeaponCategories, WeaponStats } from './WeaponData.ts'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -27,42 +25,53 @@ ChartJS.register(
   // Legend
 );
 
+interface WeaponSelections {
+  ammoType: string, barrelType: string
+}
+
 function App() {
-  const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
-    'ammo': 'Standard',
-    'barrel': 'Factory'
-  }});
+  const initialSelectedWeapons = new Map<string, WeaponSelections>();
+  initialSelectedWeapons.set('AEK-971', {
+    ammoType: 'Standard',
+    barrelType: 'Factory'
+  });
+  const [selectedWeapons, setSelectedWeapons] = useState(initialSelectedWeapons);
+  // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
+  //   ammoType: 'Standard',
+  //   barrelType: 'Factory'
+  // }});
   const oldLocalStorageSetting = localStorage.getItem('useLocalStorage') == 'true';
   const [useLocalStorage, setUseLocalStorage] = useState(oldLocalStorageSetting);
-  const selectedWeaponsData = [];
-  for (const category of Object.keys(weaponData)) {
-    let weapons = weaponData[category];
-    for (let i = 0; i < weapons.length; i++) {
-      let weapon = weapons[i];
-      if (selectedWeapons[weapon.name]) {
-        selectedWeaponsData.push(weapon);
+  const selectedWeaponStats = new Map<string, WeaponStats>();
+  for (const category of WeaponCategories) {
+    const weapons = GetCategoryWeapons(category);
+    for (let weapon of weapons) {
+      const selected = selectedWeapons.get(weapon.name);
+      if (selected) {
+        for (const stat of weapon.stats) {
+          if (stat.barrelType == selected.barrelType && stat.ammoType == selected.ammoType) {
+            if (selectedWeaponStats.get(weapon.name)) {
+              console.warn('Already have stats for ' + weapon.name);
+            }
+            selectedWeaponStats.set(weapon.name, stat);
+          }
+        }
       }
     }
   }
-  const requiredRanges = {};
+  const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
-  for (let i = 0; i < selectedWeaponsData.length; i++) {
-    const weapon = selectedWeaponsData[i];
-    const modifications = selectedWeapons[weapon.name];
-    const dropoffs = weapon.dropoffs['']
-    // for (let index = 0; index < weapon.damage.length; index = index + 2) {
-    //   const range = weapon.damage[index + 1];
-    //   requiredRanges[range] = true;
-    //   if (range > highestRangeSeen) {
-    //     highestRangeSeen = range;
-    //   }
-    // }
+  for (const  [name, stat] of selectedWeaponStats) {
+    for (const dropoff of stat.dropoffs) {
+      requiredRanges.set(dropoff.range, true);
+      if (dropoff.range > highestRangeSeen) {
+        highestRangeSeen = dropoff.range;
+      }
+    }
   }
-
   let remainder = highestRangeSeen % 10;
   highestRangeSeen += (10 - remainder);
   function changeLocalStorage(e) {
-    // console.log(e.target.value);
     if (useLocalStorage) {
       // disabling storage, so clear all stored data
       localStorage.clear();
@@ -71,6 +80,7 @@ function App() {
     }
     setUseLocalStorage(!useLocalStorage);
   }
+  const selectedWeaponsData = selectedWeaponStats;
   return (
     <>
       <div>
@@ -84,9 +94,9 @@ function App() {
         <div className="weapon-selector">
           <WeaponSelector selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons}/>
         </div>
-        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen}/>
-        <TTKChartBurst selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen}/>
-        <TTKChartFullAuto selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen}/>
+        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmAuto'} title={'TTK Auto'}/>
+        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmSingle'} title={'TTK Single'}/>
+        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmBurst'} title={'TTK Burst'}/>
         <DamageChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen}/>
       </div>
     </>
@@ -95,3 +105,6 @@ function App() {
 
 
 export default App
+export type {
+  WeaponSelections
+}

@@ -1,6 +1,7 @@
 import { Line } from 'react-chartjs-2'
 import StringHue from './StringColor.ts'
 import { DamageMultiplier } from './Values.ts';
+import { WeaponStats } from './WeaponData.ts';
 
 interface WeaponData {
     damage: [number],
@@ -11,7 +12,7 @@ interface DamageChartProps {
     selectedWeapons: {string: boolean},
     highestRangeSeen: number,
     requiredRanges: [number],
-    selectedWeaponsData: [WeaponData]
+    selectedWeaponsData: [WeaponStats]
 }
 
 function DamageChart(props: DamageChartProps) {
@@ -19,17 +20,19 @@ function DamageChart(props: DamageChartProps) {
     const requiredRanges = props.requiredRanges;
     const selectedWeaponsData = props.selectedWeaponsData;
     const datasets = [];
-    for (let i = 0; i < selectedWeaponsData.length; i++) {
-      const weapon = selectedWeaponsData[i];
+    for (const [weaponName, stats] of selectedWeaponsData) {
+    // for (let i = 0; i < selectedWeaponsData.length; i++) {
+    //   const weapon = stats;
       const data = [];
       let lastDamage = 0;
       let lastRange = 0;
       let range = 0;
       let damage = 0;
-      for (let index = 0; index < weapon.damage.length; index = index + 2) {
-        range = weapon.damage[index + 1]
-        damage = weapon.damage[index] * DamageMultiplier;
-        damage = Math.round(damage * 100) / 100;
+      for (let dropoff of stats.dropoffs) {
+    //   for (let i = 0; i < stats.dropoffs.length; i = i + 1) {
+        range = dropoff.range;
+        damage = dropoff.damage;
+        damage = Math.round(damage * 100) / 100
         for (let i = lastRange + 1; i < range; i++) {
           if (requiredRanges[i]) {
             data.push(lastDamage);
@@ -54,10 +57,10 @@ function DamageChart(props: DamageChartProps) {
         }
       }
       datasets.push({
-        label: weapon.name,
+        label: weaponName,
         data: data,
         fill: false,
-        borderColor: 'hsl(' + StringHue(weapon.name) + ', 50%, 50%)',
+        borderColor: 'hsl(' + StringHue(weaponName) + ', 50%, 50%)',
         tension: 0.1
       })
     }

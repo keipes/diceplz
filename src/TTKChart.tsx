@@ -1,6 +1,7 @@
 import { Line } from 'react-chartjs-2'
 import StringHue from './StringColor.ts'
 import { DamageMultiplier, PlayerHealth } from './Values.ts'
+import { WeaponStats } from './WeaponData.ts'
 
 interface WeaponData {
     damage: [number],
@@ -12,12 +13,14 @@ interface TTKChartProps {
     selectedWeapons: {string: boolean},
     highestRangeSeen: number,
     requiredRanges: [number],
-    selectedWeaponsData: [WeaponData]
+    selectedWeaponsData: [WeaponStats],
+    rpmSelector: string,
+    title: string
 }
 
-const damageToTTK = function(weapon: WeaponData, damage: number) {
+const damageToTTK = function(weapon: WeaponStats, damage: number, rpmSelector: string) {
     const btk = Math.ceil(PlayerHealth / damage);
-    return Math.round((1000 / (weapon.rpm[0] / 60)) * (btk - 1));
+    return Math.round((1000 / (weapon[rpmSelector] / 60)) * (btk - 1));
 }
 
 function TTKChart(props: TTKChartProps) {
@@ -25,45 +28,49 @@ function TTKChart(props: TTKChartProps) {
     const requiredRanges = props.requiredRanges;
     const selectedWeaponsData = props.selectedWeaponsData;
     const datasets = [];
-    for (let i = 0; i < selectedWeaponsData.length; i++) {
-      const weapon = selectedWeaponsData[i];
+    // for (let i = 0; i < selectedWeaponsData.length; i++) {
+    for (const [weaponName, stats] of selectedWeaponsData) {
+    //   const weapon = selectedWeaponsData[i];
       const data = [];
       let lastDamage = 0;
       let lastRange = 0;
       let range = 0;
       let damage = 0;
-      for (let index = 0; index < weapon.damage.length; index = index + 2) {
-        range = weapon.damage[index + 1]
-        damage = weapon.damage[index] * DamageMultiplier;
+      for (let dropoff of stats.dropoffs) {
+        range = dropoff.range;
+        damage = dropoff.damage * DamageMultiplier;
+    //   for (let index = 0; index < weapon.damage.length; index = index + 2) {
+    //     range = weapon.damage[index + 1]
+    //     damage = weapon.damage[index] * DamageMultiplier;
         for (let i = lastRange + 1; i < range; i++) {
           if (requiredRanges[i]) {
 
-            data.push(damageToTTK(weapon, lastDamage));
+            data.push(damageToTTK(stats, lastDamage, props.rpmSelector));
           } else {
             data.push(null);
           }
         }
         lastDamage = damage;
         lastRange = range;
-        data.push(damageToTTK(weapon, damage));
+        data.push(damageToTTK(stats, damage, props.rpmSelector));
       }
       if (damage > 0) {
         for (let i = range + 1; i < highestRangeSeen; i++) {
           if (requiredRanges[i]) {
-            data.push(damageToTTK(weapon, damage));
+            data.push(damageToTTK(stats, damage, props.rpmSelector));
           } else {
             data.push(null);
           }
         }
         if (range != highestRangeSeen) {
-          data.push(damageToTTK(weapon, damage));
+          data.push(damageToTTK(stats, damage, props.rpmSelector));
         }
       }
       datasets.push({
-        label: weapon.name,
+        label: weaponName,
         data: data,
         fill: false,
-        borderColor: 'hsl(' + StringHue(weapon.name) + ', 50%, 50%)',
+        borderColor: 'hsl(' + StringHue(weaponName) + ', 50%, 50%)',
         tension: 0.1
       })
     }
@@ -140,7 +147,7 @@ function TTKChart(props: TTKChartProps) {
     }
     return (
         <div>
-            <h2>Single Fire TTK</h2>
+            <h2>{props.title}</h2>
             <div className="chart-container">
             <Line data={chartData} options={options}/>
             </div>
