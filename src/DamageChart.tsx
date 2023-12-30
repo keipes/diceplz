@@ -3,16 +3,12 @@ import StringHue from './StringColor.ts'
 import { WeaponStats } from './WeaponData.ts';
 import { WeaponSelections } from './App.tsx';
 
-interface WeaponData {
-    damage: [number],
-    name: string
-}
-
 interface DamageChartProps {
     selectedWeapons: Map<string, WeaponSelections>,
     highestRangeSeen: number,
-    requiredRanges: [number],
-    selectedWeaponsData: [WeaponStats]
+    requiredRanges: Map<number, boolean>,
+    selectedWeaponsData: [WeaponStats],
+    damageMultiplier: number
 }
 
 function DamageChart(props: DamageChartProps) {
@@ -31,10 +27,10 @@ function DamageChart(props: DamageChartProps) {
       for (let dropoff of stats.dropoffs) {
     //   for (let i = 0; i < stats.dropoffs.length; i = i + 1) {
         range = dropoff.range;
-        damage = dropoff.damage;
+        damage = dropoff.damage * props.damageMultiplier;
         damage = Math.round(damage * 100) / 100
         for (let i = lastRange + 1; i < range; i++) {
-          if (requiredRanges[i]) {
+          if (requiredRanges.has(i)) {
             data.push(lastDamage);
           } else {
             data.push(null);
@@ -46,7 +42,7 @@ function DamageChart(props: DamageChartProps) {
       }
       if (damage > 0) {
         for (let i = range + 1; i < highestRangeSeen; i++) {
-          if (requiredRanges[i]) {
+          if (requiredRanges.has(i)) {
             data.push(damage);
           } else {
             data.push(null);
@@ -67,7 +63,7 @@ function DamageChart(props: DamageChartProps) {
   
     const labels = [];
     for (let i = 0; i <= highestRangeSeen; i++) {
-      if (requiredRanges[i] || i == highestRangeSeen) {
+      if (requiredRanges.has(i) || i == highestRangeSeen) {
         labels.push(i);
       } else {
         labels.push('');
@@ -79,9 +75,7 @@ function DamageChart(props: DamageChartProps) {
     }
     const options = {
       maintainAspectRatio: false,
-      animation: {
-        duration: 0
-      },
+      animation: false,
       spanGaps: true,
       interaction: {
         intersect: false,
@@ -132,6 +126,15 @@ function DamageChart(props: DamageChartProps) {
             color: 'rgba(75, 192, 192, 0.2)',
           },
           min: 0,
+        //   ticks: {
+        //     autoSkip: false,
+        //     // callback: (value, index, ticks) => {
+        //     //     if (index == 79) {
+        //     //         return 'asd';
+        //     //     }
+        //     //     return '';
+        //     // }
+        //   }
         }
       }
     }

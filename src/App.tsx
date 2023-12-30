@@ -31,11 +31,13 @@ interface WeaponSelections {
 
 function App() {
   const initialSelectedWeapons = new Map<string, WeaponSelections>();
-  initialSelectedWeapons.set('AEK-971', {
-    ammoType: 'Standard',
-    barrelType: 'Factory'
-  });
+  // initialSelectedWeapons.set('AEK-971', {
+  //   ammoType: 'Standard',
+  //   barrelType: 'Factory'
+  // });
   const [selectedWeapons, setSelectedWeapons] = useState(initialSelectedWeapons);
+  const [healthMultiplier, setHealthMultiplier] = useState(1);
+  const [damageMultiplier, setDamageMultiplier] = useState(1);
   // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
   //   ammoType: 'Standard',
   //   barrelType: 'Factory'
@@ -50,9 +52,9 @@ function App() {
       if (selected) {
         for (const stat of weapon.stats) {
           if (stat.barrelType == selected.barrelType && stat.ammoType == selected.ammoType) {
-            if (selectedWeaponStats.get(weapon.name)) {
-              console.warn('Already have stats for ' + weapon.name);
-            }
+            // if (selectedWeaponStats.has(weapon.name)) {
+            //   console.warn('Already have stats for ' + weapon.name);
+            // }
             selectedWeaponStats.set(weapon.name, stat);
           }
         }
@@ -69,8 +71,8 @@ function App() {
       }
     }
   }
-  let remainder = highestRangeSeen % 10;
-  highestRangeSeen += (10 - remainder);
+  // let remainder = highestRangeSeen % 10;
+  // highestRangeSeen += (10 - remainder);
   function changeLocalStorage(_: SyntheticEvent) {
     if (useLocalStorage) {
       // disabling storage, so clear all stored data
@@ -79,6 +81,10 @@ function App() {
       localStorage.setItem('useLocalStorage', 'true');
     }
     setUseLocalStorage(!useLocalStorage);
+  }
+  function handleHealthMultiplier(e) {
+    console.log(e.target.value);
+    setHealthMultiplier(e.target.value);
   }
   const selectedWeaponsData = selectedWeaponStats;
   return (
@@ -89,17 +95,47 @@ function App() {
           <p>Weapon stats are from <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">Sorrow's Scribbles</a> as of patch 6.2.0</p>
           <p>Shotgun damage doesn't consider number of pellets yet.</p>
         </div>
-        <div className="value-config">
-          <label for="health-multiplier">Soldier Max Health Multiplier:</label>
-          <input type="number" id="health-multiplier" name="health-multiplier" min="0.1" max="10" value="1" />
-        </div>
+
         <div className="weapon-selector">
           <WeaponSelector selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons}/>
         </div>
-        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmAuto'} title={'TTK Auto'}/>
-        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmSingle'} title={'TTK Single'}/>
-        <TTKChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen} rpmSelector={'rpmBurst'} title={'TTK Burst'}/>
-        <DamageChart selectedWeapons={selectedWeapons} selectedWeaponsData={selectedWeaponsData} requiredRanges={requiredRanges} highestRangeSeen={highestRangeSeen}/>
+        <div>
+          <label htmlFor="health-multiplier">Soldier Max Health Multiplier: </label>
+          <input type="number" id="health-multiplier" name="health-multiplier" step="0.1" min="0.1" max="10" value={healthMultiplier} onChange={handleHealthMultiplier}/>
+        </div>
+        <div>
+          <label htmlFor="damage-multiplier">Damage Multiplier: </label>
+          <input type="number" id="damage-multiplier" name="damage-multiplier" step="0.1" min="0.1" max="5" value={damageMultiplier} onChange={e => setDamageMultiplier(parseFloat(e.target.value))}/>
+        </div>
+        <TTKChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          rpmSelector={'rpmAuto'}
+          healthMultiplier={healthMultiplier}
+          damageMultiplier={damageMultiplier}
+          title={'TTK Auto'}/>
+        <TTKChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          rpmSelector={'rpmSingle'}
+          healthMultiplier={healthMultiplier}
+          damageMultiplier={damageMultiplier}
+          title={'TTK Single'}/>
+        <TTKChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          rpmSelector={'rpmBurst'}
+          healthMultiplier={healthMultiplier}
+          damageMultiplier={damageMultiplier}
+          title={'TTK Burst'}/>
+        <DamageChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          damageMultiplier={damageMultiplier}/>
       </div>
     </>
   )

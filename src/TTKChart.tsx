@@ -1,26 +1,22 @@
 import { Line } from 'react-chartjs-2'
 import StringHue from './StringColor.ts'
-import { DamageMultiplier, PlayerHealth } from './Values.ts'
 import { WeaponStats } from './WeaponData.ts'
 import { WeaponSelections } from './App.tsx'
 
-interface WeaponData {
-    damage: [number],
-    name: string,
-    rpm: [number]
-}
 
 interface TTKChartProps {
     selectedWeapons: Map<string, WeaponSelections>,
     highestRangeSeen: number,
-    requiredRanges: [number],
+    requiredRanges: Map<number, boolean>,
     selectedWeaponsData: [WeaponStats],
     rpmSelector: string,
-    title: string
+    title: string,
+    healthMultiplier: number,
+    damageMultiplier: number
 }
 
-const damageToTTK = function(weapon: WeaponStats, damage: number, rpmSelector: string) {
-    const btk = Math.ceil(PlayerHealth / damage);
+const damageToTTK = function(weapon: WeaponStats, damage: number, rpmSelector: string, healthMultiplier: number) {
+    const btk = Math.ceil((healthMultiplier * 100) / damage);
     return Math.round((1000 / (weapon[rpmSelector] / 60)) * (btk - 1));
 }
 
@@ -39,32 +35,32 @@ function TTKChart(props: TTKChartProps) {
       let damage = 0;
       for (let dropoff of stats.dropoffs) {
         range = dropoff.range;
-        damage = dropoff.damage * DamageMultiplier;
+        damage = dropoff.damage * props.damageMultiplier;
     //   for (let index = 0; index < weapon.damage.length; index = index + 2) {
     //     range = weapon.damage[index + 1]
     //     damage = weapon.damage[index] * DamageMultiplier;
         for (let i = lastRange + 1; i < range; i++) {
-          if (requiredRanges[i]) {
+          if (requiredRanges.has(i)) {
 
-            data.push(damageToTTK(stats, lastDamage, props.rpmSelector));
+            data.push(damageToTTK(stats, lastDamage, props.rpmSelector, props.healthMultiplier));
           } else {
             data.push(null);
           }
         }
         lastDamage = damage;
         lastRange = range;
-        data.push(damageToTTK(stats, damage, props.rpmSelector));
+        data.push(damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier));
       }
       if (damage > 0) {
         for (let i = range + 1; i < highestRangeSeen; i++) {
-          if (requiredRanges[i]) {
-            data.push(damageToTTK(stats, damage, props.rpmSelector));
+          if (requiredRanges.has(i)) {
+            data.push(damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier));
           } else {
             data.push(null);
           }
         }
         if (range != highestRangeSeen) {
-          data.push(damageToTTK(stats, damage, props.rpmSelector));
+          data.push(damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier));
         }
       }
       datasets.push({
@@ -72,13 +68,13 @@ function TTKChart(props: TTKChartProps) {
         data: data,
         fill: false,
         borderColor: 'hsl(' + StringHue(weaponName) + ', 50%, 50%)',
-        tension: 0.1
+        // tension: 0.1
       })
     }
   
     const labels = [];
     for (let i = 0; i <= highestRangeSeen; i++) {
-      if (requiredRanges[i] || i == highestRangeSeen) {
+      if (requiredRanges.has(i) || i == highestRangeSeen) {
         labels.push(i);
       } else {
         labels.push('');
@@ -90,9 +86,7 @@ function TTKChart(props: TTKChartProps) {
     }
     const options = {
       maintainAspectRatio: false,
-      animation: {
-        duration: 0
-      },
+      animation: false,
       spanGaps: true,
       interaction: {
         intersect: false,

@@ -6,7 +6,7 @@ import { WeaponSelections } from './App.tsx';
 
 interface WeaponProps {
     name: string,
-    selectedWeapons: {string: boolean},
+    selectedWeapons: Map<string, WeaponSelections>,
     setSelectedWeapons: Function
 }
 
@@ -36,27 +36,41 @@ function Weapon(props: WeaponProps) {
   const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
   const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
   const clickHandler = (o) => {
-    const newSelectedWeapons = new Map<string, WeaponSelections>();
+    const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
     // let newSelectedWeapons = {};
-    let add = true;
-    for (const [name, selections] of props.selectedWeapons) {
-      if (name == props.name) {
-          add = false;
-      } else {
-          // newSelectedWeapons[name] = selections;
-          newSelectedWeapons.set(name, selections);
-      }
+    if (!newSelectedWeapons.delete(props.name)) {
+      newSelectedWeapons.set(props.name, {
+        ammoType: selectedAmmo,
+        barrelType: selectedBarrel
+      });
     }
-    if (add) {
-        // newSelectedWeapons[props.name] = {
-        //   ammoType: selectedAmmo,
-        //   barrelType: selectedBarrel
-        // };
-        newSelectedWeapons.set(props.name, {
-          ammoType: selectedAmmo,
-          barrelType: selectedBarrel
-        });
-    }
+    // if (newSelectedWeapons.has(props.name)) {
+
+    // } else {
+    //   newSelectedWeapons.set(props.name, {
+    //     ammoType: selectedAmmo,
+    //     barrelType: selectedBarrel
+    //   });
+    // }
+    // let add = true;
+    // for (const [name, selections] of props.selectedWeapons) {
+    //   if (name == props.name) {
+    //       add = false;
+    //   } else {
+    //       // newSelectedWeapons[name] = selections;
+    //       newSelectedWeapons.set(name, selections);
+    //   }
+    // }
+    // if (add) {
+    //     // newSelectedWeapons[props.name] = {
+    //     //   ammoType: selectedAmmo,
+    //     //   barrelType: selectedBarrel
+    //     // };
+    //     newSelectedWeapons.set(props.name, {
+    //       ammoType: selectedAmmo,
+    //       barrelType: selectedBarrel
+    //     });
+    // }
     props.setSelectedWeapons(newSelectedWeapons);
   }
 
