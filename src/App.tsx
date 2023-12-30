@@ -28,7 +28,10 @@ ChartJS.register(
 );
 
 function App() {
-  const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': true});
+  const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
+    'ammo': 'Standard',
+    'barrel': 'Factory'
+  }});
   const oldLocalStorageSetting = localStorage.getItem('useLocalStorage') == 'true';
   const [useLocalStorage, setUseLocalStorage] = useState(oldLocalStorageSetting);
   const selectedWeaponsData = [];
@@ -45,13 +48,15 @@ function App() {
   let highestRangeSeen = 0;
   for (let i = 0; i < selectedWeaponsData.length; i++) {
     const weapon = selectedWeaponsData[i];
-    for (let index = 0; index < weapon.damage.length; index = index + 2) {
-      const range = weapon.damage[index + 1];
-      requiredRanges[range] = true;
-      if (range > highestRangeSeen) {
-        highestRangeSeen = range;
-      }
-    }
+    const modifications = selectedWeapons[weapon.name];
+    const dropoffs = weapon.dropoffs['']
+    // for (let index = 0; index < weapon.damage.length; index = index + 2) {
+    //   const range = weapon.damage[index + 1];
+    //   requiredRanges[range] = true;
+    //   if (range > highestRangeSeen) {
+    //     highestRangeSeen = range;
+    //   }
+    // }
   }
 
   let remainder = highestRangeSeen % 10;

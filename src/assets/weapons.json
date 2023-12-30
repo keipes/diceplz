@@ -1,322 +1,4455 @@
 {
-
     "Sidearms": [
         {
             "name": "G57",
-            "velocity": 355,
-            "damages": [
-                {"damage": 28, "range": 0},
-                {"damage": 22, "range": 30},
-                {"damage": 28, "range": 0}
-            ],
-            "rpmSingle": 450,
-            "rpmBurst": 577,
-            "rpmAuto": 0,
-            "damage": [
-                28, 0,
-                22, 30,
-                18, 40
-            ],
-            "rpm": [
-                450, 577, 0
-            ]
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 450,
+                    "rpmBurst": 577
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 450,
+                    "rpmBurst": 577
+                }
+            }
         },
         {
-            "name": "1911",
-            "velocity": 260,
-            "damage": [
-                34, 0,
-                20, 40,
-                16, 50
-            ],
-            "rpm": [
-                359, 0, 0
-            ]
+            "name": "MP28",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 420,
+                    "rpmSingle": 505
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 505
+                }
+            }
+        },
+        {
+            "name": "M44",
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 61
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 20
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 61
+                }
+            }
+        },
+        {
+            "name": "PF51",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 13,
+                            "range": 10
+                        },
+                        {
+                            "damage": 12,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 420,
+                    "rpmAuto": 898
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 13,
+                            "range": 20
+                        },
+                        {
+                            "damage": 12,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 420,
+                    "rpmAuto": 898
+                }
+            }
+        },
+        {
+            "name": "NVK-P125",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 505,
+                    "rpmBurst": 425
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 505,
+                    "rpmBurst": 425
+                }
+            }
+        },
+        {
+            "name": "SUPER 500",
+            "Flechette": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 12,
+                            "range": 0
+                        },
+                        {
+                            "damage": 10,
+                            "range": 15
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 75
+                }
+            },
+            "#01 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 20,
+                            "range": 0
+                        },
+                        {
+                            "damage": 12,
+                            "range": 20
+                        },
+                        {
+                            "damage": 10,
+                            "range": 30
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 75
+                }
+            },
+            "Slug": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 30
+                        },
+                        {
+                            "damage": 40,
+                            "range": 50
+                        },
+                        {
+                            "damage": 30,
+                            "range": 75
+                        },
+                        {
+                            "damage": 20,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 75
+                }
+            }
+        },
+        {
+            "name": "BFP.50",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 20
+                        },
+                        {
+                            "damage": 35,
+                            "range": 40
+                        },
+                        {
+                            "damage": 28,
+                            "range": 50
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 520,
+                    "rpmSingle": 299
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 20
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        },
+                        {
+                            "damage": 28,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 610,
+                    "rpmSingle": 245
+                }
+            }
+        },
+        {
+            "name": "L9CZ",
+            "": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 20,
+                            "range": 40
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "M1911",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 34,
+                            "range": 0
+                        },
+                        {
+                            "damage": 20,
+                            "range": 40
+                        },
+                        {
+                            "damage": 16.7,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 260,
+                    "rpmSingle": 359
+                }
+            }
+        },
+        {
+            "name": "MP412 REX",
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 50,
+                            "range": 0
+                        },
+                        {
+                            "damage": 38,
+                            "range": 50
+                        },
+                        {
+                            "damage": 28,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 520,
+                    "rpmSingle": 269
+                }
+            }
+        },
+        {
+            "name": "M93R",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 15
+                        },
+                        {
+                            "damage": 16,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        },
+                        {
+                            "damage": 12,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 449,
+                    "rpmBurst": 567
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 15
+                        },
+                        {
+                            "damage": 16,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        },
+                        {
+                            "damage": 12,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 449,
+                    "rpmBurst": 567
+                }
+            }
+        },
+        {
+            "name": "MP443",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 26,
+                            "range": 15
+                        },
+                        {
+                            "damage": 23,
+                            "range": 20
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        },
+                        {
+                            "damage": 21,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 16,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 449
+                }
+            }
         }
     ],
     "Assault Rifles": [
         {
-            "name": "M5A3",
-            "velocity": 750,
-            "damage": [
-                22, 0,
-                18, 40,
-                15, 75
-            ],
-            "rpm": [
-                513, 0, 980
-            ]
+            "name": "PBX-45",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        },
+                        {
+                            "damage": 12,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 622,
+                    "rpmAuto": 898
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        },
+                        {
+                            "damage": 12,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 505,
+                    "rpmAuto": 808
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 560,
+                    "rpmSingle": 622,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        },
+                        {
+                            "damage": 13,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 400,
+                    "rpmSingle": 622,
+                    "rpmAuto": 808
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        },
+                        {
+                            "damage": 13,
+                            "range": 150
+                        }
+                    ]
+                }
+            }
         },
         {
-            "name": "AM40",
-            "velocity": 965,
-            "damage": [
-                26, 0,
-                22, 10,
-                18, 40,
-                15, 75
-            ],
-            "rpm": [
-                622, 0, 898
-            ]
+            "name": "PP-29",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 520,
+                    "rpmSingle": 577,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 450,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            }
         },
         {
-            "name": "AK-24",
-            "velocity": 750,
-            "damage": [
-                28, 0,
-                22, 10,
-                18, 75
-            ],
-            "rpm": [
-                505, 425, 674
-            ]
+            "name": "MP9",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        },
+                        {
+                            "damage": 12,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 395,
+                    "rpmSingle": 513,
+                    "rpmAuto": 898
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        },
+                        {
+                            "damage": 12,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 599,
+                    "rpmAuto": 898
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        },
+                        {
+                            "damage": 12,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 395,
+                    "rpmSingle": 599,
+                    "rpmAuto": 829
+                }
+            }
         },
         {
-            "name": "SFAR",
-            "velocity": 750,
-            "damage": [
-                28, 0,
-                22, 30,
-                18, 75
-            ],
-            "rpm": [
-                505, 0, 674
-            ]
+            "name": "K30",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        },
+                        {
+                            "damage": 12,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 420,
+                    "rpmBurst": 674,
+                    "rpmAuto": 1225
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 520,
+                    "rpmBurst": 674,
+                    "rpmAuto": 1123
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        },
+                        {
+                            "damage": 12,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmBurst": 674,
+                    "rpmAuto": 1123
+                }
+            }
         },
         {
-            "name": "AC-42",
-            "velocity": 750,
-            "damage": [
-                28, 0,
-                22, 30,
-                18, 75,
-                15, 150
-            ],
-            "rpm": [
-                505, 539, 0
-            ]
+            "name": "AC9",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 20
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 50
+                        },
+                        {
+                            "damage": 12,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 420,
+                    "rpmSingle": 1078,
+                    "rpmAuto": 1078
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        },
+                        {
+                            "damage": 12,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 480,
+                    "rpmSingle": 599,
+                    "rpmAuto": 898
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 20
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        },
+                        {
+                            "damage": 12,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 980,
+                    "rpmAuto": 1078
+                }
+            }
         },
         {
-            "name": "RM68",
-            "velocity": 750,
-            "damage": [
-                22, 0,
-                22, 30,
-                18, 150
-            ],
-            "rpm": [
-                505, 0, 770
-            ]
+            "name": "P90",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 16,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 257,
+                    "rpmAuto": 898
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 16,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 257,
+                    "rpmAuto": 898
+                }
+            }
         },
         {
-            "name": "GEW-46",
-            "velocity": 675,
-            "damage": [
-                28, 0,
-                22, 10,
-                18, 50
-            ],
-            "rpm": [
-                505, 0, 810
-            ]
+            "name": "AKS-74U",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 16,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 674,
+                    "rpmAuto": 674
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 16,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 674,
+                    "rpmAuto": 674
+                }
+            }
         },
         {
-            "name": "VHX-D3",
-            "velocity": 750,
-            "damage": [
-                26, 0,
-                25, 5,
-                24, 10,
-                22, 20,
-                20, 30,
-                19, 40,
-                17, 50,
-                16, 75,
-                15, 100
-            ],
-            "rpm": [
-                505, 0, 900
-            ]
-        },
-        {
-            "name": "M16A3",
-            "velocity": 845,
-            "damage": [
-                22, 0,
-                21, 40,
-                22, 50,
-                18, 75
-            ],
-            "rpm": [
-                449, 634, 829
-            ]
-        },
-        {
-            "name": "ACW-R",
-            "velocity": 750,
-            "damage": [
-                28, 0,
-                26, 15,
-                22, 20,
-                18, 70
-            ],
-            "rpm": [
-                737, 539, 735
-            ]
-        },
-        {
-            "name": "A-91",
-            "velocity": 675,
-            "damage": [
-                22, 0,
-                18, 40,
-                16, 75
-            ],
-            "rpm": [
-                737, 539, 735
-            ]
-        },
-        {
-            "name": "M416",
-            "velocity": 675,
-            "damage": [
-                22, 0,
-                21, 40,
-                22, 50,
-                18, 75
-            ],
-            "rpm": [
-                513, 0, 770
-            ]
-        },
-        {
-            "name": "MTAR-21",
-            "velocity": 675,
-            "damage": [
-                22, 0,
-                18, 40,
-                15, 100
-            ],
-            "rpm": [
-                505, 539, 898
-            ]
-        },
-        {
-            "name": "AEK-971",
-            "velocity": 750,
-            "damage": [
-                22, 0,
-                18, 40,
-                15, 75
-            ],
-            "rpm": [
-                513, 599, 898
-            ]
+            "name": "PP-2000",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 355,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                }
+            }
         }
     ],
     "SMG": [
         {
-            "name": "PBX-45",
-            "velocity": 480,
-            "damage": [
-                28, 0,
-                22, 10,
-                18, 30,
-                15, 50,
-                13, 100
-            ],
-            "rpm": [
-                505, 0, 808
-            ]
+            "name": "M5A3",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 10
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 513,
+                    "rpmAuto": 829
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 10
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 513,
+                    "rpmAuto": 718
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 499,
+                    "rpmAuto": 709
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
         },
         {
-            "name": "PP-29",
-            "velocity": 480,
-            "damage": [
-                28, 0,
-                22, 30,
-                18, 50,
-                15, 75
-            ],
-            "rpm": [
-                577, 0, 735
-            ]
+            "name": "AM40",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 622,
+                    "rpmAuto": 898
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 505,
+                    "rpmAuto": 808
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 20
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 622,
+                    "rpmAuto": 808
+                }
+            }
+        },
+        {
+            "name": "AK-24",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 505,
+                    "rpmBurst": 425,
+                    "rpmAuto": 674
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 505,
+                    "rpmBurst": 385,
+                    "rpmAuto": 622
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 20
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 513,
+                    "rpmBurst": 327,
+                    "rpmAuto": 599
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 20
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "SFAR-M GL",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 505,
+                    "rpmAuto": 622
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 513,
+                    "rpmAuto": 599
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AC-42",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 505,
+                    "rpmBurst": 539
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 100
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 505,
+                    "rpmBurst": 539
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 100
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 505,
+                    "rpmBurst": 539
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "RM68"
+        },
+        {
+            "name": "GEW-46",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 505,
+                    "rpmAuto": 808
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 674,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 622,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 10
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "VHX-D3",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 20,
+                            "range": 30
+                        },
+                        {
+                            "damage": 19,
+                            "range": 40
+                        },
+                        {
+                            "damage": 17,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 476,
+                    "rpmAuto": 811
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 20,
+                            "range": 30
+                        },
+                        {
+                            "damage": 19,
+                            "range": 40
+                        },
+                        {
+                            "damage": 17,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 20
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 20,
+                            "range": 40
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 17,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 577,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 20
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 20,
+                            "range": 40
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 17,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 20,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 17,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 615,
+                    "rpmSingle": 577,
+                    "rpmAuto": 735
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 26,
+                            "range": 0
+                        },
+                        {
+                            "damage": 25,
+                            "range": 5
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 20,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 17,
+                            "range": 50
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "M16A3",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 449,
+                    "rpmBurst": 634,
+                    "rpmAuto": 829
+                }
+            }
+        },
+        {
+            "name": "ACW-R",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 737,
+                    "rpmBurst": 539,
+                    "rpmAuto": 735
+                }
+            }
+        },
+        {
+            "name": "A-91",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 16,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 449,
+                    "rpmBurst": 634,
+                    "rpmAuto": 829
+                }
+            }
+        },
+        {
+            "name": "M416",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 675,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                }
+            }
+        },
+        {
+            "name": "MTAR-21",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 505,
+                    "rpmBurst": 539,
+                    "rpmAuto": 898
+                }
+            }
+        },
+        {
+            "name": "AEK-971",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 40
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 513,
+                    "rpmBurst": 599,
+                    "rpmAuto": 898
+                }
+            }
         }
     ],
-    "LMG": [],
+    "LMG": [
+        {
+            "name": "LCMG",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 505,
+                    "rpmAuto": 674
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 505,
+                    "rpmAuto": 622
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 1125,
+                    "rpmSingle": 505,
+                    "rpmAuto": 577
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 750,
+                    "rpmSingle": 505,
+                    "rpmAuto": 577
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 1125,
+                    "rpmSingle": 513,
+                    "rpmAuto": 567
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 100
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AVANCYS",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 513,
+                    "rpmAuto": 718
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 680,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 499,
+                    "rpmAuto": 709
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 30
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "PKP-BP",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmAuto": 898
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmAuto": 829
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmAuto": 842
+                }
+            }
+        },
+        {
+            "name": "RPT-31",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 22,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 50
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 718,
+                    "rpmAuto": 718
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 18,
+                            "range": 100
+                        },
+                        {
+                            "damage": 15,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmSingle": 622,
+                    "rpmAuto": 622
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 18,
+                            "range": 0
+                        },
+                        {
+                            "damage": 15,
+                            "range": 50
+                        },
+                        {
+                            "damage": 13,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 1365,
+                    "rpmSingle": 612,
+                    "rpmAuto": 612
+                }
+            }
+        },
+        {
+            "name": "M60E4",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 24,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        },
+                        {
+                            "damage": 20,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmAuto": 577
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 24,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        },
+                        {
+                            "damage": 20,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmAuto": 577
+                }
+            }
+        },
+        {
+            "name": "XM8 LMG",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 513,
+                    "rpmAuto": 770
+                }
+            }
+        },
+        {
+            "name": "M240B",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 20,
+                            "range": 75
+                        },
+                        {
+                            "damage": 19,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmAuto": 674
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 24,
+                            "range": 10
+                        },
+                        {
+                            "damage": 22,
+                            "range": 30
+                        },
+                        {
+                            "damage": 20,
+                            "range": 75
+                        },
+                        {
+                            "damage": 19,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmAuto": 674
+                }
+            }
+        },
+        {
+            "name": "TYPE 88 LMG",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 20,
+                            "range": 50
+                        },
+                        {
+                            "damage": 19,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmAuto": 674
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 21,
+                            "range": 40
+                        },
+                        {
+                            "damage": 20,
+                            "range": 50
+                        },
+                        {
+                            "damage": 19,
+                            "range": 100
+                        },
+                        {
+                            "damage": 18,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmAuto": 674
+                }
+            }
+        },
+        {
+            "name": "RPK-74M",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 17,
+                            "range": 100
+                        },
+                        {
+                            "damage": 16,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 513,
+                    "rpmAuto": 718
+                }
+            },
+            "Default": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 24,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 20
+                        },
+                        {
+                            "damage": 19,
+                            "range": 50
+                        },
+                        {
+                            "damage": 18,
+                            "range": 75
+                        },
+                        {
+                            "damage": 17,
+                            "range": 100
+                        },
+                        {
+                            "damage": 16,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 513,
+                    "rpmAuto": 718
+                }
+            }
+        }
+    ],
     "DMR": [
         {
             "name": "DM7",
-            "velocity": 975,
-            "damage": [
-                35, 0,
-                28, 100
-            ],
-            "rpm": [
-                359, 0, 0
-            ]
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 359
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 40
+                        },
+                        {
+                            "damage": 22,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 299
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "velocity": 1135,
+                    "rpmSingle": 269
+                },
+                "Extended": {}
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 269
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmSingle": 261
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 28,
+                            "range": 0
+                        },
+                        {
+                            "damage": 22,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
         },
         {
             "name": "SVK",
-            "velocity": 975,
-            "damage": [
-                60, 0,
-                35, 100
-            ],
-            "rpm": [
-                225, 0, 0
-            ]
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 225
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 125
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmSingle": 180
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 125
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 180
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 75
+                        }
+                    ]
+                }
+            }
         },
         {
             "name": "VCAR",
-            "velocity": 975,
-            "damage": [
-                35, 0,
-                28, 30,
-                22, 100
-            ],
-            "rpm": [
-                415, 0, 0
-            ]
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 30
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 449
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 30
+                        },
+                        {
+                            "damage": 22,
+                            "range": 40
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 30
+                        },
+                        {
+                            "damage": 22,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 415
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 30
+                        },
+                        {
+                            "damage": 22,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 20
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 415
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 20
+                        },
+                        {
+                            "damage": 22,
+                            "range": 50
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "BSV-M",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 21,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 680,
+                    "rpmSingle": 469,
+                    "rpmAuto": 829
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 21,
+                            "range": 0
+                        },
+                        {
+                            "damage": 18,
+                            "range": 30
+                        },
+                        {
+                            "damage": 15,
+                            "range": 40
+                        },
+                        {
+                            "damage": 13,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 26,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmSingle": 415,
+                    "rpmAuto": 415
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 26,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 26,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 415,
+                    "rpmAuto": 415
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 26,
+                            "range": 50
+                        }
+                    ]
+                }
+            }
         },
         {
             "name": "G428",
-            "velocity": 965,
-            "damage": [
-                60, 0,
-                45, 20,
-                35, 40,
-                25, 125
-            ],
-            "rpm": [
-                245, 0, 270
-            ]
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 965,
+                    "rpmSingle": 299,
+                    "rpmAuto": 299
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 40
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 1125,
+                    "rpmSingle": 269,
+                    "rpmAuto": 269
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 845,
+                    "rpmSingle": 269,
+                    "rpmAuto": 269
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ]
+                }
+            }
         },
         {
             "name": "M39 EMR",
-            "velocity": 975,
-            "damage": [
-                60, 0,
-                38, 40,
-                35, 50
-            ],
-            "rpm": [
-                299, 0, 0
-            ]
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 38,
+                            "range": 40
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 299
+                }
+            }
         },
         {
             "name": "SVD",
-            "velocity": 975,
-            "damage": [
-                60, 0,
-                35, 75
-            ],
-            "rpm": [
-                269, 0, 0
-            ]
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 269
+                }
+            }
         }
     ],
-    "Bolt Action": [],
-    "Shotgun/Utility": []
+    "Bolt Action": [
+        {
+            "name": "SWS-10",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 680,
+                    "rpmSingle": 69
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 50
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 75
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 36
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 100
+                        }
+                    ]
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 680,
+                    "rpmSingle": 50
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 150
+                        }
+                    ]
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 36
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "DXR-1",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 20
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 40
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 20
+                        }
+                    ]
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "velocity": 1135,
+                    "rpmSingle": 30
+                },
+                "Extended": {}
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ],
+                    "velocity": 1135,
+                    "rpmSingle": 30
+                },
+                "Extended": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 100
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "NTW-50",
+            "Anti-Material": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 90,
+                            "range": 0
+                        },
+                        {
+                            "damage": 75,
+                            "range": 150
+                        }
+                    ],
+                    "velocity": 525,
+                    "rpmSingle": 21
+                }
+            }
+        },
+        {
+            "name": "XCE BAR",
+            "Close Combat": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 680,
+                    "rpmSingle": 59
+                }
+            },
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 850,
+                    "rpmSingle": 59
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 59
+                }
+            },
+            "Subsonic": {
+                "Factory": {
+                    "velocity": 680,
+                    "rpmSingle": 59
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 59
+                }
+            }
+        },
+        {
+            "name": "GOL-SNIPER MAGNUM",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 88,
+                            "range": 0
+                        },
+                        {
+                            "damage": 65,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 975,
+                    "rpmSingle": 43
+                }
+            }
+        }
+    ],
+    "Shotgun/Utility": [
+        {
+            "name": "MCS-880",
+            "Flechette": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 12,
+                            "range": 0
+                        },
+                        {
+                            "damage": 10,
+                            "range": 15
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 75
+                }
+            },
+            "#00 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 10,
+                            "range": 15
+                        },
+                        {
+                            "damage": 6,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 75
+                }
+            },
+            "#01 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 10,
+                            "range": 20
+                        },
+                        {
+                            "damage": 5,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 75
+                }
+            },
+            "#4 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 12,
+                            "range": 0
+                        },
+                        {
+                            "damage": 10,
+                            "range": 20
+                        },
+                        {
+                            "damage": 6,
+                            "range": 30
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 75
+                }
+            },
+            "Slug": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 310,
+                    "rpmSingle": 75
+                }
+            }
+        },
+        {
+            "name": "GVT 45-70",
+            "Standard": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 525,
+                    "rpmSingle": 79
+                }
+            },
+            "High Power": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 60,
+                            "range": 0
+                        },
+                        {
+                            "damage": 35,
+                            "range": 140
+                        }
+                    ],
+                    "velocity": 620,
+                    "rpmSingle": 79
+                }
+            },
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 35,
+                            "range": 0
+                        },
+                        {
+                            "damage": 28,
+                            "range": 30
+                        }
+                    ],
+                    "velocity": 620,
+                    "rpmSingle": 75
+                }
+            }
+        },
+        {
+            "name": "12M AUTO",
+            "Flechette": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 12,
+                            "range": 30
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 269,
+                    "rpmAuto": 269
+                }
+            },
+            "#01 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 15,
+                            "range": 0
+                        },
+                        {
+                            "damage": 12,
+                            "range": 30
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 269,
+                    "rpmAuto": 269
+                }
+            },
+            "Slug": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 310,
+                    "rpmSingle": 269,
+                    "rpmAuto": 269
+                }
+            }
+        },
+        {
+            "name": "GHOSTMAKER R10",
+            "Bolt Rack": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 110,
+                            "range": 0
+                        },
+                        {
+                            "damage": 110,
+                            "range": 5
+                        },
+                        {
+                            "damage": 60,
+                            "range": 10
+                        },
+                        {
+                            "damage": 60,
+                            "range": 30
+                        },
+                        {
+                            "damage": 35,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 485,
+                    "rpmSingle": 40
+                }
+            },
+            "Standard Bolts": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 110,
+                            "range": 0
+                        },
+                        {
+                            "damage": 110,
+                            "range": 30
+                        },
+                        {
+                            "damage": 60,
+                            "range": 40
+                        },
+                        {
+                            "damage": 60,
+                            "range": 50
+                        },
+                        {
+                            "damage": 35,
+                            "range": 75
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 27
+                }
+            },
+            "Explosive Bolts": {
+                "Factory": {
+                    "velocity": 120,
+                    "rpmSingle": 27
+                }
+            }
+        },
+        {
+            "name": "RORSCH MK-4",
+            "Armor Piercing": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 80,
+                            "range": 0
+                        },
+                        {
+                            "damage": 40,
+                            "range": 200
+                        }
+                    ],
+                    "velocity": 6740,
+                    "rpmBurst": 499,
+                    "rpmAuto": 735,
+                    "rpmSingle": 55
+                }
+            }
+        },
+        {
+            "name": "NVK-S22",
+            "Flechette": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 16,
+                            "range": 0
+                        },
+                        {
+                            "damage": 12,
+                            "range": 30
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 299
+                }
+            },
+            "#00 Buckshot": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 16,
+                            "range": 0
+                        },
+                        {
+                            "damage": 12,
+                            "range": 30
+                        },
+                        {
+                            "damage": 6,
+                            "range": 50
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 299
+                }
+            },
+            "Slug": {
+                "Factory": {
+                    "dropoff": [
+                        {
+                            "damage": 75,
+                            "range": 0
+                        },
+                        {
+                            "damage": 60,
+                            "range": 40
+                        }
+                    ],
+                    "velocity": 425,
+                    "rpmSingle": 299
+                }
+            }
+        }
+    ]
 }
