@@ -71,8 +71,8 @@ function App() {
       }
     }
   }
-  // let remainder = highestRangeSeen % 10;
-  // highestRangeSeen += (10 - remainder);
+  let remainder = highestRangeSeen % 10;
+  highestRangeSeen += (10 - remainder);
   function changeLocalStorage(_: SyntheticEvent) {
     if (useLocalStorage) {
       // disabling storage, so clear all stored data
@@ -89,8 +89,39 @@ function App() {
   const selectedWeaponsData = selectedWeaponStats;
   return (
     <>
-      <div>
-        <h1>BF2042 Weapon Stats</h1>
+      <div className="top-nav">
+
+        <ul>
+          <li><h1 className="top-nav-title">DicePlz</h1></li>
+          <li className="top-nav-weapon-select">
+            <div className="top-nav-label">SMG</div>
+            <div className="weapon-select-dropdown-container">
+              <ul className="weapon-select-dropdown">
+                <li className="weapon-select-item">PBX-45</li>
+                <li className="weapon-select-item">PP-2000</li>
+              </ul>
+            </div>
+          </li>
+          <li className="top-nav-weapon-select">
+            <div className="top-nav-label">Assault Rifles</div>
+            <div className="weapon-select-dropdown-container">
+              <ul className="weapon-select-dropdown">
+                <li className="weapon-select-item">M5A3</li>
+                <li className="weapon-select-item">ACW-R</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        
+        {/* <div className="top-nav-weapon-select">
+          <div className="top-nav-weapon-select-label">SMG</div>
+          <div className="top-nav-weapon-select-dropdown">
+            <div className="top-nav-weapon-select-item">PBX-45</div>
+            <div className="top-nav-weapon-select-item">PP-2000</div>
+          </div>
+        </div> */}
+      </div>
+      <div className="main-content">
         <div className='disclosure'>
           <p>Weapon stats are from <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">Sorrow's Scribbles</a> as of patch 6.2.0</p>
           <p>Shotgun damage doesn't consider number of pellets yet.</p>
