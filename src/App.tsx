@@ -3,6 +3,7 @@ import './App.css'
 import WeaponSelector from './WeaponSelector'
 import DamageChart from './DamageChart.tsx'
 import TTKChart from './TTKChart.tsx';
+import RPMChart from './RPMChart.tsx';
 
 import {
   Chart as ChartJS,
@@ -12,9 +13,12 @@ import {
   LineElement,
   Title,
   Tooltip,
+  BarElement,
+  BarController
   // Legend,
 } from 'chart.js';
 import { GetCategoryWeapons, WeaponCategories, WeaponStats } from './WeaponData.ts'
+import VelocityChart from './VelocityChart.tsx';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,6 +26,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
+  BarElement,
+  BarController
   // Legend
 );
 
@@ -38,6 +44,7 @@ function App() {
   const [selectedWeapons, setSelectedWeapons] = useState(initialSelectedWeapons);
   const [healthMultiplier, setHealthMultiplier] = useState(1);
   const [damageMultiplier, setDamageMultiplier] = useState(1);
+  const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
   // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
   //   ammoType: 'Standard',
   //   barrelType: 'Factory'
@@ -93,7 +100,7 @@ function App() {
 
         <ul>
           <li><h1 className="top-nav-title">DicePlz</h1></li>
-          <li className="top-nav-weapon-select">
+          {/* <li className="top-nav-weapon-select">
             <div className="top-nav-label">SMG</div>
             <div className="weapon-select-dropdown-container">
               <ul className="weapon-select-dropdown">
@@ -110,7 +117,7 @@ function App() {
                 <li className="weapon-select-item">ACW-R</li>
               </ul>
             </div>
-          </li>
+          </li> */}
         </ul>
         
         {/* <div className="top-nav-weapon-select">
@@ -138,13 +145,18 @@ function App() {
           <label htmlFor="damage-multiplier">Damage Multiplier: </label>
           <input type="number" id="damage-multiplier" name="damage-multiplier" step="0.1" min="0.1" max="5" value={damageMultiplier} onChange={e => setDamageMultiplier(parseFloat(e.target.value))}/>
         </div>
+        <div>
+          <label htmlFor="body-damage-multiplier">Body Damage Multiplier: </label>
+          <input type="number" id="body-damage-multiplier" name="body-damage-multiplier" step="0.1" min="0" max="4" value={bodyDamageMultiplier} onChange={e => setBodyDamageMultiplier(parseFloat(e.target.value))}/>
+        </div>
+
         <TTKChart selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={'rpmAuto'}
           healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier}
+          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
           title={'TTK Auto'}/>
         <TTKChart selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
@@ -152,7 +164,7 @@ function App() {
           highestRangeSeen={highestRangeSeen}
           rpmSelector={'rpmSingle'}
           healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier}
+          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
           title={'TTK Single'}/>
         <TTKChart selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
@@ -160,13 +172,19 @@ function App() {
           highestRangeSeen={highestRangeSeen}
           rpmSelector={'rpmBurst'}
           healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier}
+          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
           title={'TTK Burst'}/>
         <DamageChart selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          damageMultiplier={damageMultiplier}/>
+          damageMultiplier={damageMultiplier * bodyDamageMultiplier}/>
+        <RPMChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}/>
+        <VelocityChart selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}/>
+
+
       </div>
     </>
   )

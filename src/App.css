@@ -116,7 +116,7 @@ li:hover div.weapon-select-dropdown-container {
   color: var(--battle-blue);
 }
 .weapon-select-item {
-	background-color:#000000;
+	/* background-color:#000000; */
   cursor: pointer;
 }
 

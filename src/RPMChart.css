@@ -1,0 +1,25 @@
+button:focus {
+    outline: none;
+}
+
+button {
+    opacity: 0.6;
+}
+
+button:hover {
+    outline: none;
+    opacity: 1;
+}
+.enabled {
+    opacity: 1;
+    background-color: #000;
+}
+
+.button-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 10px;
+    max-width: 20vh;
+    margin-left: auto;
+    margin-right: auto;
+}
