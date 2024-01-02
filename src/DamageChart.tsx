@@ -3,6 +3,7 @@ import StringHue from "./StringColor.ts";
 import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "./LabelMaker.ts";
 
 interface DamageChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -59,11 +60,12 @@ function DamageChart(props: DamageChartProps) {
         data.push(damage);
       }
     }
+    const label = ConfigDisplayName(config);
     datasets.push({
-      label: weaponName,
+      label: label,
       data: data,
       fill: false,
-      borderColor: "hsl(" + StringHue(weaponName) + ", 50%, 50%)",
+      borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
       tension: 0.1,
     });
   }
@@ -128,21 +130,12 @@ function DamageChart(props: DamageChartProps) {
       x: {
         title: {
           display: true,
-          text: "range",
+          text: "meters",
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
-        //   ticks: {
-        //     autoSkip: false,
-        //     // callback: (value, index, ticks) => {
-        //     //     if (index == 79) {
-        //     //         return 'asd';
-        //     //     }
-        //     //     return '';
-        //     // }
-        //   }
       },
     },
   };

@@ -5,6 +5,7 @@ import { WeaponSelections } from "./App.tsx";
 import { useState } from "react";
 import "./RPMChart.css";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "./LabelMaker.ts";
 
 interface RPMChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -28,7 +29,7 @@ function RPMChart(props: RPMChartProps) {
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    weaponData.push([config.name, stats]);
+    weaponData.push([config, stats]);
   }
   weaponData.sort((a, b) => {
     const aValues = [];
@@ -47,7 +48,8 @@ function RPMChart(props: RPMChartProps) {
     }
     return Math.max(...bValues) - Math.max(...aValues);
   });
-  for (const [weaponName, stats] of weaponData) {
+  for (const [config, stats] of weaponData) {
+    const weaponName = ConfigDisplayName(config);
     labels.push(weaponName);
     if (showAuto) {
       if (stats.rpmAuto) {

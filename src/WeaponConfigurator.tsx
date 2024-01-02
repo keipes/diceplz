@@ -50,12 +50,19 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   return (
     <>
       <div className={containerClass}>
-        <div className="wcf-header">
+        <div className="wcf-header-bar">
+          <span></span>
           <span
             className="configurator-toggle material-symbols-outlined"
             onClick={toggle}
           >
             {expansionSymbol}
+          </span>
+          <span
+            className="configurator-clear-all"
+            onClick={props.weaponConfig.Reset}
+          >
+            Clear All
           </span>
         </div>
         <div className="wcf-scrollable">

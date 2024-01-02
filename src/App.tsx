@@ -49,6 +49,10 @@ interface AddWeaponFn {
   (config: WeaponConfiguration): void;
 }
 
+interface BulkAddWeaponFn {
+  (config: WeaponConfiguration[]): void;
+}
+
 interface DuplicateWeaponFn {
   (id: string): void;
 }
@@ -61,18 +65,24 @@ interface UpdateWeaponFn {
   (id: string, config: WeaponConfiguration): void;
 }
 
+interface ResetFn {
+  (): void;
+}
+
 interface WeaponConfig {
   AddWeapon: AddWeaponFn;
+  BulkAddWeapon: BulkAddWeaponFn;
   RemoveWeapon: RemoveWeaponFn;
   DuplicateWeapon: DuplicateWeaponFn;
   UpdateWeapon: UpdateWeaponFn;
+  Reset: ResetFn;
 }
 
 const initialSelectedWeapons = new Map<string, WeaponSelections>();
 
 const CONFIG_STORAGE_KEY = "configurations";
 let initialConfigurations = new Map<string, WeaponConfiguration>();
-let useLocalStorage = location.hostname === "localhost";
+let useLocalStorage = false; //location.hostname === "localhost";
 if (useLocalStorage) {
   const cached = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (cached) {
@@ -103,6 +113,18 @@ function App() {
     _setWeaponConfigurations(configurations);
   };
 
+  function BulkAddWeapon(configs: WeaponConfiguration[]) {
+    const configurations = new Map(weaponConfigurations);
+    for (const config of configs) {
+      let id = crypto.randomUUID();
+      while (configurations.has(id)) {
+        console.warn("Duplicate UUID generated.");
+        id = crypto.randomUUID();
+      }
+      configurations.set(id, config);
+    }
+    setWeaponConfigurations(configurations);
+  }
   function AddWeapon(config: WeaponConfiguration) {
     const configurations = new Map(weaponConfigurations);
     let id = crypto.randomUUID();
@@ -131,11 +153,16 @@ function App() {
     configurations.set(id, config);
     setWeaponConfigurations(configurations);
   }
+  function Reset() {
+    setWeaponConfigurations(new Map());
+  }
   const wpnCfg = {
     AddWeapon: AddWeapon,
     DuplicateWeapon: DuplicateWeapon,
     RemoveWeapon: RemoveWeapon,
     UpdateWeapon: UpdateWeapon,
+    BulkAddWeapon: BulkAddWeapon,
+    Reset: Reset,
   };
 
   const oldLocalStorageSetting =
@@ -193,7 +220,7 @@ function App() {
   const selectedWeaponsData = selectedWeaponStats;
   return (
     <>
-      <TopNav addWeapon={AddWeapon} />
+      <TopNav weaponConfig={wpnCfg} />
       <WeaponConfigurator
         configurations={weaponConfigurations}
         weaponConfig={wpnCfg}

@@ -3,6 +3,7 @@ import StringHue from "./StringColor.ts";
 import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "./LabelMaker.ts";
 
 interface TTKChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -88,8 +89,7 @@ function TTKChart(props: TTKChartProps) {
         );
       }
     }
-    const label =
-      config.name + " " + config.barrelType + " " + config.ammoType + "";
+    const label = ConfigDisplayName(config);
     datasets.push({
       label: label,
       data: data,
@@ -158,7 +158,7 @@ function TTKChart(props: TTKChartProps) {
       x: {
         title: {
           display: true,
-          text: "range",
+          text: "meters",
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",

@@ -1,21 +1,26 @@
-import { AddWeaponFn } from "../App";
+import { AddWeaponFn, WeaponConfig } from "../App";
 import { GetCategoryWeapons, WeaponCategories } from "../WeaponData";
+import "./TopNav.css";
 
 interface NavProps {
-  addWeapon: AddWeaponFn;
+  weaponConfig: WeaponConfig;
 }
 
 function TopNav(props: NavProps) {
   const weaponSelectDropdowns = [];
   for (const category of WeaponCategories) {
     const weaponSelectItems = [];
-    for (const weapon of GetCategoryWeapons(category)) {
+    let weapons = GetCategoryWeapons(category);
+    weapons.sort((a, b) => {
+      return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+    });
+    for (const weapon of weapons) {
       weaponSelectItems.push(
         <li
           className="weapon-select-item"
           key={weapon.name}
           onClick={() => {
-            props.addWeapon({
+            props.weaponConfig.AddWeapon({
               name: weapon.name,
               visible: true,
               barrelType: weapon.stats[0].barrelType,
@@ -31,7 +36,31 @@ function TopNav(props: NavProps) {
       <li className="top-nav-weapon-select" key={category}>
         <div className="top-nav-label">{category}</div>
         <div className="weapon-select-dropdown-container">
-          <ul className="weapon-select-dropdown">{weaponSelectItems}</ul>
+          <ul className="weapon-select-dropdown">
+            <div
+              className="weapon-select-add-all"
+              onClick={() => {
+                const toAdd = [];
+                for (const weapon of weapons) {
+                  if (weapon.stats.length == 0) {
+                    console.warn("no stats for " + weapon.name);
+                  }
+                  toAdd.push({
+                    name: weapon.name,
+                    visible: true,
+                    barrelType: weapon.stats[0].barrelType,
+                    ammoType: weapon.stats[0].ammoType,
+                  });
+                }
+                props.weaponConfig.BulkAddWeapon(toAdd);
+              }}
+            >
+              Add All
+            </div>
+            <div className="weapon-select-items-container">
+              {weaponSelectItems}
+            </div>
+          </ul>
         </div>
       </li>
     );
@@ -44,24 +73,6 @@ function TopNav(props: NavProps) {
             <h1 className="top-nav-title">DicePlz</h1>
           </li>
           {weaponSelectDropdowns}
-          {/* <li className="top-nav-weapon-select">
-            <div className="top-nav-label">SMG</div>
-            <div className="weapon-select-dropdown-container">
-              <ul className="weapon-select-dropdown">
-                <li className="weapon-select-item">PBX-45</li>
-                <li className="weapon-select-item">PP-2000</li>
-              </ul>
-            </div>
-          </li>
-          <li className="top-nav-weapon-select">
-            <div className="top-nav-label">Assault Rifles</div>
-            <div className="weapon-select-dropdown-container">
-              <ul className="weapon-select-dropdown">
-                <li className="weapon-select-item">M5A3</li>
-                <li className="weapon-select-item">ACW-R</li>
-              </ul>
-            </div>
-          </li> */}
         </ul>
       </div>
     </>

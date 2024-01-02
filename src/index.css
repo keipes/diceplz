@@ -4,7 +4,6 @@
   font-weight: 400;
   font-size: 14px;
   color-scheme: light dark;
-  /* background-color: #050e11; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,7 +17,7 @@
   --battle-black: #121212;
 
   color: var(--battle-white);
-
+  background-color: var(--battle-black);
 }
 
 a {
@@ -65,7 +64,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -76,12 +75,10 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
 
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 200,
-  'GRAD' 0,
-  'opsz' 24
+  font-size: 32px;
+  /* line-height: 1.5; */
+  font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 32;
 }

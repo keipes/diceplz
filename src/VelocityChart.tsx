@@ -4,6 +4,7 @@ import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
 import "./VelocityChart.css";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "./LabelMaker.ts";
 
 interface VelocityChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -20,15 +21,16 @@ function VelocityChart(props: VelocityChartProps) {
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    weaponData.push([config.name, stats]);
+    weaponData.push([config, stats]);
   }
   // const weaponData = Array.from(selectedWeaponsData.entries());
   weaponData.sort((a, b) => {
     return b[1].velocity - a[1].velocity;
   });
-  for (const [weaponName, stats] of weaponData) {
-    labels.push(weaponName);
-    backgroundColors.push("hsl(" + StringHue(weaponName) + ", 50%, 50%)");
+  for (const [config, stats] of weaponData) {
+    const label = ConfigDisplayName(config);
+    labels.push(label);
+    backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
     data.push(stats.velocity);
   }
   datasets.push({

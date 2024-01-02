@@ -4,13 +4,13 @@
   /* padding: 2rem; */
   text-align: center;
   color: var(--battle-white);
-  background-color: var(--battle-grey);
+  /* background-color: var(--battle-grey); */
 }
 
 .chart-container {
   position: relative;
-  height:30vh;
-  width:80vw;
+  height: 30vh;
+  width: 80vw;
   max-width: 1280px;
 }
 
@@ -18,113 +18,13 @@
   margin: 0;
 }
 
-.top-nav {
-  position: fixed;
-  top: 0px;
-  left: 0;
-  background-color: var(--battle-black);
-  z-index: 100;
-  width: 100%;
-  text-align: left;
-  height: 4rem;
-  font-size: 1.3rem;
-  /* -webkit-transition: all .25s ease;
-	-moz-transition: all .25s ease;
-	-ms-transition: all .25s ease;
-	-o-transition: all .25s ease;
-	transition: all .25s ease; */
-}
-
-.top-nav-title {
-  font-size: 2.6rem;
-  line-height: 4rem;
-  color: var(--battle-white);
-}
-
-.top-nav ul, .top-nav li {
-  margin: 0;
-  padding: 0;
-}
-
-.top-nav ul {
-  background: gray;
-	list-style: none;
-	width: 100%;
-}
-
-.top-nav li {
-  float: left;
-	position: relative;
-	width: auto;
-  /* padding-left: 0.2rem; */
-}
-
-.top-nav h1 {
-  margin-block-start: 0;
-  margin-block-end: 0;
-}
-
-.top-nav-label {
-  /* background: #30A6E6; */
-	color: #FFFFFF;
-	display: block;
-	font: bold 1.3rem/2rem sans-serif;
-	padding: 1rem 25px;
-	text-align: center;
-	text-decoration: none;
-
-}
-
-.top-nav li:hover .top-nav-label {
-  color: var(--battle-blue);
-}
-
 /* .top-nav-weapon-select-dropdown {
   position:relative;
 } */
-
-.weapon-select-dropdown-container {
-  /* margin-top: 10px; */
-  opacity: 0;
-  position: absolute;
-	top: 4rem;
-  visibility: hidden;
-  min-width: 200px;
-}
-
-ul.weapon-select-dropdown {
-	left: 0;
-  margin-top: 0.5rem;
-  /* margin: 0.5rem 1rem 0.5rem 1rem; */
-  padding: 1rem;
-	z-index: 1;
-  font-size: 1rem;
-  background-color: rgba(0,0,0,0.8);
-  border-radius: 4px;
-}
-
-li:hover div.weapon-select-dropdown-container {
-	opacity: 1;
-	top: 4rem;	/* adjust this as per top nav padding top & bottom comes */
-	visibility: visible;
-}
-.weapon-select-dropdown li {
-	float: none;
-	width: 100%;
-}
-.weapon-select-item:hover {
-	/* background: #DF4B05; */
-  color: var(--battle-blue);
-}
-.weapon-select-item {
-	/* background-color:#000000; */
-  cursor: pointer;
-}
-
 
 .main-content {
   margin-top: 4em;
   margin-left: 2em;
   margin-right: 1em;
-  padding-bottom:30vh;
+  padding-bottom: 30vh;
 }
