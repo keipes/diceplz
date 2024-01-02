@@ -18,6 +18,7 @@ function VelocityChart(props: VelocityChartProps) {
   const backgroundColors = [];
   const weaponData = [];
   for (const [_, config] of props.weaponConfigurations) {
+    if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     weaponData.push([config.name, stats]);
   }

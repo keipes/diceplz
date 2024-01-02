@@ -34,6 +34,7 @@ function TTKChart(props: TTKChartProps) {
   // for (let i = 0; i < selectedWeaponsData.length; i++) {
 
   for (const [id, config] of props.weaponConfigurations) {
+    if (!config.visible) continue;
     const weaponName = config.name;
     const stats = GetStatsForConfiguration(config);
     // for (const [weaponName, stats] of selectedWeaponsData) {
@@ -87,11 +88,13 @@ function TTKChart(props: TTKChartProps) {
         );
       }
     }
+    const label =
+      config.name + " " + config.barrelType + " " + config.ammoType + "";
     datasets.push({
-      label: config.name + " " + config.barrelType + " " + config.ammoType + "",
+      label: label,
       data: data,
       fill: false,
-      borderColor: "hsl(" + StringHue(weaponName) + ", 50%, 50%)",
+      borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
     });
   }
 

@@ -20,6 +20,7 @@ function DamageChart(props: DamageChartProps) {
   const datasets = [];
 
   for (const [id, config] of props.weaponConfigurations) {
+    if (!config.visible) continue;
     const weaponName = config.name;
     const stats = GetStatsForConfiguration(config);
     // for (const [weaponName, stats] of selectedWeaponsData) {

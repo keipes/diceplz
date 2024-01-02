@@ -68,8 +68,18 @@ interface WeaponConfig {
   UpdateWeapon: UpdateWeaponFn;
 }
 
+const initialSelectedWeapons = new Map<string, WeaponSelections>();
+
+const CONFIG_STORAGE_KEY = "configurations";
+let initialConfigurations = new Map<string, WeaponConfiguration>();
+let useLocalStorage = location.hostname === "localhost";
+if (useLocalStorage) {
+  const cached = localStorage.getItem(CONFIG_STORAGE_KEY);
+  if (cached) {
+    initialConfigurations = new Map(JSON.parse(cached));
+  }
+}
 function App() {
-  const initialSelectedWeapons = new Map<string, WeaponSelections>();
   const [selectedWeapons, setSelectedWeapons] = useState(
     initialSelectedWeapons
   );
@@ -77,9 +87,21 @@ function App() {
   const [damageMultiplier, setDamageMultiplier] = useState(1);
   const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
 
-  const [weaponConfigurations, setWeaponConfigurations] = useState(
-    new Map<string, WeaponConfiguration>()
+  const [weaponConfigurations, _setWeaponConfigurations] = useState(
+    initialConfigurations
   );
+
+  const setWeaponConfigurations = (
+    configurations: Map<string, WeaponConfiguration>
+  ) => {
+    if (useLocalStorage) {
+      localStorage.setItem(
+        CONFIG_STORAGE_KEY,
+        JSON.stringify(Array.from(configurations.entries()))
+      );
+    }
+    _setWeaponConfigurations(configurations);
+  };
 
   function AddWeapon(config: WeaponConfiguration) {
     const configurations = new Map(weaponConfigurations);
@@ -144,8 +166,8 @@ function App() {
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
   for (const [_, config] of weaponConfigurations) {
+    if (!config.visible) continue;
     const stat = GetStatsForConfiguration(config);
-    // for (const [name, stat] of selectedWeaponStats) {
     for (const dropoff of stat.dropoffs) {
       requiredRanges.set(dropoff.range, true);
       if (dropoff.range > highestRangeSeen) {
@@ -176,7 +198,6 @@ function App() {
         configurations={weaponConfigurations}
         weaponConfig={wpnCfg}
       />
-
       <div className="main-content">
         <div className="disclosure">
           <p>
@@ -188,13 +209,6 @@ function App() {
           </p>
           <p>Shotgun damage doesn't consider number of pellets yet.</p>
         </div>
-
-        {/* <div className="weapon-selector">
-          <WeaponSelector
-            selectedWeapons={selectedWeapons}
-            setSelectedWeapons={setSelectedWeapons}
-          />
-        </div> */}
         <div>
           <label htmlFor="health-multiplier">
             Soldier Max Health Multiplier:{" "}

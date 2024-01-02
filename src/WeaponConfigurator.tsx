@@ -6,6 +6,7 @@ import {
   WeaponConfig,
 } from "./App";
 import Weapon from "./WeaponConfigurator/Weapon";
+import { useState } from "react";
 
 interface WeaponConfiguratorProps {
   configurations: Map<String, WeaponConfiguration>;
@@ -34,14 +35,32 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
       />
     );
   }
+  const [open, setOpen] = useState(true);
+  function toggle() {
+    setOpen(!open);
+  }
+
+  let containerClass = "wcf-container";
+  let expansionSymbol = "expand_more";
+  if (!open) {
+    expansionSymbol = "expand_less";
+    containerClass = "wcf-container-closed";
+  }
+
   return (
     <>
-      <div className="wcf-container">
+      <div className={containerClass}>
         <div className="wcf-header">
-          <span className="material-symbols-outlined">expand_more</span>
+          <span
+            className="configurator-toggle material-symbols-outlined"
+            onClick={toggle}
+          >
+            {expansionSymbol}
+          </span>
         </div>
-
-        <div className="wcf">{weaponsDisplay}</div>
+        <div className="wcf-scrollable">
+          <div className="wcf">{weaponsDisplay}</div>
+        </div>
       </div>
     </>
   );
