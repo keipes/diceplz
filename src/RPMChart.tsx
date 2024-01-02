@@ -1,20 +1,21 @@
 import { Bar, Line } from "react-chartjs-2";
 import StringHue from "./StringColor.ts";
-import { WeaponStats } from "./WeaponData.ts";
+import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
 import { useState } from "react";
 import "./RPMChart.css";
+import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 
 interface RPMChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
   selectedWeaponsData: Map<string, WeaponStats>;
+  weaponConfigurations: Map<String, WeaponConfiguration>;
 }
 
 function RPMChart(props: RPMChartProps) {
   const [showAuto, setShowAuto] = useState(true);
   const [showSingle, setShowSingle] = useState(true);
   const [showBurst, setShowBurst] = useState(true);
-  const selectedWeaponsData = props.selectedWeaponsData;
   const labels = [];
   const datasets = [];
   const data = [];
@@ -23,8 +24,11 @@ function RPMChart(props: RPMChartProps) {
   const backgroundColors = [];
   const singleData = [];
   const singleBackgroundColors = [];
-
-  const weaponData = Array.from(selectedWeaponsData.entries());
+  const weaponData = [];
+  for (const [_, config] of props.weaponConfigurations) {
+    const stats = GetStatsForConfiguration(config);
+    weaponData.push([config.name, stats]);
+  }
   weaponData.sort((a, b) => {
     const aValues = [];
     const bValues = [];

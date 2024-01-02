@@ -1,11 +1,12 @@
 import { useState } from "react";
-import StringHue from "../StringColor.ts";
 import { GetWeaponByName } from "../WeaponData.ts";
-import { WeaponSelections } from "../App.tsx";
+import { WeaponConfig, WeaponSelections } from "../App.tsx";
 import { WeaponConfiguration } from "../WeaponConfigurator.tsx";
 
 interface WeaponProps {
+  id: string;
   config: WeaponConfiguration;
+  weaponConfig: WeaponConfig;
 }
 
 function Weapon(props: WeaponProps) {
@@ -31,47 +32,47 @@ function Weapon(props: WeaponProps) {
     selectedAmmoInitial = weapon.stats[0].ammoType;
   }
 
-  const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
-  const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
-  const clickHandler = (o) => {
-    const newSelectedWeapons = new Map<string, WeaponSelections>(
-      props.selectedWeapons
-    );
-    if (!newSelectedWeapons.delete(props.name)) {
-      newSelectedWeapons.set(props.name, {
-        ammoType: selectedAmmo,
-        barrelType: selectedBarrel,
-      });
-    }
-    props.setSelectedWeapons(newSelectedWeapons);
-  };
+  // const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
+  // const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
+  // const clickHandler = (o) => {
+  //   const newSelectedWeapons = new Map<string, WeaponSelections>(
+  //     props.selectedWeapons
+  //   );
+  //   if (!newSelectedWeapons.delete(props.name)) {
+  //     newSelectedWeapons.set(props.name, {
+  //       ammoType: selectedAmmo,
+  //       barrelType: selectedBarrel,
+  //     });
+  //   }
+  //   props.setSelectedWeapons(newSelectedWeapons);
+  // };
 
-  function barrelChangeHandler(e) {
-    setSelectedBarrel(e.target.value);
-    if (props.selectedWeapons.has(props.name)) {
-      const newSelectedWeapons = new Map<string, WeaponSelections>(
-        props.selectedWeapons
-      );
-      newSelectedWeapons.set(props.name, {
-        ammoType: selectedAmmo,
-        barrelType: e.target.value,
-      });
-      props.setSelectedWeapons(newSelectedWeapons);
-    }
-  }
-  function ammoChangeHandler(e) {
-    setSelectedAmmo(e.target.value);
-    if (props.selectedWeapons.has(props.name)) {
-      const newSelectedWeapons = new Map<string, WeaponSelections>(
-        props.selectedWeapons
-      );
-      newSelectedWeapons.set(props.name, {
-        ammoType: e.target.value,
-        barrelType: selectedBarrel,
-      });
-      props.setSelectedWeapons(newSelectedWeapons);
-    }
-  }
+  // function barrelChangeHandler(e) {
+  //   setSelectedBarrel(e.target.value);
+  //   if (props.selectedWeapons.has(props.name)) {
+  //     const newSelectedWeapons = new Map<string, WeaponSelections>(
+  //       props.selectedWeapons
+  //     );
+  //     newSelectedWeapons.set(props.name, {
+  //       ammoType: selectedAmmo,
+  //       barrelType: e.target.value,
+  //     });
+  //     props.setSelectedWeapons(newSelectedWeapons);
+  //   }
+  // }
+  // function ammoChangeHandler(e) {
+  //   setSelectedAmmo(e.target.value);
+  //   if (props.selectedWeapons.has(props.name)) {
+  //     const newSelectedWeapons = new Map<string, WeaponSelections>(
+  //       props.selectedWeapons
+  //     );
+  //     newSelectedWeapons.set(props.name, {
+  //       ammoType: e.target.value,
+  //       barrelType: selectedBarrel,
+  //     });
+  //     props.setSelectedWeapons(newSelectedWeapons);
+  //   }
+  // }
 
   const seenBarrels = new Set<string>();
   const barrelOptions = [];
@@ -79,7 +80,7 @@ function Weapon(props: WeaponProps) {
   const ammoOptions = [];
 
   for (const stat of weapon.stats) {
-    if (stat.barrelType == selectedBarrel) {
+    if (stat.barrelType == props.config.barrelType) {
       if (!seenAmmo.has(stat.ammoType)) {
         // shouldn't need to do this
         ammoOptions.push(
@@ -110,32 +111,59 @@ function Weapon(props: WeaponProps) {
     <div className="wcf-weapon">
       <div className="wcf-header">
         <div className="wcf-header-item wcf-name">{config.name}</div>
-        <span className="wcf-header-item wcf-header-button wcf-duplicate material-symbols-outlined">
+        <span
+          className="wcf-header-item wcf-header-button wcf-duplicate material-symbols-outlined"
+          onClick={() => {
+            props.weaponConfig.DuplicateWeapon(props.id);
+          }}
+        >
           content_copy
         </span>
-        <span className="wcf-header-item wcf-header-button wcf-visibility material-symbols-outlined">
+        <span
+          className="wcf-header-item wcf-header-button wcf-visibility material-symbols-outlined"
+          onClick={() => {
+            const cloned = JSON.parse(JSON.stringify(props.config));
+            cloned.visible = !cloned.visible;
+            props.weaponConfig.UpdateWeapon(props.id, cloned);
+          }}
+        >
           {visibility}
         </span>
-        <span className="wcf-header-item wcf-header-button wcf-close material-symbols-outlined">
+        <span
+          className="wcf-header-item wcf-header-button wcf-close material-symbols-outlined"
+          onClick={() => {
+            props.weaponConfig.RemoveWeapon(props.id);
+          }}
+        >
           delete
         </span>
       </div>
 
       <select
-        value={selectedBarrel}
+        value={props.config.barrelType}
         name="barrel"
         id="barrel"
-        onChange={barrelChangeHandler}
+        // onChange={barrelChangeHandler}
+        onChange={(e) => {
+          const cloned = JSON.parse(JSON.stringify(props.config));
+          cloned.barrelType = e.target.value;
+          props.weaponConfig.UpdateWeapon(props.id, cloned);
+        }}
         onClick={(e) => e.stopPropagation()}
         disabled={seenBarrels.size < 2}
       >
         {barrelOptions}
       </select>
       <select
-        value={selectedAmmo}
+        value={props.config.ammoType}
         name="ammo"
         id="ammo"
-        onChange={ammoChangeHandler}
+        // onChange={ammoChangeHandler}
+        onChange={(e) => {
+          const cloned = JSON.parse(JSON.stringify(props.config));
+          cloned.ammoType = e.target.value;
+          props.weaponConfig.UpdateWeapon(props.id, cloned);
+        }}
         onClick={(e) => e.stopPropagation()}
         disabled={seenAmmo.size < 2}
       >

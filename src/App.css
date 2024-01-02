@@ -21,6 +21,7 @@
 .top-nav {
   position: fixed;
   top: 0px;
+  left: 0;
   background-color: var(--battle-black);
   z-index: 100;
   width: 100%;

@@ -22,10 +22,12 @@ import {
 } from "chart.js";
 import {
   GetCategoryWeapons,
+  GetStatsForConfiguration,
   WeaponCategories,
   WeaponStats,
 } from "./WeaponData.ts";
 import VelocityChart from "./VelocityChart.tsx";
+import TopNav from "./Nav/TopNav.tsx";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -43,7 +45,28 @@ interface WeaponSelections {
   barrelType: string;
 }
 
-let first = true;
+interface AddWeaponFn {
+  (config: WeaponConfiguration): void;
+}
+
+interface DuplicateWeaponFn {
+  (id: string): void;
+}
+
+interface RemoveWeaponFn {
+  (id: string): void;
+}
+
+interface UpdateWeaponFn {
+  (id: string, config: WeaponConfiguration): void;
+}
+
+interface WeaponConfig {
+  AddWeapon: AddWeaponFn;
+  RemoveWeapon: RemoveWeaponFn;
+  DuplicateWeapon: DuplicateWeaponFn;
+  UpdateWeapon: UpdateWeaponFn;
+}
 
 function App() {
   const initialSelectedWeapons = new Map<string, WeaponSelections>();
@@ -55,7 +78,7 @@ function App() {
   const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
 
   const [weaponConfigurations, setWeaponConfigurations] = useState(
-    new Map<String, WeaponConfiguration>()
+    new Map<string, WeaponConfiguration>()
   );
 
   function AddWeapon(config: WeaponConfiguration) {
@@ -86,22 +109,13 @@ function App() {
     configurations.set(id, config);
     setWeaponConfigurations(configurations);
   }
-  if (first) {
-    setTimeout(() => {
-      AddWeapon({
-        name: "AEK-971",
-        visible: true,
-        barrelType: "Factory",
-        ammoType: "Standard",
-      });
-    });
-    first = false;
-  }
+  const wpnCfg = {
+    AddWeapon: AddWeapon,
+    DuplicateWeapon: DuplicateWeapon,
+    RemoveWeapon: RemoveWeapon,
+    UpdateWeapon: UpdateWeapon,
+  };
 
-  // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
-  //   ammoType: 'Standard',
-  //   barrelType: 'Factory'
-  // }});
   const oldLocalStorageSetting =
     localStorage.getItem("useLocalStorage") == "true";
   const [useLocalStorage, setUseLocalStorage] = useState(
@@ -129,7 +143,9 @@ function App() {
   }
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
-  for (const [name, stat] of selectedWeaponStats) {
+  for (const [_, config] of weaponConfigurations) {
+    const stat = GetStatsForConfiguration(config);
+    // for (const [name, stat] of selectedWeaponStats) {
     for (const dropoff of stat.dropoffs) {
       requiredRanges.set(dropoff.range, true);
       if (dropoff.range > highestRangeSeen) {
@@ -155,40 +171,11 @@ function App() {
   const selectedWeaponsData = selectedWeaponStats;
   return (
     <>
-      <div className="top-nav">
-        <ul>
-          <li>
-            <h1 className="top-nav-title">DicePlz</h1>
-          </li>
-          <li className="top-nav-weapon-select">
-            <div className="top-nav-label">SMG</div>
-            <div className="weapon-select-dropdown-container">
-              <ul className="weapon-select-dropdown">
-                <li className="weapon-select-item">PBX-45</li>
-                <li className="weapon-select-item">PP-2000</li>
-              </ul>
-            </div>
-          </li>
-          <li className="top-nav-weapon-select">
-            <div className="top-nav-label">Assault Rifles</div>
-            <div className="weapon-select-dropdown-container">
-              <ul className="weapon-select-dropdown">
-                <li className="weapon-select-item">M5A3</li>
-                <li className="weapon-select-item">ACW-R</li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-
-        {/* <div className="top-nav-weapon-select">
-          <div className="top-nav-weapon-select-label">SMG</div>
-          <div className="top-nav-weapon-select-dropdown">
-            <div className="top-nav-weapon-select-item">PBX-45</div>
-            <div className="top-nav-weapon-select-item">PP-2000</div>
-          </div>
-        </div> */}
-      </div>
-      <WeaponConfigurator configurations={weaponConfigurations} />
+      <TopNav addWeapon={AddWeapon} />
+      <WeaponConfigurator
+        configurations={weaponConfigurations}
+        weaponConfig={wpnCfg}
+      />
 
       <div className="main-content">
         <div className="disclosure">
@@ -202,12 +189,12 @@ function App() {
           <p>Shotgun damage doesn't consider number of pellets yet.</p>
         </div>
 
-        <div className="weapon-selector">
+        {/* <div className="weapon-selector">
           <WeaponSelector
             selectedWeapons={selectedWeapons}
             setSelectedWeapons={setSelectedWeapons}
           />
-        </div>
+        </div> */}
         <div>
           <label htmlFor="health-multiplier">
             Soldier Max Health Multiplier:{" "}
@@ -256,6 +243,7 @@ function App() {
         <TTKChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmAuto"}
@@ -266,6 +254,7 @@ function App() {
         <TTKChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmSingle"}
@@ -276,6 +265,7 @@ function App() {
         <TTKChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmBurst"}
@@ -286,6 +276,7 @@ function App() {
         <DamageChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           damageMultiplier={damageMultiplier * bodyDamageMultiplier}
@@ -293,10 +284,12 @@ function App() {
         <RPMChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
         />
         <VelocityChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
+          weaponConfigurations={weaponConfigurations}
         />
       </div>
     </>
@@ -304,4 +297,11 @@ function App() {
 }
 
 export default App;
-export type { WeaponSelections };
+export type {
+  WeaponSelections,
+  AddWeaponFn,
+  DuplicateWeaponFn,
+  RemoveWeaponFn,
+  UpdateWeaponFn,
+  WeaponConfig,
+};

@@ -1,10 +1,12 @@
 import { Line } from "react-chartjs-2";
 import StringHue from "./StringColor.ts";
-import { WeaponStats } from "./WeaponData.ts";
+import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
+import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 
 interface DamageChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
+  weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   selectedWeaponsData: [WeaponStats];
@@ -16,7 +18,11 @@ function DamageChart(props: DamageChartProps) {
   const requiredRanges = props.requiredRanges;
   const selectedWeaponsData = props.selectedWeaponsData;
   const datasets = [];
-  for (const [weaponName, stats] of selectedWeaponsData) {
+
+  for (const [id, config] of props.weaponConfigurations) {
+    const weaponName = config.name;
+    const stats = GetStatsForConfiguration(config);
+    // for (const [weaponName, stats] of selectedWeaponsData) {
     // for (let i = 0; i < selectedWeaponsData.length; i++) {
     //   const weapon = stats;
     const data = [];

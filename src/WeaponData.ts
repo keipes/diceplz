@@ -1,3 +1,4 @@
+import { WeaponConfiguration } from "./WeaponConfigurator";
 import weaponData from "./assets/weapons.json";
 
 interface Weapon {
@@ -35,10 +36,25 @@ for (const category of WeaponCategories) {
 function GetWeaponByName(name: string): Weapon {
   return weaponsByName.get(name)!;
 }
+
+function GetStatsForConfiguration(config: WeaponConfiguration) {
+  const weapon = GetWeaponByName(config.name);
+  for (const stat of weapon.stats) {
+    if (
+      stat.barrelType == config.barrelType &&
+      stat.ammoType == config.ammoType
+    ) {
+      return stat;
+    }
+  }
+  throw new Error("no stats for config");
+}
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
   GetWeaponByName,
+  GetStatsForConfiguration,
   // WeaponStats,
 };
 

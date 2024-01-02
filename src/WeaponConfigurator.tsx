@@ -1,11 +1,18 @@
 import "./WeaponConfigurator.css";
-import { WeaponSelections } from "./App";
+import {
+  DuplicateWeaponFn,
+  RemoveWeaponFn,
+  UpdateWeaponFn,
+  WeaponConfig,
+} from "./App";
 import Weapon from "./WeaponConfigurator/Weapon";
 
 interface WeaponConfiguratorProps {
-  // selectedWeapons: Map<string, WeaponSelections>,
-  // setSelectedWeapons: Function,
   configurations: Map<String, WeaponConfiguration>;
+  //   duplicateWeapon: DuplicateWeaponFn;
+  //   removeWeapon: RemoveWeaponFn;
+  //   updateWeapon: UpdateWeaponFn;
+  weaponConfig: WeaponConfig;
 }
 
 interface WeaponConfiguration {
@@ -16,14 +23,16 @@ interface WeaponConfiguration {
 }
 
 function WeaponConfigurator(props: WeaponConfiguratorProps) {
-  let mockWeapons = [];
-  for (const [id, config] of props.configurations) {
-    mockWeapons.push(config);
-  }
   const weaponsDisplay = [];
-  for (const weaponConfig of mockWeapons) {
-    console.log(weaponConfig.name);
-    weaponsDisplay.push(<Weapon config={weaponConfig} />);
+  for (const [id, config] of props.configurations) {
+    weaponsDisplay.push(
+      <Weapon
+        id={id}
+        config={config}
+        key={id}
+        weaponConfig={props.weaponConfig}
+      />
+    );
   }
   return (
     <>
@@ -37,19 +46,6 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
     </>
   );
 }
-
-// function configurationDisplay(config: WeaponConfiguration) {
-//     return (
-//         // <div className="wcf-weapon">
-//         //     <div className="wcf-name">{config.name}</div>
-//         //     <button><span class="material-symbols-outlined">close</span></button>
-//         //     <button><span class="material-symbols-outlined">visibility</span></button>
-//         //     <button><span class="material-symbols-outlined">visibility_off</span></button>
-//         //     <button><span class="material-symbols-outlined">content_copy</span></button>
-//         // </div>
-//         <Weapon config={config}/>
-//     );
-// }
 
 export default WeaponConfigurator;
 export type { WeaponConfiguration };

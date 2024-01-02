@@ -1,10 +1,12 @@
 import { Line } from "react-chartjs-2";
 import StringHue from "./StringColor.ts";
-import { WeaponStats } from "./WeaponData.ts";
+import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
 import { WeaponSelections } from "./App.tsx";
+import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 
 interface TTKChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
+  weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   selectedWeaponsData: [WeaponStats];
@@ -27,10 +29,14 @@ const damageToTTK = function (
 function TTKChart(props: TTKChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
-  const selectedWeaponsData = props.selectedWeaponsData;
+  // const selectedWeaponsData = props.selectedWeaponsData;
   const datasets = [];
   // for (let i = 0; i < selectedWeaponsData.length; i++) {
-  for (const [weaponName, stats] of selectedWeaponsData) {
+
+  for (const [id, config] of props.weaponConfigurations) {
+    const weaponName = config.name;
+    const stats = GetStatsForConfiguration(config);
+    // for (const [weaponName, stats] of selectedWeaponsData) {
     //   const weapon = selectedWeaponsData[i];
     const data = [];
     let lastDamage = 0;
@@ -40,9 +46,6 @@ function TTKChart(props: TTKChartProps) {
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
       damage = dropoff.damage * props.damageMultiplier;
-      //   for (let index = 0; index < weapon.damage.length; index = index + 2) {
-      //     range = weapon.damage[index + 1]
-      //     damage = weapon.damage[index] * DamageMultiplier;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(
@@ -85,11 +88,10 @@ function TTKChart(props: TTKChartProps) {
       }
     }
     datasets.push({
-      label: weaponName,
+      label: config.name + " " + config.barrelType + " " + config.ammoType + "",
       data: data,
       fill: false,
       borderColor: "hsl(" + StringHue(weaponName) + ", 50%, 50%)",
-      // tension: 0.1
     });
   }
 
