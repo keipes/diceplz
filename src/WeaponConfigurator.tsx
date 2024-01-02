@@ -1,46 +1,41 @@
-import './WeaponConfigurator.css'
-import { WeaponSelections } from './App';
-import Weapon from './WeaponConfigurator/Weapon';
-
+import "./WeaponConfigurator.css";
+import { WeaponSelections } from "./App";
+import Weapon from "./WeaponConfigurator/Weapon";
 
 interface WeaponConfiguratorProps {
-    // selectedWeapons: Map<string, WeaponSelections>,
-    // setSelectedWeapons: Function,
-    configurations: Map<String, WeaponConfiguration>
+  // selectedWeapons: Map<string, WeaponSelections>,
+  // setSelectedWeapons: Function,
+  configurations: Map<String, WeaponConfiguration>;
 }
 
 interface WeaponConfiguration {
-    name: string,
-    visible: boolean,
-    barrelType: string,
-    ammoType: string
+  name: string;
+  visible: boolean;
+  barrelType: string;
+  ammoType: string;
 }
 
 function WeaponConfigurator(props: WeaponConfiguratorProps) {
-    let mockWeapons = [];
-    for (const [id, config] of props.configurations) {
-        mockWeapons.push(config);
-    }
-    const weaponsDisplay = [];
-    for (const weaponConfig of mockWeapons) {
-        console.log(weaponConfig.name);
-        weaponsDisplay.push(<Weapon config={weaponConfig}/>);
-    }
+  let mockWeapons = [];
+  for (const [id, config] of props.configurations) {
+    mockWeapons.push(config);
+  }
+  const weaponsDisplay = [];
+  for (const weaponConfig of mockWeapons) {
+    console.log(weaponConfig.name);
+    weaponsDisplay.push(<Weapon config={weaponConfig} />);
+  }
   return (
     <>
-    <div className="wcf-container">
+      <div className="wcf-container">
         <div className="wcf-header">
-            <span className="material-symbols-outlined">expand_more</span>
+          <span className="material-symbols-outlined">expand_more</span>
         </div>
 
-        <div className="wcf">
-        
-            {weaponsDisplay}
-            
-        </div>
-    </div>
+        <div className="wcf">{weaponsDisplay}</div>
+      </div>
     </>
-  )
+  );
 }
 
 // function configurationDisplay(config: WeaponConfiguration) {
@@ -56,7 +51,5 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
 //     );
 // }
 
-export default WeaponConfigurator
-export type {
-    WeaponConfiguration
-}
+export default WeaponConfigurator;
+export type { WeaponConfiguration };

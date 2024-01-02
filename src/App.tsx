@@ -1,10 +1,12 @@
-import { SyntheticEvent, useState } from 'react'
-import './App.css'
-import WeaponSelector from './WeaponSelector'
-import DamageChart from './DamageChart.tsx'
-import TTKChart from './TTKChart.tsx';
-import RPMChart from './RPMChart.tsx';
-import WeaponConfigurator, { WeaponConfiguration } from './WeaponConfigurator.tsx';
+import { SyntheticEvent, useState } from "react";
+import "./App.css";
+import WeaponSelector from "./WeaponSelector";
+import DamageChart from "./DamageChart.tsx";
+import TTKChart from "./TTKChart.tsx";
+import RPMChart from "./RPMChart.tsx";
+import WeaponConfigurator, {
+  WeaponConfiguration,
+} from "./WeaponConfigurator.tsx";
 
 import {
   Chart as ChartJS,
@@ -15,11 +17,15 @@ import {
   Title,
   Tooltip,
   BarElement,
-  BarController
+  BarController,
   // Legend,
-} from 'chart.js';
-import { GetCategoryWeapons, WeaponCategories, WeaponStats } from './WeaponData.ts'
-import VelocityChart from './VelocityChart.tsx';
+} from "chart.js";
+import {
+  GetCategoryWeapons,
+  WeaponCategories,
+  WeaponStats,
+} from "./WeaponData.ts";
+import VelocityChart from "./VelocityChart.tsx";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -33,25 +39,30 @@ ChartJS.register(
 );
 
 interface WeaponSelections {
-  ammoType: string, barrelType: string
+  ammoType: string;
+  barrelType: string;
 }
 
 let first = true;
 
 function App() {
   const initialSelectedWeapons = new Map<string, WeaponSelections>();
-  const [selectedWeapons, setSelectedWeapons] = useState(initialSelectedWeapons);
+  const [selectedWeapons, setSelectedWeapons] = useState(
+    initialSelectedWeapons
+  );
   const [healthMultiplier, setHealthMultiplier] = useState(1);
   const [damageMultiplier, setDamageMultiplier] = useState(1);
   const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
-  
-  const [weaponConfigurations, setWeaponConfigurations] = useState(new Map<String, WeaponConfiguration>());
+
+  const [weaponConfigurations, setWeaponConfigurations] = useState(
+    new Map<String, WeaponConfiguration>()
+  );
 
   function AddWeapon(config: WeaponConfiguration) {
     const configurations = new Map(weaponConfigurations);
     let id = crypto.randomUUID();
     while (configurations.has(id)) {
-      console.warn('Duplicate UUID generated.');
+      console.warn("Duplicate UUID generated.");
       id = crypto.randomUUID();
     }
     configurations.set(id, config);
@@ -78,22 +89,24 @@ function App() {
   if (first) {
     setTimeout(() => {
       AddWeapon({
-        name: 'AEK-971',
+        name: "AEK-971",
         visible: true,
-        barrelType: 'Factory',
-        ammoType: 'Standard'
+        barrelType: "Factory",
+        ammoType: "Standard",
       });
-    })
+    });
     first = false;
   }
-
 
   // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
   //   ammoType: 'Standard',
   //   barrelType: 'Factory'
   // }});
-  const oldLocalStorageSetting = localStorage.getItem('useLocalStorage') == 'true';
-  const [useLocalStorage, setUseLocalStorage] = useState(oldLocalStorageSetting);
+  const oldLocalStorageSetting =
+    localStorage.getItem("useLocalStorage") == "true";
+  const [useLocalStorage, setUseLocalStorage] = useState(
+    oldLocalStorageSetting
+  );
   const selectedWeaponStats = new Map<string, WeaponStats>();
   for (const category of WeaponCategories) {
     const weapons = GetCategoryWeapons(category);
@@ -101,7 +114,10 @@ function App() {
       const selected = selectedWeapons.get(weapon.name);
       if (selected) {
         for (const stat of weapon.stats) {
-          if (stat.barrelType == selected.barrelType && stat.ammoType == selected.ammoType) {
+          if (
+            stat.barrelType == selected.barrelType &&
+            stat.ammoType == selected.ammoType
+          ) {
             // if (selectedWeaponStats.has(weapon.name)) {
             //   console.warn('Already have stats for ' + weapon.name);
             // }
@@ -113,7 +129,7 @@ function App() {
   }
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
-  for (const  [name, stat] of selectedWeaponStats) {
+  for (const [name, stat] of selectedWeaponStats) {
     for (const dropoff of stat.dropoffs) {
       requiredRanges.set(dropoff.range, true);
       if (dropoff.range > highestRangeSeen) {
@@ -122,13 +138,13 @@ function App() {
     }
   }
   let remainder = highestRangeSeen % 10;
-  highestRangeSeen += (10 - remainder);
+  highestRangeSeen += 10 - remainder;
   function changeLocalStorage(_: SyntheticEvent) {
     if (useLocalStorage) {
       // disabling storage, so clear all stored data
       localStorage.clear();
     } else {
-      localStorage.setItem('useLocalStorage', 'true');
+      localStorage.setItem("useLocalStorage", "true");
     }
     setUseLocalStorage(!useLocalStorage);
   }
@@ -140,9 +156,10 @@ function App() {
   return (
     <>
       <div className="top-nav">
-
         <ul>
-          <li><h1 className="top-nav-title">DicePlz</h1></li>
+          <li>
+            <h1 className="top-nav-title">DicePlz</h1>
+          </li>
           <li className="top-nav-weapon-select">
             <div className="top-nav-label">SMG</div>
             <div className="weapon-select-dropdown-container">
@@ -162,7 +179,7 @@ function App() {
             </div>
           </li>
         </ul>
-        
+
         {/* <div className="top-nav-weapon-select">
           <div className="top-nav-weapon-select-label">SMG</div>
           <div className="top-nav-weapon-select-dropdown">
@@ -171,71 +188,120 @@ function App() {
           </div>
         </div> */}
       </div>
-      <WeaponConfigurator configurations={weaponConfigurations}/>
+      <WeaponConfigurator configurations={weaponConfigurations} />
 
       <div className="main-content">
-        <div className='disclosure'>
-          <p>Weapon stats are from <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">Sorrow's Scribbles</a> as of patch 6.2.0</p>
+        <div className="disclosure">
+          <p>
+            Weapon stats are from{" "}
+            <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
+              Sorrow's Scribbles
+            </a>{" "}
+            as of patch 6.2.0
+          </p>
           <p>Shotgun damage doesn't consider number of pellets yet.</p>
         </div>
 
         <div className="weapon-selector">
-          <WeaponSelector selectedWeapons={selectedWeapons} setSelectedWeapons={setSelectedWeapons}/>
+          <WeaponSelector
+            selectedWeapons={selectedWeapons}
+            setSelectedWeapons={setSelectedWeapons}
+          />
         </div>
         <div>
-          <label htmlFor="health-multiplier">Soldier Max Health Multiplier: </label>
-          <input type="number" id="health-multiplier" name="health-multiplier" step="0.1" min="0.1" max="10" value={healthMultiplier} onChange={handleHealthMultiplier}/>
+          <label htmlFor="health-multiplier">
+            Soldier Max Health Multiplier:{" "}
+          </label>
+          <input
+            type="number"
+            id="health-multiplier"
+            name="health-multiplier"
+            step="0.1"
+            min="0.1"
+            max="10"
+            value={healthMultiplier}
+            onChange={handleHealthMultiplier}
+          />
         </div>
         <div>
           <label htmlFor="damage-multiplier">Damage Multiplier: </label>
-          <input type="number" id="damage-multiplier" name="damage-multiplier" step="0.1" min="0.1" max="5" value={damageMultiplier} onChange={e => setDamageMultiplier(parseFloat(e.target.value))}/>
+          <input
+            type="number"
+            id="damage-multiplier"
+            name="damage-multiplier"
+            step="0.1"
+            min="0.1"
+            max="5"
+            value={damageMultiplier}
+            onChange={(e) => setDamageMultiplier(parseFloat(e.target.value))}
+          />
         </div>
         <div>
-          <label htmlFor="body-damage-multiplier">Body Damage Multiplier: </label>
-          <input type="number" id="body-damage-multiplier" name="body-damage-multiplier" step="0.1" min="0" max="4" value={bodyDamageMultiplier} onChange={e => setBodyDamageMultiplier(parseFloat(e.target.value))}/>
+          <label htmlFor="body-damage-multiplier">
+            Body Damage Multiplier:{" "}
+          </label>
+          <input
+            type="number"
+            id="body-damage-multiplier"
+            name="body-damage-multiplier"
+            step="0.1"
+            min="0"
+            max="4"
+            value={bodyDamageMultiplier}
+            onChange={(e) =>
+              setBodyDamageMultiplier(parseFloat(e.target.value))
+            }
+          />
         </div>
-        <TTKChart selectedWeapons={selectedWeapons}
+        <TTKChart
+          selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          rpmSelector={'rpmAuto'}
+          rpmSelector={"rpmAuto"}
           healthMultiplier={healthMultiplier}
           damageMultiplier={damageMultiplier * bodyDamageMultiplier}
-          title={'TTK Auto'}/>
-        <TTKChart selectedWeapons={selectedWeapons}
+          title={"TTK Auto"}
+        />
+        <TTKChart
+          selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          rpmSelector={'rpmSingle'}
+          rpmSelector={"rpmSingle"}
           healthMultiplier={healthMultiplier}
           damageMultiplier={damageMultiplier * bodyDamageMultiplier}
-          title={'TTK Single'}/>
-        <TTKChart selectedWeapons={selectedWeapons}
+          title={"TTK Single"}
+        />
+        <TTKChart
+          selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          rpmSelector={'rpmBurst'}
+          rpmSelector={"rpmBurst"}
           healthMultiplier={healthMultiplier}
           damageMultiplier={damageMultiplier * bodyDamageMultiplier}
-          title={'TTK Burst'}/>
-        <DamageChart selectedWeapons={selectedWeapons}
+          title={"TTK Burst"}
+        />
+        <DamageChart
+          selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          damageMultiplier={damageMultiplier * bodyDamageMultiplier}/>
-        <RPMChart selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}/>
-        <VelocityChart selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}/>
-
-
+          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
+        />
+        <RPMChart
+          selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+        />
+        <VelocityChart
+          selectedWeapons={selectedWeapons}
+          selectedWeaponsData={selectedWeaponsData}
+        />
       </div>
     </>
-  )
+  );
 }
 
-
-export default App
-export type {
-  WeaponSelections
-}
+export default App;
+export type { WeaponSelections };

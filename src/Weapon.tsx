@@ -1,58 +1,61 @@
-import { useState } from 'react';
-import StringHue from './StringColor.ts'
-import { GetWeaponByName } from './WeaponData.ts';
-import { WeaponSelections } from './App.tsx';
-
+import { useState } from "react";
+import StringHue from "./StringColor.ts";
+import { GetWeaponByName } from "./WeaponData.ts";
+import { WeaponSelections } from "./App.tsx";
 
 interface WeaponProps {
-    name: string,
-    selectedWeapons: Map<string, WeaponSelections>,
-    setSelectedWeapons: Function
+  name: string;
+  selectedWeapons: Map<string, WeaponSelections>;
+  setSelectedWeapons: Function;
 }
 
 function Weapon(props: WeaponProps) {
   const weapon = GetWeaponByName(props.name);
-  let selectedBarrelInitial = '';
-  let selectedAmmoInitial = '';
+  let selectedBarrelInitial = "";
+  let selectedAmmoInitial = "";
   for (const stat of weapon.stats) {
-    if (stat.barrelType == 'Factory') {
-      selectedBarrelInitial = 'Factory';
+    if (stat.barrelType == "Factory") {
+      selectedBarrelInitial = "Factory";
     }
-    if (stat.ammoType == 'Standard') {
-      selectedAmmoInitial = 'Standard';
+    if (stat.ammoType == "Standard") {
+      selectedAmmoInitial = "Standard";
     }
-    if (stat.ammoType == 'Standard Bolts') {
-      selectedAmmoInitial = 'Standard';
+    if (stat.ammoType == "Standard Bolts") {
+      selectedAmmoInitial = "Standard";
     }
   }
   // fall back to initial if none exists
-  if (selectedBarrelInitial == '' && weapon.stats.length > 0) {
+  if (selectedBarrelInitial == "" && weapon.stats.length > 0) {
     selectedBarrelInitial = weapon.stats[0].barrelType;
   }
-  if (selectedAmmoInitial == '' && weapon.stats.length > 0) {
+  if (selectedAmmoInitial == "" && weapon.stats.length > 0) {
     selectedAmmoInitial = weapon.stats[0].ammoType;
   }
 
   const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
   const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
   const clickHandler = (o) => {
-    const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
+    const newSelectedWeapons = new Map<string, WeaponSelections>(
+      props.selectedWeapons
+    );
     if (!newSelectedWeapons.delete(props.name)) {
       newSelectedWeapons.set(props.name, {
         ammoType: selectedAmmo,
-        barrelType: selectedBarrel
+        barrelType: selectedBarrel,
       });
     }
     props.setSelectedWeapons(newSelectedWeapons);
-  }
+  };
 
   function barrelChangeHandler(e) {
     setSelectedBarrel(e.target.value);
     if (props.selectedWeapons.has(props.name)) {
-      const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
+      const newSelectedWeapons = new Map<string, WeaponSelections>(
+        props.selectedWeapons
+      );
       newSelectedWeapons.set(props.name, {
         ammoType: selectedAmmo,
-        barrelType: e.target.value
+        barrelType: e.target.value,
       });
       props.setSelectedWeapons(newSelectedWeapons);
     }
@@ -60,10 +63,12 @@ function Weapon(props: WeaponProps) {
   function ammoChangeHandler(e) {
     setSelectedAmmo(e.target.value);
     if (props.selectedWeapons.has(props.name)) {
-      const newSelectedWeapons = new Map<string, WeaponSelections>(props.selectedWeapons);
+      const newSelectedWeapons = new Map<string, WeaponSelections>(
+        props.selectedWeapons
+      );
       newSelectedWeapons.set(props.name, {
         ammoType: e.target.value,
-        barrelType: selectedBarrel
+        barrelType: selectedBarrel,
       });
       props.setSelectedWeapons(newSelectedWeapons);
     }
@@ -71,10 +76,10 @@ function Weapon(props: WeaponProps) {
   let className = "weapon";
   let style = {};
   if (props.selectedWeapons.has(props.name)) {
-    className += ' selected-weapon'
-    style.backgroundColor = 'hsl(' + StringHue(props.name) + ', 50%, 50%)'
+    className += " selected-weapon";
+    style.backgroundColor = "hsl(" + StringHue(props.name) + ", 50%, 50%)";
   } else {
-    style.backgroundColor = 'hsl(' + StringHue(props.name) + ', 50%, 50%)'
+    style.backgroundColor = "hsl(" + StringHue(props.name) + ", 50%, 50%)";
   }
 
   const seenBarrels = new Set<string>();
@@ -84,14 +89,23 @@ function Weapon(props: WeaponProps) {
 
   for (const stat of weapon.stats) {
     if (stat.barrelType == selectedBarrel) {
-      if (!seenAmmo.has(stat.ammoType)) { // shouldn't need to do this
-        ammoOptions.push(<option value={stat.ammoType} key={stat.ammoType}>{stat.ammoType}</option>)
-        seenAmmo.add(stat.ammoType)
+      if (!seenAmmo.has(stat.ammoType)) {
+        // shouldn't need to do this
+        ammoOptions.push(
+          <option value={stat.ammoType} key={stat.ammoType}>
+            {stat.ammoType}
+          </option>
+        );
+        seenAmmo.add(stat.ammoType);
       }
     }
     if (!seenBarrels.has(stat.barrelType)) {
-      barrelOptions.push(<option value={stat.barrelType} key={stat.barrelType}>{stat.barrelType}</option>);
-      seenBarrels.add(stat.barrelType)
+      barrelOptions.push(
+        <option value={stat.barrelType} key={stat.barrelType}>
+          {stat.barrelType}
+        </option>
+      );
+      seenBarrels.add(stat.barrelType);
     }
   }
 
@@ -99,16 +113,29 @@ function Weapon(props: WeaponProps) {
     <div className={className} onClick={clickHandler} style={style}>
       {props.name}
       <div>
-        <select value={selectedBarrel} name="barrel" id="barrel" onChange={barrelChangeHandler} onClick={e => e.stopPropagation()} disabled={seenBarrels.size < 2}>
+        <select
+          value={selectedBarrel}
+          name="barrel"
+          id="barrel"
+          onChange={barrelChangeHandler}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenBarrels.size < 2}
+        >
           {barrelOptions}
         </select>
-        <select value={selectedAmmo} name="ammo" id="ammo" onChange={ammoChangeHandler} onClick={e => e.stopPropagation()} disabled={seenAmmo.size < 2}>
+        <select
+          value={selectedAmmo}
+          name="ammo"
+          id="ammo"
+          onChange={ammoChangeHandler}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenAmmo.size < 2}
+        >
           {ammoOptions}
         </select>
       </div>
     </div>
-  )
+  );
 }
 
-
-export default Weapon
+export default Weapon;
