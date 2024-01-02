@@ -17,25 +17,13 @@ interface WeaponConfiguration {
 }
 
 function WeaponConfigurator(props: WeaponConfiguratorProps) {
-//   let categories = [];
-//   for (const category of Object.keys(weaponData)) {
-//     categories.push(<WeaponCategory title={category} key={category} selectedWeapons={props.selectedWeapons} setSelectedWeapons={props.setSelectedWeapons} />)
-//   }
     let mockWeapons = [];
-    mockWeapons.push({
-        name: 'AEK-971',
-        visible: true,
-        barrelType: 'Factory',
-        ammoType: 'Standard'
-    })
-    mockWeapons.push({
-        name: 'M5A3',
-        visible: false,
-        barrelType: 'Factory',
-        ammoType: 'Standard'
-    })
+    for (const [id, config] of props.configurations) {
+        mockWeapons.push(config);
+    }
     const weaponsDisplay = [];
     for (const weaponConfig of mockWeapons) {
+        console.log(weaponConfig.name);
         weaponsDisplay.push(<Weapon config={weaponConfig}/>);
     }
   return (

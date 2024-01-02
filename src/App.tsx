@@ -36,19 +36,58 @@ interface WeaponSelections {
   ammoType: string, barrelType: string
 }
 
+let first = true;
+
 function App() {
   const initialSelectedWeapons = new Map<string, WeaponSelections>();
-  // initialSelectedWeapons.set('AEK-971', {
-  //   ammoType: 'Standard',
-  //   barrelType: 'Factory'
-  // });
   const [selectedWeapons, setSelectedWeapons] = useState(initialSelectedWeapons);
   const [healthMultiplier, setHealthMultiplier] = useState(1);
   const [damageMultiplier, setDamageMultiplier] = useState(1);
   const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
   
+  const [weaponConfigurations, setWeaponConfigurations] = useState(new Map<String, WeaponConfiguration>());
 
-  const weaponConfigurations = new Map<String, WeaponConfiguration>();
+  function AddWeapon(config: WeaponConfiguration) {
+    const configurations = new Map(weaponConfigurations);
+    let id = crypto.randomUUID();
+    while (configurations.has(id)) {
+      console.warn('Duplicate UUID generated.');
+      id = crypto.randomUUID();
+    }
+    configurations.set(id, config);
+    setWeaponConfigurations(configurations);
+  }
+
+  function DuplicateWeapon(id: string) {
+    const config = weaponConfigurations.get(id);
+    if (config) {
+      const cloned = JSON.parse(JSON.stringify(config));
+      AddWeapon(cloned);
+    }
+  }
+  function RemoveWeapon(id: string) {
+    const configurations = new Map(weaponConfigurations);
+    configurations.delete(id);
+    setWeaponConfigurations(configurations);
+  }
+  function UpdateWeapon(id: string, config: WeaponConfiguration) {
+    const configurations = new Map(weaponConfigurations);
+    configurations.set(id, config);
+    setWeaponConfigurations(configurations);
+  }
+  if (first) {
+    setTimeout(() => {
+      AddWeapon({
+        name: 'AEK-971',
+        visible: true,
+        barrelType: 'Factory',
+        ammoType: 'Standard'
+      });
+    })
+    first = false;
+  }
+
+
   // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
   //   ammoType: 'Standard',
   //   barrelType: 'Factory'

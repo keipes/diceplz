@@ -42,7 +42,6 @@ function RPMChart(props: RPMChartProps) {
         }
         return Math.max(...bValues) - Math.max(...aValues);
     });
-    console.log(weaponData[0])
     for (const [weaponName, stats] of weaponData) {
         labels.push(weaponName);
         if (showAuto) {
