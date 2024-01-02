@@ -44,13 +44,14 @@ function TopNav(props: NavProps) {
                 for (const weapon of weapons) {
                   if (weapon.stats.length == 0) {
                     console.warn("no stats for " + weapon.name);
+                  } else {
+                    toAdd.push({
+                      name: weapon.name,
+                      visible: true,
+                      barrelType: weapon.stats[0].barrelType,
+                      ammoType: weapon.stats[0].ammoType,
+                    });
                   }
-                  toAdd.push({
-                    name: weapon.name,
-                    visible: true,
-                    barrelType: weapon.stats[0].barrelType,
-                    ammoType: weapon.stats[0].ammoType,
-                  });
                 }
                 props.weaponConfig.BulkAddWeapon(toAdd);
               }}
