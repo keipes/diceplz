@@ -4,6 +4,7 @@ import WeaponSelector from './WeaponSelector'
 import DamageChart from './DamageChart.tsx'
 import TTKChart from './TTKChart.tsx';
 import RPMChart from './RPMChart.tsx';
+import WeaponConfigurator, { WeaponConfiguration } from './WeaponConfigurator.tsx';
 
 import {
   Chart as ChartJS,
@@ -45,6 +46,9 @@ function App() {
   const [healthMultiplier, setHealthMultiplier] = useState(1);
   const [damageMultiplier, setDamageMultiplier] = useState(1);
   const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
+  
+
+  const weaponConfigurations = new Map<String, WeaponConfiguration>();
   // const [selectedWeapons, setSelectedWeapons] = useState({'AEK-971': {
   //   ammoType: 'Standard',
   //   barrelType: 'Factory'
@@ -100,7 +104,7 @@ function App() {
 
         <ul>
           <li><h1 className="top-nav-title">DicePlz</h1></li>
-          {/* <li className="top-nav-weapon-select">
+          <li className="top-nav-weapon-select">
             <div className="top-nav-label">SMG</div>
             <div className="weapon-select-dropdown-container">
               <ul className="weapon-select-dropdown">
@@ -117,7 +121,7 @@ function App() {
                 <li className="weapon-select-item">ACW-R</li>
               </ul>
             </div>
-          </li> */}
+          </li>
         </ul>
         
         {/* <div className="top-nav-weapon-select">
@@ -128,6 +132,8 @@ function App() {
           </div>
         </div> */}
       </div>
+      <WeaponConfigurator configurations={weaponConfigurations}/>
+
       <div className="main-content">
         <div className='disclosure'>
           <p>Weapon stats are from <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">Sorrow's Scribbles</a> as of patch 6.2.0</p>
@@ -149,7 +155,6 @@ function App() {
           <label htmlFor="body-damage-multiplier">Body Damage Multiplier: </label>
           <input type="number" id="body-damage-multiplier" name="body-damage-multiplier" step="0.1" min="0" max="4" value={bodyDamageMultiplier} onChange={e => setBodyDamageMultiplier(parseFloat(e.target.value))}/>
         </div>
-
         <TTKChart selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
           requiredRanges={requiredRanges}
