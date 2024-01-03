@@ -148,11 +148,36 @@ function TopNav(props: NavProps) {
     </li>
   );
 
+  weaponSelectDropdowns.push(
+    <li className="top-nav-weapon-select" key="settings">
+      <div className="top-nav-label">
+        {" "}
+        <span className="material-symbols-outlined">info</span>
+      </div>
+      <div className="weapon-select-dropdown-container">
+        <ul className="weapon-select-dropdown">
+          <div className="weapon-select-items-container-settings">
+            <div className="disclosure">
+              <p>
+                Weapon stats are from{" "}
+                <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
+                  Sorrow's Scribbles
+                </a>{" "}
+                as of patch 6.2.0
+              </p>
+              <p>Shotgun damage doesn't consider number of pellets yet.</p>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </li>
+  );
+
   return (
     <>
       <div className="top-nav">
         <ul>
-          <li>
+          <li className="top-nav-title-container">
             <h1 className="top-nav-title">DicePlz</h1>
           </li>
           {weaponSelectDropdowns}

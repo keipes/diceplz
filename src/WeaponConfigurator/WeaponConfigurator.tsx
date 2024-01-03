@@ -1,19 +1,17 @@
 import "./WeaponConfigurator.css";
-import {
-  DuplicateWeaponFn,
-  RemoveWeaponFn,
-  UpdateWeaponFn,
-  WeaponConfig,
-} from "../App";
+import { WeaponConfig } from "../App";
 import Weapon from "./Weapon";
 import { useState } from "react";
 
 interface WeaponConfiguratorProps {
-  configurations: Map<String, WeaponConfiguration>;
-  //   duplicateWeapon: DuplicateWeaponFn;
-  //   removeWeapon: RemoveWeaponFn;
-  //   updateWeapon: UpdateWeaponFn;
+  configurations: Map<string, WeaponConfiguration>;
   weaponConfig: WeaponConfig;
+  open: boolean;
+  setOpen: SetOpenFn;
+}
+
+interface SetOpenFn {
+  (visible: boolean): void;
 }
 
 interface WeaponConfiguration {
@@ -35,14 +33,13 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
       />
     );
   }
-  const [open, setOpen] = useState(true);
   function toggle() {
-    setOpen(!open);
+    props.setOpen(!props.open);
   }
 
   let containerClass = "wcf-container";
   let expansionSymbol = "expand_more";
-  if (!open) {
+  if (!props.open) {
     expansionSymbol = "expand_less";
     containerClass = "wcf-container-closed";
   }

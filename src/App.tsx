@@ -100,7 +100,7 @@ function App() {
   const [weaponConfigurations, _setWeaponConfigurations] = useState(
     initialConfigurations
   );
-
+  const [configuratorOpen, setConfiguratorOpen] = useState(true);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
   ) => {
@@ -205,6 +205,11 @@ function App() {
   //   setHealthMultiplier(e.target.value);
   // }
   const selectedWeaponsData = selectedWeaponStats;
+  console.log(configuratorOpen);
+  let mainContentClass = "main-content";
+  if (!configuratorOpen) {
+    mainContentClass += " configurator-closed";
+  }
   return (
     <>
       <TopNav
@@ -219,8 +224,10 @@ function App() {
       <WeaponConfigurator
         configurations={weaponConfigurations}
         weaponConfig={wpnCfg}
+        open={configuratorOpen}
+        setOpen={setConfiguratorOpen}
       />
-      <div className="main-content">
+      <div className={mainContentClass}>
         <TTKChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}
@@ -272,16 +279,6 @@ function App() {
           selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
         />
-        <div className="disclosure">
-          <p>
-            Weapon stats are from{" "}
-            <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
-              Sorrow's Scribbles
-            </a>{" "}
-            as of patch 6.2.0
-          </p>
-          <p>Shotgun damage doesn't consider number of pellets yet.</p>
-        </div>
       </div>
     </>
   );
