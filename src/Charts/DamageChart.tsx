@@ -1,92 +1,63 @@
 import { Line } from "react-chartjs-2";
-import StringHue from "./StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
-import { WeaponSelections } from "./App.tsx";
-import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "./LabelMaker.ts";
+import StringHue from "../StringColor.ts";
+import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
+import { WeaponSelections } from "../App.tsx";
+import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "../LabelMaker.ts";
 
-interface TTKChartProps {
+interface DamageChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
   weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   selectedWeaponsData: [WeaponStats];
-  rpmSelector: string;
-  title: string;
-  healthMultiplier: number;
   damageMultiplier: number;
 }
 
-const damageToTTK = function (
-  weapon: WeaponStats,
-  damage: number,
-  rpmSelector: string,
-  healthMultiplier: number
-) {
-  const btk = Math.ceil((healthMultiplier * 100) / damage);
-  return Math.round((1000 / (weapon[rpmSelector] / 60)) * (btk - 1));
-};
-
-function TTKChart(props: TTKChartProps) {
+function DamageChart(props: DamageChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
-  // const selectedWeaponsData = props.selectedWeaponsData;
+  const selectedWeaponsData = props.selectedWeaponsData;
   const datasets = [];
-  // for (let i = 0; i < selectedWeaponsData.length; i++) {
 
   for (const [id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const weaponName = config.name;
     const stats = GetStatsForConfiguration(config);
     // for (const [weaponName, stats] of selectedWeaponsData) {
-    //   const weapon = selectedWeaponsData[i];
+    // for (let i = 0; i < selectedWeaponsData.length; i++) {
+    //   const weapon = stats;
     const data = [];
     let lastDamage = 0;
     let lastRange = 0;
     let range = 0;
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
+      //   for (let i = 0; i < stats.dropoffs.length; i = i + 1) {
       range = dropoff.range;
       damage = dropoff.damage * props.damageMultiplier;
+      damage = Math.round(damage * 100) / 100;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
-          data.push(
-            damageToTTK(
-              stats,
-              lastDamage,
-              props.rpmSelector,
-              props.healthMultiplier
-            )
-          );
+          data.push(lastDamage);
         } else {
           data.push(null);
         }
       }
       lastDamage = damage;
       lastRange = range;
-      data.push(
-        damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier)
-      );
+      data.push(damage);
     }
     if (damage > 0) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
         if (requiredRanges.has(i)) {
-          data.push(
-            damageToTTK(
-              stats,
-              damage,
-              props.rpmSelector,
-              props.healthMultiplier
-            )
-          );
+          data.push(damage);
         } else {
           data.push(null);
         }
       }
       if (range != highestRangeSeen) {
-        data.push(
-          damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier)
-        );
+        data.push(damage);
       }
     }
     const label = ConfigDisplayName(config);
@@ -95,6 +66,7 @@ function TTKChart(props: TTKChartProps) {
       data: data,
       fill: false,
       borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
+      tension: 0.1,
     });
   }
 
@@ -148,28 +120,39 @@ function TTKChart(props: TTKChartProps) {
       y: {
         title: {
           display: true,
-          text: "ms",
+          text: "damage",
+          color: "white",
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+          beginAtZero: true,
+        },
       },
       x: {
         title: {
           display: true,
           text: "meters",
+          color: "white",
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+          beginAtZero: true,
+          autoSkip: false,
+        },
       },
     },
   };
   return (
-    <div>
-      <h2>{props.title}</h2>
+    <div className="chart-outer-container">
+      <h2>Damage</h2>
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>
@@ -177,4 +160,4 @@ function TTKChart(props: TTKChartProps) {
   );
 }
 
-export default TTKChart;
+export default DamageChart;

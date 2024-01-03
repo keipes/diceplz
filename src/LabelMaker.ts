@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "./WeaponConfigurator";
+import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
 
 function ConfigDisplayName(config: WeaponConfiguration) {
   return config.name + " " + config.barrelType + " " + config.ammoType + "";

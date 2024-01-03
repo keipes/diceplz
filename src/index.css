@@ -15,9 +15,10 @@
   --battle-red: #ff3224;
   --battle-grey: #252525;
   --battle-black: #121212;
+  --battle-bg-blue: #001621;
 
   color: var(--battle-white);
-  background-color: var(--battle-black);
+  background-color: var(--battle-bg-blue);
 }
 
 a {

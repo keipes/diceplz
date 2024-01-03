@@ -34,7 +34,7 @@ function TopNav(props: NavProps) {
     }
     weaponSelectDropdowns.push(
       <li className="top-nav-weapon-select" key={category}>
-        <div className="top-nav-label">{category}</div>
+        <div className="top-nav-label">{category.toUpperCase()}</div>
         <div className="weapon-select-dropdown-container">
           <ul className="weapon-select-dropdown">
             <div

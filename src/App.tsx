@@ -1,12 +1,12 @@
 import { SyntheticEvent, useState } from "react";
 import "./App.css";
 import WeaponSelector from "./WeaponSelector";
-import DamageChart from "./DamageChart.tsx";
-import TTKChart from "./TTKChart.tsx";
-import RPMChart from "./RPMChart.tsx";
+import DamageChart from "./Charts/DamageChart.tsx";
+import TTKChart from "./Charts/TTKChart.tsx";
+import RPMChart from "./Charts/RPMChart.tsx";
 import WeaponConfigurator, {
   WeaponConfiguration,
-} from "./WeaponConfigurator.tsx";
+} from "./WeaponConfigurator/WeaponConfigurator.tsx";
 
 import {
   Chart as ChartJS,
@@ -26,7 +26,7 @@ import {
   WeaponCategories,
   WeaponStats,
 } from "./WeaponData.ts";
-import VelocityChart from "./VelocityChart.tsx";
+import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 ChartJS.register(
   CategoryScale,
@@ -181,9 +181,6 @@ function App() {
             stat.barrelType == selected.barrelType &&
             stat.ammoType == selected.ammoType
           ) {
-            // if (selectedWeaponStats.has(weapon.name)) {
-            //   console.warn('Already have stats for ' + weapon.name);
-            // }
             selectedWeaponStats.set(weapon.name, stat);
           }
         }
@@ -204,17 +201,7 @@ function App() {
   }
   let remainder = highestRangeSeen % 10;
   highestRangeSeen += 10 - remainder;
-  function changeLocalStorage(_: SyntheticEvent) {
-    if (useLocalStorage) {
-      // disabling storage, so clear all stored data
-      localStorage.clear();
-    } else {
-      localStorage.setItem("useLocalStorage", "true");
-    }
-    setUseLocalStorage(!useLocalStorage);
-  }
   function handleHealthMultiplier(e) {
-    console.log(e.target.value);
     setHealthMultiplier(e.target.value);
   }
   const selectedWeaponsData = selectedWeaponStats;
@@ -226,16 +213,7 @@ function App() {
         weaponConfig={wpnCfg}
       />
       <div className="main-content">
-        <div className="disclosure">
-          <p>
-            Weapon stats are from{" "}
-            <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
-              Sorrow's Scribbles
-            </a>{" "}
-            as of patch 6.2.0
-          </p>
-          <p>Shotgun damage doesn't consider number of pellets yet.</p>
-        </div>
+        <h1>Battlefield 2042 Weapon Stats</h1>
         <div>
           <label htmlFor="health-multiplier">
             Soldier Max Health Multiplier:{" "}
@@ -332,6 +310,16 @@ function App() {
           selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
         />
+        <div className="disclosure">
+          <p>
+            Weapon stats are from{" "}
+            <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
+              Sorrow's Scribbles
+            </a>{" "}
+            as of patch 6.2.0
+          </p>
+          <p>Shotgun damage doesn't consider number of pellets yet.</p>
+        </div>
       </div>
     </>
   );

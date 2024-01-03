@@ -4,8 +4,8 @@ import {
   RemoveWeaponFn,
   UpdateWeaponFn,
   WeaponConfig,
-} from "./App";
-import Weapon from "./WeaponConfigurator/Weapon";
+} from "../App";
+import Weapon from "./Weapon";
 import { useState } from "react";
 
 interface WeaponConfiguratorProps {

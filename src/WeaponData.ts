@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "./WeaponConfigurator";
+import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
 import weaponData from "./assets/weapons.json";
 
 interface Weapon {

@@ -1,10 +1,10 @@
 import { Bar } from "react-chartjs-2";
-import StringHue from "./StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
-import { WeaponSelections } from "./App.tsx";
+import StringHue from "../StringColor.ts";
+import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
+import { WeaponSelections } from "../App.tsx";
 import "./VelocityChart.css";
-import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "./LabelMaker.ts";
+import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "../LabelMaker.ts";
 
 interface VelocityChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -78,27 +78,35 @@ function VelocityChart(props: VelocityChartProps) {
       y: {
         title: {
           display: true,
-          text: "m/s",
+          text: "m / s",
+          color: "white",
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+        },
       },
       x: {
         title: {
           display: false,
           text: "weapon",
+          color: "white",
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+        },
       },
     },
   };
   return (
-    <div>
+    <div className="chart-outer-container">
       <h2>Velocity</h2>
       <div className="chart-container">
         <Bar data={chartData} options={options} />

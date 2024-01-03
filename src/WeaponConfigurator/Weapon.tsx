@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { GetWeaponByName } from "../WeaponData.ts";
-import { WeaponConfig, WeaponSelections } from "../App.tsx";
-import { WeaponConfiguration } from "../WeaponConfigurator.tsx";
+import { WeaponConfig } from "../App.tsx";
+import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 
 interface WeaponProps {
   id: string;
@@ -32,48 +31,6 @@ function Weapon(props: WeaponProps) {
     selectedAmmoInitial = weapon.stats[0].ammoType;
   }
 
-  // const [selectedBarrel, setSelectedBarrel] = useState(selectedBarrelInitial);
-  // const [selectedAmmo, setSelectedAmmo] = useState(selectedAmmoInitial);
-  // const clickHandler = (o) => {
-  //   const newSelectedWeapons = new Map<string, WeaponSelections>(
-  //     props.selectedWeapons
-  //   );
-  //   if (!newSelectedWeapons.delete(props.name)) {
-  //     newSelectedWeapons.set(props.name, {
-  //       ammoType: selectedAmmo,
-  //       barrelType: selectedBarrel,
-  //     });
-  //   }
-  //   props.setSelectedWeapons(newSelectedWeapons);
-  // };
-
-  // function barrelChangeHandler(e) {
-  //   setSelectedBarrel(e.target.value);
-  //   if (props.selectedWeapons.has(props.name)) {
-  //     const newSelectedWeapons = new Map<string, WeaponSelections>(
-  //       props.selectedWeapons
-  //     );
-  //     newSelectedWeapons.set(props.name, {
-  //       ammoType: selectedAmmo,
-  //       barrelType: e.target.value,
-  //     });
-  //     props.setSelectedWeapons(newSelectedWeapons);
-  //   }
-  // }
-  // function ammoChangeHandler(e) {
-  //   setSelectedAmmo(e.target.value);
-  //   if (props.selectedWeapons.has(props.name)) {
-  //     const newSelectedWeapons = new Map<string, WeaponSelections>(
-  //       props.selectedWeapons
-  //     );
-  //     newSelectedWeapons.set(props.name, {
-  //       ammoType: e.target.value,
-  //       barrelType: selectedBarrel,
-  //     });
-  //     props.setSelectedWeapons(newSelectedWeapons);
-  //   }
-  // }
-
   const seenBarrels = new Set<string>();
   const barrelOptions = [];
   const seenAmmo = new Set<string>();
@@ -84,7 +41,11 @@ function Weapon(props: WeaponProps) {
       if (!seenAmmo.has(stat.ammoType)) {
         // shouldn't need to do this
         ammoOptions.push(
-          <option value={stat.ammoType} key={stat.ammoType}>
+          <option
+            value={stat.ammoType}
+            key={stat.ammoType}
+            className="wcf-selector-option"
+          >
             {stat.ammoType}
           </option>
         );
@@ -93,7 +54,11 @@ function Weapon(props: WeaponProps) {
     }
     if (!seenBarrels.has(stat.barrelType)) {
       barrelOptions.push(
-        <option value={stat.barrelType} key={stat.barrelType}>
+        <option
+          value={stat.barrelType}
+          key={stat.barrelType}
+          className="wcf-selector-option"
+        >
           {stat.barrelType}
         </option>
       );
@@ -139,36 +104,50 @@ function Weapon(props: WeaponProps) {
         </span>
       </div>
 
-      <select
-        value={props.config.barrelType}
-        name="barrel"
-        id="barrel"
-        // onChange={barrelChangeHandler}
-        onChange={(e) => {
-          const cloned = JSON.parse(JSON.stringify(props.config));
-          cloned.barrelType = e.target.value;
-          props.weaponConfig.UpdateWeapon(props.id, cloned);
-        }}
-        onClick={(e) => e.stopPropagation()}
-        disabled={seenBarrels.size < 2}
-      >
-        {barrelOptions}
-      </select>
-      <select
-        value={props.config.ammoType}
-        name="ammo"
-        id="ammo"
-        // onChange={ammoChangeHandler}
-        onChange={(e) => {
-          const cloned = JSON.parse(JSON.stringify(props.config));
-          cloned.ammoType = e.target.value;
-          props.weaponConfig.UpdateWeapon(props.id, cloned);
-        }}
-        onClick={(e) => e.stopPropagation()}
-        disabled={seenAmmo.size < 2}
-      >
-        {ammoOptions}
-      </select>
+      <div className="wcf-weapon-selector">
+        <label htmlFor="barrel" className="wcf-selector-label">
+          BL
+        </label>
+        <span></span>
+        <select
+          className="wcf-selector-select"
+          value={props.config.barrelType}
+          name="barrel"
+          id="barrel"
+          // onChange={barrelChangeHandler}
+          onChange={(e) => {
+            const cloned = JSON.parse(JSON.stringify(props.config));
+            cloned.barrelType = e.target.value;
+            props.weaponConfig.UpdateWeapon(props.id, cloned);
+          }}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenBarrels.size < 2}
+        >
+          {barrelOptions}
+        </select>
+      </div>
+      <div className="wcf-weapon-selector">
+        <label htmlFor="barrel" className="wcf-selector-label">
+          AM
+        </label>
+        <span></span>
+        <select
+          className="wcf-selector-select"
+          value={props.config.ammoType}
+          name="ammo"
+          id="ammo"
+          // onChange={ammoChangeHandler}
+          onChange={(e) => {
+            const cloned = JSON.parse(JSON.stringify(props.config));
+            cloned.ammoType = e.target.value;
+            props.weaponConfig.UpdateWeapon(props.id, cloned);
+          }}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenAmmo.size < 2}
+        >
+          {ammoOptions}
+        </select>
+      </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import { Bar, Line } from "react-chartjs-2";
-import StringHue from "./StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "./WeaponData.ts";
-import { WeaponSelections } from "./App.tsx";
+import StringHue from "../StringColor.ts";
+import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
+import { WeaponSelections } from "../App.tsx";
 import { useState } from "react";
 import "./RPMChart.css";
-import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "./LabelMaker.ts";
+import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "../LabelMaker.ts";
 
 interface RPMChartProps {
   selectedWeapons: Map<string, WeaponSelections>;
@@ -153,11 +153,15 @@ function RPMChart(props: RPMChartProps) {
         title: {
           display: true,
           text: "rpm",
+          color: "white",
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+        },
       },
       x: {
         title: {
@@ -168,6 +172,9 @@ function RPMChart(props: RPMChartProps) {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
+        ticks: {
+          color: "white",
+        },
       },
     },
   };
@@ -178,7 +185,7 @@ function RPMChart(props: RPMChartProps) {
   if (showBurst) burstClass += " enabled";
   if (showSingle) singleClass += " enabled";
   return (
-    <div>
+    <div className="chart-outer-container">
       <h2>RPM</h2>
       <div className="button-container">
         <button className={autoClass} onClick={(_) => setShowAuto(!showAuto)}>

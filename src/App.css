@@ -14,6 +14,17 @@
   max-width: 1280px;
 }
 
+.chart-outer-container {
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  background-color: #000c;
+  padding: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.chart-outer-container > h2 {
+  margin: 0;
+  margin-bottom: 1rem;
+}
 .disclosure > p {
   margin: 0;
 }
