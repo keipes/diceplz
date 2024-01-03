@@ -1,6 +1,8 @@
 import { GetWeaponByName } from "../WeaponData.ts";
 import { WeaponConfig } from "../App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { ConfigDisplayName } from "../LabelMaker.ts";
+import { ConfigHSL } from "../StringColor.ts";
 
 interface WeaponProps {
   id: string;
@@ -35,6 +37,13 @@ function Weapon(props: WeaponProps) {
   const barrelOptions = [];
   const seenAmmo = new Set<string>();
   const ammoOptions = [];
+
+  const style = {
+    borderColor: ConfigHSL(props.config),
+  };
+  const nameStyle = {
+    color: ConfigHSL(props.config),
+  };
 
   for (const stat of weapon.stats) {
     if (stat.barrelType == props.config.barrelType) {
@@ -73,9 +82,11 @@ function Weapon(props: WeaponProps) {
     visibility += "_off";
   }
   return (
-    <div className="wcf-weapon">
+    <div className="wcf-weapon" style={style}>
       <div className="wcf-header">
-        <div className="wcf-header-item wcf-name">{config.name}</div>
+        <div className="wcf-header-item wcf-name" style={nameStyle}>
+          {config.name}
+        </div>
         <span
           className="wcf-header-item wcf-header-button wcf-duplicate material-symbols-outlined"
           onClick={() => {

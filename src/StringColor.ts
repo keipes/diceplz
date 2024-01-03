@@ -1,3 +1,6 @@
+import { ConfigDisplayName } from "./LabelMaker";
+import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
+
 const cyrb53 = function (str, seed = 0) {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;
@@ -13,8 +16,13 @@ const cyrb53 = function (str, seed = 0) {
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
 
-const StringHue = function (str) {
+const StringHue = function (str: string) {
   return (cyrb53(str) / Math.pow(2, 53)) * 255;
 };
 
+const ConfigHSL = function (config: WeaponConfiguration) {
+  return "hsl(" + StringHue(ConfigDisplayName(config)) + ", 50%, 50%)";
+};
+
 export default StringHue;
+export { ConfigHSL };

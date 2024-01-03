@@ -44,15 +44,17 @@
   color: var(--battle-blue);
 }
 .wcf-scrollable {
-  height: 28vh;
-  padding-bottom: 4rem;
+  /* height: 40vh; */
+  height: calc(30vh - 3.2rem);
+  padding-bottom: 1rem;
   overflow-y: scroll;
+  padding-left: 1rem;
+  background-color: #000;
 }
 .wcf {
   /* padding-top: 2rem; */
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background-color: #000;
 }
 
 .wcf-weapon {
@@ -62,9 +64,10 @@
   border-width: 2px;
   border-style: solid;
   height: 10rem;
-  width: 20vw;
+  /* width: 20vw; */
+  margin-right: 1rem;
   padding: 1rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
 }
 
 .wcf-selector-select {
