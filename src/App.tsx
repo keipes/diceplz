@@ -201,64 +201,26 @@ function App() {
   }
   let remainder = highestRangeSeen % 10;
   highestRangeSeen += 10 - remainder;
-  function handleHealthMultiplier(e) {
-    setHealthMultiplier(e.target.value);
-  }
+  // function handleHealthMultiplier(e) {
+  //   setHealthMultiplier(e.target.value);
+  // }
   const selectedWeaponsData = selectedWeaponStats;
   return (
     <>
-      <TopNav weaponConfig={wpnCfg} />
+      <TopNav
+        weaponConfig={wpnCfg}
+        healthMultiplier={healthMultiplier}
+        setHealthMultiplier={setHealthMultiplier}
+        damageMultiplier={damageMultiplier}
+        setDamageMultiplier={setDamageMultiplier}
+        bodyDamageMultiplier={bodyDamageMultiplier}
+        setBodyDamageMultiplier={setBodyDamageMultiplier}
+      />
       <WeaponConfigurator
         configurations={weaponConfigurations}
         weaponConfig={wpnCfg}
       />
       <div className="main-content">
-        <h1>Battlefield 2042 Weapon Stats</h1>
-        <div>
-          <label htmlFor="health-multiplier">
-            Soldier Max Health Multiplier:{" "}
-          </label>
-          <input
-            type="number"
-            id="health-multiplier"
-            name="health-multiplier"
-            step="0.1"
-            min="0.1"
-            max="10"
-            value={healthMultiplier}
-            onChange={handleHealthMultiplier}
-          />
-        </div>
-        <div>
-          <label htmlFor="damage-multiplier">Damage Multiplier: </label>
-          <input
-            type="number"
-            id="damage-multiplier"
-            name="damage-multiplier"
-            step="0.1"
-            min="0.1"
-            max="5"
-            value={damageMultiplier}
-            onChange={(e) => setDamageMultiplier(parseFloat(e.target.value))}
-          />
-        </div>
-        <div>
-          <label htmlFor="body-damage-multiplier">
-            Body Damage Multiplier:{" "}
-          </label>
-          <input
-            type="number"
-            id="body-damage-multiplier"
-            name="body-damage-multiplier"
-            step="0.1"
-            min="0"
-            max="4"
-            value={bodyDamageMultiplier}
-            onChange={(e) =>
-              setBodyDamageMultiplier(parseFloat(e.target.value))
-            }
-          />
-        </div>
         <TTKChart
           selectedWeapons={selectedWeapons}
           selectedWeaponsData={selectedWeaponsData}

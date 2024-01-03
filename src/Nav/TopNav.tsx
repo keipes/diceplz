@@ -2,8 +2,18 @@ import { AddWeaponFn, WeaponConfig } from "../App";
 import { GetCategoryWeapons, WeaponCategories } from "../WeaponData";
 import "./TopNav.css";
 
+interface NumSetterFn {
+  (value: number): void;
+}
+
 interface NavProps {
   weaponConfig: WeaponConfig;
+  healthMultiplier: number;
+  setHealthMultiplier: NumSetterFn;
+  damageMultiplier: number;
+  setDamageMultiplier: NumSetterFn;
+  bodyDamageMultiplier: number;
+  setBodyDamageMultiplier: NumSetterFn;
 }
 
 function TopNav(props: NavProps) {
@@ -66,6 +76,78 @@ function TopNav(props: NavProps) {
       </li>
     );
   }
+
+  weaponSelectDropdowns.push(
+    <li className="top-nav-weapon-select" key="settings">
+      <div className="top-nav-label">
+        {" "}
+        <span className="material-symbols-outlined">settings</span>
+      </div>
+      <div className="weapon-select-dropdown-container">
+        <ul className="weapon-select-dropdown">
+          <div className="weapon-select-items-container-settings">
+            <li className="weapon-select-item">
+              {" "}
+              <div>
+                <label htmlFor="health-multiplier">
+                  Soldier Max Health Multiplier:{" "}
+                </label>
+                <input
+                  type="number"
+                  id="health-multiplier"
+                  name="health-multiplier"
+                  step="0.1"
+                  min="0.1"
+                  max="10"
+                  value={props.healthMultiplier}
+                  onChange={(e) =>
+                    props.setHealthMultiplier(parseFloat(e.target.value))
+                  }
+                />
+              </div>
+            </li>
+            <li className="weapon-select-item">
+              <div>
+                <label htmlFor="damage-multiplier">Damage Multiplier: </label>
+                <input
+                  type="number"
+                  id="damage-multiplier"
+                  name="damage-multiplier"
+                  step="0.1"
+                  min="0.1"
+                  max="5"
+                  value={props.damageMultiplier}
+                  onChange={(e) =>
+                    props.setDamageMultiplier(parseFloat(e.target.value))
+                  }
+                />
+              </div>
+            </li>
+            <li className="weapon-select-item">
+              <div>
+                <label htmlFor="body-damage-multiplier">
+                  Body Damage Multiplier:{" "}
+                </label>
+                <input
+                  type="number"
+                  id="body-damage-multiplier"
+                  name="body-damage-multiplier"
+                  step="0.1"
+                  min="0"
+                  max="4"
+                  value={props.bodyDamageMultiplier}
+                  onChange={(e) =>
+                    props.setBodyDamageMultiplier(parseFloat(e.target.value))
+                  }
+                />
+              </div>
+            </li>
+          </div>
+        </ul>
+      </div>
+    </li>
+  );
+
   return (
     <>
       <div className="top-nav">
