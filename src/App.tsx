@@ -165,11 +165,11 @@ function App() {
     Reset: Reset,
   };
 
-  const oldLocalStorageSetting =
-    localStorage.getItem("useLocalStorage") == "true";
-  const [useLocalStorage, setUseLocalStorage] = useState(
-    oldLocalStorageSetting
-  );
+  // const oldLocalStorageSetting =
+  //   localStorage.getItem("useLocalStorage") == "true";
+  // const [useLocalStorage, setUseLocalStorage] = useState(
+  //   oldLocalStorageSetting
+  // );
   const selectedWeaponStats = new Map<string, WeaponStats>();
   for (const category of WeaponCategories) {
     const weapons = GetCategoryWeapons(category);
@@ -205,7 +205,6 @@ function App() {
   //   setHealthMultiplier(e.target.value);
   // }
   const selectedWeaponsData = selectedWeaponStats;
-  console.log(configuratorOpen);
   let mainContentClass = "main-content";
   if (!configuratorOpen) {
     mainContentClass += " configurator-closed";

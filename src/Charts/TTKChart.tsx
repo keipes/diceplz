@@ -1,6 +1,10 @@
 import { Line } from "react-chartjs-2";
 import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
+import {
+  GetStatsForConfiguration,
+  GetWeaponByName,
+  WeaponStats,
+} from "../WeaponData.ts";
 import { WeaponSelections } from "../App.tsx";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
@@ -18,13 +22,13 @@ interface TTKChartProps {
 }
 
 const damageToTTK = function (
-  weapon: WeaponStats,
+  stats: WeaponStats,
   damage: number,
   rpmSelector: string,
   healthMultiplier: number
 ) {
   const btk = Math.ceil((healthMultiplier * 100) / damage);
-  return Math.round((1000 / (weapon[rpmSelector] / 60)) * (btk - 1));
+  return Math.round((1000 / (stats[rpmSelector] / 60)) * (btk - 1));
 };
 
 function TTKChart(props: TTKChartProps) {
@@ -38,6 +42,7 @@ function TTKChart(props: TTKChartProps) {
     if (!config.visible) continue;
     const weaponName = config.name;
     const stats = GetStatsForConfiguration(config);
+    const weapon = GetWeaponByName(config.name);
     // for (const [weaponName, stats] of selectedWeaponsData) {
     //   const weapon = selectedWeaponsData[i];
     const data = [];
@@ -47,7 +52,11 @@ function TTKChart(props: TTKChartProps) {
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
-      damage = dropoff.damage * props.damageMultiplier;
+      let pelletMultiplier = 1;
+      if (weapon.pelletCounts && weapon.pelletCounts[config.ammoType]) {
+        pelletMultiplier = weapon.pelletCounts[config.ammoType];
+      }
+      damage = dropoff.damage * props.damageMultiplier * pelletMultiplier;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(
@@ -156,12 +165,7 @@ function TTKChart(props: TTKChartProps) {
         },
         min: 0,
         ticks: {
-          color: "white", // not 'fontColor:' anymore
-          // fontSize: 18,
-          // font: {
-          //   size: 18, // 'size' now within object 'font {}'
-          // },
-          // stepSize: 1,
+          color: "white",
           beginAtZero: true,
         },
       },
@@ -176,12 +180,7 @@ function TTKChart(props: TTKChartProps) {
         },
         min: 0,
         ticks: {
-          color: "white", // not 'fontColor:' anymore
-          // fontSize: 18,
-          // font: {
-          //   size: 18, // 'size' now within object 'font {}'
-          // },
-          // stepSize: 1,
+          color: "white",
           beginAtZero: true,
           autoSkip: false,
         },

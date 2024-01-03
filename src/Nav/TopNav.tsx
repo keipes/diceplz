@@ -149,7 +149,7 @@ function TopNav(props: NavProps) {
   );
 
   weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select" key="settings">
+    <li className="top-nav-weapon-select" key="info">
       <div className="top-nav-label">
         {" "}
         <span className="material-symbols-outlined">info</span>
@@ -165,7 +165,6 @@ function TopNav(props: NavProps) {
                 </a>{" "}
                 as of patch 6.2.0
               </p>
-              <p>Shotgun damage doesn't consider number of pellets yet.</p>
             </div>
           </div>
         </ul>
@@ -177,7 +176,7 @@ function TopNav(props: NavProps) {
     <>
       <div className="top-nav">
         <ul>
-          <li className="top-nav-title-container">
+          <li className="top-nav-title-container" key="123">
             <h1 className="top-nav-title">DicePlz</h1>
           </li>
           {weaponSelectDropdowns}

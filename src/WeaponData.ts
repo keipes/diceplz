@@ -4,7 +4,12 @@ import weaponData from "./assets/weapons.json";
 interface Weapon {
   name: string;
   stats: WeaponStats[];
+  pelletCounts?: Record<string, number>;
 }
+
+// interface PelletCounts {
+//     ammoType
+// }
 
 interface WeaponStats {
   name: string;
@@ -15,6 +20,7 @@ interface WeaponStats {
   rpmBurst: number;
   rpmAuto: number;
   velocity: number;
+  pelletCount?: number;
 }
 
 interface DamageRange {
@@ -39,14 +45,20 @@ function GetWeaponByName(name: string): Weapon {
 
 function GetStatsForConfiguration(config: WeaponConfiguration) {
   const weapon = GetWeaponByName(config.name);
+  let returnVal;
   for (const stat of weapon.stats) {
     if (
       stat.barrelType == config.barrelType &&
       stat.ammoType == config.ammoType
     ) {
-      return stat;
+      if (returnVal) {
+        console.warn("duplicate stat info " + weapon.name);
+      }
+      returnVal = stat;
+      //   return stat;
     }
   }
+  if (returnVal) return returnVal;
   throw new Error("no stats for config");
 }
 
