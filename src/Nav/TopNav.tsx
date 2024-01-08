@@ -177,7 +177,12 @@ function TopNav(props: NavProps) {
       <div className="top-nav">
         <ul>
           <li className="top-nav-title-container" key="123">
-            <h1 className="top-nav-title">DicePlz</h1>
+            <h1
+              className="top-nav-title"
+              onClick={() => window.location.reload()}
+            >
+              DicePlz
+            </h1>
           </li>
           {weaponSelectDropdowns}
         </ul>
