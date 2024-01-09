@@ -119,6 +119,15 @@ li:hover div.weapon-select-dropdown-container {
   font-weight: 600;
 }
 
+.weapon-select-add-all form input {
+  font-size: 4rem;
+  background-color: black;
+  font-size: 13pt;
+  text-align: center;
+  border: none;
+  width: 100%;
+}
+
 .weapon-select-add-all:hover {
   color: var(--battle-blue);
   border-bottom: 1px solid var(--battle-blue);
@@ -142,4 +151,30 @@ li:hover div.weapon-select-dropdown-container {
   cursor: pointer;
   font-size: 12pt;
   font-weight: 600;
+}
+.weapon-select-items-container-saveload {
+  display: grid;
+  grid-template-columns: 1fr 2rem;
+}
+.config-name {
+  cursor: pointer;
+  font-size: 12pt;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+.config-name:hover {
+  /* background: #DF4B05; */
+  color: var(--battle-blue);
+}
+
+.config-delete.material-symbols-outlined {
+  line-height: 2rem;
+  font-size: 1.8rem;
+  text-align: right;
+  width: 100%;
+}
+
+.config-delete:hover {
+  color: var(--battle-red);
 }

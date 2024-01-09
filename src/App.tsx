@@ -1,6 +1,5 @@
-import { SyntheticEvent, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import WeaponSelector from "./WeaponSelector";
 import DamageChart from "./Charts/DamageChart.tsx";
 import TTKChart from "./Charts/TTKChart.tsx";
 import RPMChart from "./Charts/RPMChart.tsx";
@@ -28,6 +27,7 @@ import {
 } from "./WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
+import { LocalStoreConfigLoader, Modifiers } from "./Data/ConfigLoader.ts";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -89,16 +89,46 @@ if (useLocalStorage) {
     initialConfigurations = new Map(JSON.parse(cached));
   }
 }
+
+const initialStoredConfigs: string[] = [];
 function App() {
   const [selectedWeapons, setSelectedWeapons] = useState(
     initialSelectedWeapons
   );
-  const [healthMultiplier, setHealthMultiplier] = useState(1);
-  const [damageMultiplier, setDamageMultiplier] = useState(1);
-  const [bodyDamageMultiplier, setBodyDamageMultiplier] = useState(1);
+  const [modifiers, setModifiers] = useState({
+    healthMultiplier: 1,
+    damageMultiplier: 1,
+    bodyDamageMultiplier: 1,
+  });
 
-  const [weaponConfigurations, _setWeaponConfigurations] = useState(
-    initialConfigurations
+  // these functions are a hack until I want to modify all the props below to
+  // just pass the Modifiers object
+  interface Assigner {
+    (modifiers: Modifiers): void;
+  }
+  const assign = (assigner: Assigner) => {
+    const newModifiers = structuredClone(modifiers);
+    assigner(newModifiers);
+    setModifiers(newModifiers);
+  };
+  const healthMultiplier = modifiers.healthMultiplier;
+  const setHealthMultiplier = (multiplier: number) =>
+    assign((m) => (m.healthMultiplier = multiplier));
+  const damageMultiplier = modifiers.damageMultiplier;
+  const setDamageMultiplier = (multiplier: number) =>
+    assign((m) => (m.damageMultiplier = multiplier));
+  const bodyDamageMultiplier = modifiers.bodyDamageMultiplier;
+  const setBodyDamageMultiplier = (multiplier: number) =>
+    assign((m) => (m.bodyDamageMultiplier = multiplier));
+
+  const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
+
+  const [storedConfigs, setStoredConfigs] = useState(initialStoredConfigs);
+  const configLoader = new LocalStoreConfigLoader(
+    weaponConfigurations,
+    _setWeaponConfigurations,
+    modifiers,
+    setModifiers
   );
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
   const setWeaponConfigurations = (
@@ -219,6 +249,8 @@ function App() {
         setDamageMultiplier={setDamageMultiplier}
         bodyDamageMultiplier={bodyDamageMultiplier}
         setBodyDamageMultiplier={setBodyDamageMultiplier}
+        configLoader={configLoader}
+        // configs={configLoader.listConfigs()}
       />
       <WeaponConfigurator
         configurations={weaponConfigurations}

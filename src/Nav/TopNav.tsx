@@ -1,6 +1,8 @@
 import { AddWeaponFn, WeaponConfig } from "../App";
+import { ConfigLoader } from "../Data/ConfigLoader";
 import { GetCategoryWeapons, WeaponCategories } from "../WeaponData";
 import "./TopNav.css";
+import { useState, useMemo } from "react";
 
 interface NumSetterFn {
   (value: number): void;
@@ -14,9 +16,17 @@ interface NavProps {
   setDamageMultiplier: NumSetterFn;
   bodyDamageMultiplier: number;
   setBodyDamageMultiplier: NumSetterFn;
+  configLoader: ConfigLoader;
 }
 
 function TopNav(props: NavProps) {
+  const [saveFocused, setSaveFocused] = useState(false);
+  const [saveInputValue, setSaveInputValue] = useState("");
+  // const initialConfigs = useMemo(() => props.configLoader.listConfigs());
+  // const token = '';
+  const [configsList, setConfigsList] = useState(
+    useMemo(() => props.configLoader.listConfigs(), [])
+  );
   const weaponSelectDropdowns = [];
   for (const category of WeaponCategories) {
     const weaponSelectItems = [];
@@ -142,6 +152,86 @@ function TopNav(props: NavProps) {
                 />
               </div>
             </li>
+          </div>
+        </ul>
+      </div>
+    </li>
+  );
+
+  let saveDialogue = <span>Save Current Configuration</span>;
+  const configLoader = props.configLoader;
+  const loadable = [];
+  for (const name of configLoader.listConfigs()) {
+    loadable.push(
+      <>
+        <div
+          className="config-name"
+          onClick={() => {
+            configLoader.loadConfig(name);
+          }}
+          key={name}
+        >
+          {name}
+        </div>
+        <div>
+          <span
+            className="config-delete material-symbols-outlined"
+            onClick={() => {
+              configLoader.deleteConfig(name);
+              setConfigsList(configLoader.listConfigs());
+            }}
+          >
+            delete
+          </span>
+        </div>
+      </>
+    );
+  }
+  if (saveFocused) {
+    saveDialogue = (
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (saveInputValue == "") {
+            configLoader.saveConfig("Unnamed");
+          } else {
+            configLoader.saveConfig(saveInputValue);
+          }
+          setConfigsList(configLoader.listConfigs());
+          setSaveInputValue("");
+        }}
+      >
+        <input
+          value={saveInputValue}
+          autoFocus
+          type="text"
+          onChange={(e) => {
+            setSaveInputValue(e.target.value);
+          }}
+        />
+      </form>
+    );
+  }
+  weaponSelectDropdowns.push(
+    <li className="top-nav-weapon-select" key="save load">
+      <div className="top-nav-label">SAVE / LOAD</div>
+      <div className="weapon-select-dropdown-container">
+        <ul className="weapon-select-dropdown">
+          <div
+            className="weapon-select-add-all"
+            onClick={() => {
+              setSaveFocused(true);
+            }}
+            onBlur={() => {
+              setSaveFocused(false);
+              setSaveInputValue("");
+            }}
+          >
+            {saveDialogue}
+          </div>
+          <div className="weapon-select-items-container-saveload">
+            {loadable}
           </div>
         </ul>
       </div>
