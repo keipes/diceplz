@@ -80,8 +80,18 @@ interface WeaponConfig {
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
 
-  const [weaponConfigurations, setWeaponConfigurations] = useState(new Map());
-
+  const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
+  const setWeaponConfigurations = (
+    configurations: Map<string, WeaponConfiguration>
+  ) => {
+    _setWeaponConfigurations(
+      new Map(
+        [...configurations].sort((a, b) => {
+          return Intl.Collator().compare(a[1].name, b[1].name);
+        })
+      )
+    );
+  };
   const configLoader = new LocalStoreConfigLoader(
     weaponConfigurations,
     setWeaponConfigurations,
