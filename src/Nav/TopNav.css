@@ -83,7 +83,7 @@
 .weapon-select-dropdown-container {
   opacity: 0;
   position: absolute;
-  left: -100px;
+  left: -4rem;
   top: 4rem;
   visibility: hidden;
   min-width: 400px;
