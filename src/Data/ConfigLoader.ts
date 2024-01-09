@@ -24,6 +24,12 @@ interface Modifiers {
   bodyDamageMultiplier: number;
 }
 
+const DefaultModifiers: Readonly<Modifiers> = {
+  healthMultiplier: 1,
+  damageMultiplier: 1,
+  bodyDamageMultiplier: 1,
+};
+
 interface SetModifiersFn {
   (modifiers: Modifiers): void;
 }
@@ -82,6 +88,6 @@ class LocalStoreConfigLoader implements ConfigLoader {
   }
 }
 
-export { LocalStoreConfigLoader };
+export { LocalStoreConfigLoader, DefaultModifiers };
 
 export type { ConfigLoader, Modifiers };

@@ -1,14 +1,11 @@
 import { Bar } from "react-chartjs-2";
 import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
-import { WeaponSelections } from "../App.tsx";
+import { GetStatsForConfiguration } from "../WeaponData.ts";
 import "./VelocityChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 
 interface VelocityChartProps {
-  selectedWeapons: Map<string, WeaponSelections>;
-  selectedWeaponsData: Map<string, WeaponStats>;
   weaponConfigurations: Map<String, WeaponConfiguration>;
 }
 
@@ -23,7 +20,6 @@ function VelocityChart(props: VelocityChartProps) {
     const stats = GetStatsForConfiguration(config);
     weaponData.push([config, stats]);
   }
-  // const weaponData = Array.from(selectedWeaponsData.entries());
   weaponData.sort((a, b) => {
     return b[1].velocity - a[1].velocity;
   });

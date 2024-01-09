@@ -152,7 +152,28 @@ li:hover div.weapon-select-dropdown-container {
   font-size: 12pt;
   font-weight: 600;
 }
+
+.modifier-multiplier-input {
+  width: 4rem;
+  background-color: var(--battle-grey);
+  border: none;
+  float: right;
+  font-size: 12pt;
+}
+
+.modifier-multiplier-input:focus,
+.modifier-multiplier-input:hover {
+  color: var(--battle-blue);
+}
+
 .weapon-select-items-container-saveload {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+/* .select-save-load {
+  margin-left: 4rem;
+} */
+.config-loader-container {
   display: grid;
   grid-template-columns: 1fr 2rem;
 }
@@ -173,6 +194,7 @@ li:hover div.weapon-select-dropdown-container {
   font-size: 1.8rem;
   text-align: right;
   width: 100%;
+  cursor: pointer;
 }
 
 .config-delete:hover {

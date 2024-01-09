@@ -5,14 +5,14 @@ import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.ts
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
 
-interface DamageChartProps {
+interface BTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
 }
 
-function DamageChart(props: DamageChartProps) {
+function BTKChart(props: BTKChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
   const datasets = [];
@@ -32,7 +32,9 @@ function DamageChart(props: DamageChartProps) {
         dropoff.damage *
         props.modifiers.damageMultiplier *
         props.modifiers.bodyDamageMultiplier;
-      damage = Math.round(damage * 100) / 100;
+      const btk = Math.ceil((props.modifiers.healthMultiplier * 100) / damage);
+      damage = btk;
+      // damage = Math.round(damage * 100) / 100;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(lastDamage);
@@ -116,7 +118,7 @@ function DamageChart(props: DamageChartProps) {
       y: {
         title: {
           display: true,
-          text: "damage",
+          text: "shots",
           color: "white",
         },
         grid: {
@@ -148,7 +150,7 @@ function DamageChart(props: DamageChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>Damage</h2>
+      <h2>BTK</h2>
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>
@@ -156,4 +158,4 @@ function DamageChart(props: DamageChartProps) {
   );
 }
 
-export default DamageChart;
+export default BTKChart;

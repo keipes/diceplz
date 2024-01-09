@@ -5,20 +5,17 @@ import {
   GetWeaponByName,
   WeaponStats,
 } from "../WeaponData.ts";
-import { WeaponSelections } from "../App.tsx";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
+import { Modifiers } from "../Data/ConfigLoader.ts";
 
 interface TTKChartProps {
-  selectedWeapons: Map<string, WeaponSelections>;
   weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
-  selectedWeaponsData: [WeaponStats];
   rpmSelector: string;
   title: string;
-  healthMultiplier: number;
-  damageMultiplier: number;
+  modifiers: Modifiers;
 }
 
 const damageToTTK = function (
@@ -34,29 +31,25 @@ const damageToTTK = function (
 function TTKChart(props: TTKChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
-  // const selectedWeaponsData = props.selectedWeaponsData;
   const datasets = [];
-  // for (let i = 0; i < selectedWeaponsData.length; i++) {
-
   for (const [id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
-    const weaponName = config.name;
     const stats = GetStatsForConfiguration(config);
     const weapon = GetWeaponByName(config.name);
-    // for (const [weaponName, stats] of selectedWeaponsData) {
-    //   const weapon = selectedWeaponsData[i];
     const data = [];
     let lastDamage = 0;
     let lastRange = 0;
     let range = 0;
     let damage = 0;
+    const damageMultiplier =
+      props.modifiers.damageMultiplier * props.modifiers.bodyDamageMultiplier;
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
       let pelletMultiplier = 1;
       if (weapon.pelletCounts && weapon.pelletCounts[config.ammoType]) {
         pelletMultiplier = weapon.pelletCounts[config.ammoType];
       }
-      damage = dropoff.damage * props.damageMultiplier * pelletMultiplier;
+      damage = dropoff.damage * damageMultiplier * pelletMultiplier;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(
@@ -64,7 +57,7 @@ function TTKChart(props: TTKChartProps) {
               stats,
               lastDamage,
               props.rpmSelector,
-              props.healthMultiplier
+              props.modifiers.healthMultiplier
             )
           );
         } else {
@@ -74,7 +67,12 @@ function TTKChart(props: TTKChartProps) {
       lastDamage = damage;
       lastRange = range;
       data.push(
-        damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier)
+        damageToTTK(
+          stats,
+          damage,
+          props.rpmSelector,
+          props.modifiers.healthMultiplier
+        )
       );
     }
     if (damage > 0) {
@@ -85,7 +83,7 @@ function TTKChart(props: TTKChartProps) {
               stats,
               damage,
               props.rpmSelector,
-              props.healthMultiplier
+              props.modifiers.healthMultiplier
             )
           );
         } else {
@@ -94,7 +92,12 @@ function TTKChart(props: TTKChartProps) {
       }
       if (range != highestRangeSeen) {
         data.push(
-          damageToTTK(stats, damage, props.rpmSelector, props.healthMultiplier)
+          damageToTTK(
+            stats,
+            damage,
+            props.rpmSelector,
+            props.modifiers.healthMultiplier
+          )
         );
       }
     }

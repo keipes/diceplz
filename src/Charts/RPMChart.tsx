@@ -1,15 +1,12 @@
-import { Bar, Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
-import { WeaponSelections } from "../App.tsx";
+import { GetStatsForConfiguration } from "../WeaponData.ts";
 import { useState } from "react";
 import "./RPMChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 
 interface RPMChartProps {
-  selectedWeapons: Map<string, WeaponSelections>;
-  selectedWeaponsData: Map<string, WeaponStats>;
   weaponConfigurations: Map<String, WeaponConfiguration>;
 }
 

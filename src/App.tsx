@@ -19,15 +19,14 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import {
-  GetCategoryWeapons,
-  GetStatsForConfiguration,
-  WeaponCategories,
-  WeaponStats,
-} from "./WeaponData.ts";
+import { GetStatsForConfiguration } from "./WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
-import { LocalStoreConfigLoader, Modifiers } from "./Data/ConfigLoader.ts";
+import {
+  DefaultModifiers,
+  LocalStoreConfigLoader,
+} from "./Data/ConfigLoader.ts";
+import BTKChart from "./Charts/BTKChart.tsx";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -78,70 +77,18 @@ interface WeaponConfig {
   Reset: ResetFn;
 }
 
-const initialSelectedWeapons = new Map<string, WeaponSelections>();
-
-const CONFIG_STORAGE_KEY = "configurations";
-let initialConfigurations = new Map<string, WeaponConfiguration>();
-let useLocalStorage = false; //location.hostname === "localhost";
-if (useLocalStorage) {
-  const cached = localStorage.getItem(CONFIG_STORAGE_KEY);
-  if (cached) {
-    initialConfigurations = new Map(JSON.parse(cached));
-  }
-}
-
-const initialStoredConfigs: string[] = [];
 function App() {
-  const [selectedWeapons, setSelectedWeapons] = useState(
-    initialSelectedWeapons
-  );
-  const [modifiers, setModifiers] = useState({
-    healthMultiplier: 1,
-    damageMultiplier: 1,
-    bodyDamageMultiplier: 1,
-  });
+  const [modifiers, setModifiers] = useState(DefaultModifiers);
 
-  // these functions are a hack until I want to modify all the props below to
-  // just pass the Modifiers object
-  interface Assigner {
-    (modifiers: Modifiers): void;
-  }
-  const assign = (assigner: Assigner) => {
-    const newModifiers = structuredClone(modifiers);
-    assigner(newModifiers);
-    setModifiers(newModifiers);
-  };
-  const healthMultiplier = modifiers.healthMultiplier;
-  const setHealthMultiplier = (multiplier: number) =>
-    assign((m) => (m.healthMultiplier = multiplier));
-  const damageMultiplier = modifiers.damageMultiplier;
-  const setDamageMultiplier = (multiplier: number) =>
-    assign((m) => (m.damageMultiplier = multiplier));
-  const bodyDamageMultiplier = modifiers.bodyDamageMultiplier;
-  const setBodyDamageMultiplier = (multiplier: number) =>
-    assign((m) => (m.bodyDamageMultiplier = multiplier));
+  const [weaponConfigurations, setWeaponConfigurations] = useState(new Map());
 
-  const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
-
-  const [storedConfigs, setStoredConfigs] = useState(initialStoredConfigs);
   const configLoader = new LocalStoreConfigLoader(
     weaponConfigurations,
-    _setWeaponConfigurations,
+    setWeaponConfigurations,
     modifiers,
     setModifiers
   );
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
-  const setWeaponConfigurations = (
-    configurations: Map<string, WeaponConfiguration>
-  ) => {
-    if (useLocalStorage) {
-      localStorage.setItem(
-        CONFIG_STORAGE_KEY,
-        JSON.stringify(Array.from(configurations.entries()))
-      );
-    }
-    _setWeaponConfigurations(configurations);
-  };
 
   function BulkAddWeapon(configs: WeaponConfiguration[]) {
     const configurations = new Map(weaponConfigurations);
@@ -194,29 +141,6 @@ function App() {
     BulkAddWeapon: BulkAddWeapon,
     Reset: Reset,
   };
-
-  // const oldLocalStorageSetting =
-  //   localStorage.getItem("useLocalStorage") == "true";
-  // const [useLocalStorage, setUseLocalStorage] = useState(
-  //   oldLocalStorageSetting
-  // );
-  const selectedWeaponStats = new Map<string, WeaponStats>();
-  for (const category of WeaponCategories) {
-    const weapons = GetCategoryWeapons(category);
-    for (let weapon of weapons) {
-      const selected = selectedWeapons.get(weapon.name);
-      if (selected) {
-        for (const stat of weapon.stats) {
-          if (
-            stat.barrelType == selected.barrelType &&
-            stat.ammoType == selected.ammoType
-          ) {
-            selectedWeaponStats.set(weapon.name, stat);
-          }
-        }
-      }
-    }
-  }
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
   for (const [_, config] of weaponConfigurations) {
@@ -231,10 +155,6 @@ function App() {
   }
   let remainder = highestRangeSeen % 10;
   highestRangeSeen += 10 - remainder;
-  // function handleHealthMultiplier(e) {
-  //   setHealthMultiplier(e.target.value);
-  // }
-  const selectedWeaponsData = selectedWeaponStats;
   let mainContentClass = "main-content";
   if (!configuratorOpen) {
     mainContentClass += " configurator-closed";
@@ -243,14 +163,9 @@ function App() {
     <>
       <TopNav
         weaponConfig={wpnCfg}
-        healthMultiplier={healthMultiplier}
-        setHealthMultiplier={setHealthMultiplier}
-        damageMultiplier={damageMultiplier}
-        setDamageMultiplier={setDamageMultiplier}
-        bodyDamageMultiplier={bodyDamageMultiplier}
-        setBodyDamageMultiplier={setBodyDamageMultiplier}
         configLoader={configLoader}
-        // configs={configLoader.listConfigs()}
+        modifiers={modifiers}
+        setModifiers={setModifiers}
       />
       <WeaponConfigurator
         configurations={weaponConfigurations}
@@ -260,56 +175,43 @@ function App() {
       />
       <div className={mainContentClass}>
         <TTKChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmAuto"}
-          healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
+          modifiers={modifiers}
           title={"TTK Auto"}
         />
         <TTKChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmSingle"}
-          healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
+          modifiers={modifiers}
           title={"TTK Single"}
         />
         <TTKChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmBurst"}
-          healthMultiplier={healthMultiplier}
-          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
+          modifiers={modifiers}
           title={"TTK Burst"}
         />
         <DamageChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
-          damageMultiplier={damageMultiplier * bodyDamageMultiplier}
+          modifiers={modifiers}
         />
-        <RPMChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
+        <BTKChart
           weaponConfigurations={weaponConfigurations}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          modifiers={modifiers}
         />
-        <VelocityChart
-          selectedWeapons={selectedWeapons}
-          selectedWeaponsData={selectedWeaponsData}
-          weaponConfigurations={weaponConfigurations}
-        />
+        <RPMChart weaponConfigurations={weaponConfigurations} />
+        <VelocityChart weaponConfigurations={weaponConfigurations} />
       </div>
     </>
   );

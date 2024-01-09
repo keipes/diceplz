@@ -1,5 +1,10 @@
+import { clone } from "chart.js/helpers";
 import { AddWeaponFn, WeaponConfig } from "../App";
-import { ConfigLoader } from "../Data/ConfigLoader";
+import {
+  ConfigLoader,
+  DefaultModifiers,
+  Modifiers,
+} from "../Data/ConfigLoader";
 import { GetCategoryWeapons, WeaponCategories } from "../WeaponData";
 import "./TopNav.css";
 import { useState, useMemo } from "react";
@@ -8,22 +13,20 @@ interface NumSetterFn {
   (value: number): void;
 }
 
+interface SetModifiersFn {
+  (modifiers: Modifiers): void;
+}
+
 interface NavProps {
   weaponConfig: WeaponConfig;
-  healthMultiplier: number;
-  setHealthMultiplier: NumSetterFn;
-  damageMultiplier: number;
-  setDamageMultiplier: NumSetterFn;
-  bodyDamageMultiplier: number;
-  setBodyDamageMultiplier: NumSetterFn;
   configLoader: ConfigLoader;
+  modifiers: Modifiers;
+  setModifiers: SetModifiersFn;
 }
 
 function TopNav(props: NavProps) {
   const [saveFocused, setSaveFocused] = useState(false);
   const [saveInputValue, setSaveInputValue] = useState("");
-  // const initialConfigs = useMemo(() => props.configLoader.listConfigs());
-  // const token = '';
   const [configsList, setConfigsList] = useState(
     useMemo(() => props.configLoader.listConfigs(), [])
   );
@@ -87,89 +90,20 @@ function TopNav(props: NavProps) {
     );
   }
 
-  weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select" key="settings">
-      <div className="top-nav-label">
-        {" "}
-        <span className="material-symbols-outlined">settings</span>
-      </div>
-      <div className="weapon-select-dropdown-container">
-        <ul className="weapon-select-dropdown">
-          <div className="weapon-select-items-container-settings">
-            <li className="weapon-select-item">
-              {" "}
-              <div>
-                <label htmlFor="health-multiplier">
-                  Soldier Max Health Multiplier:{" "}
-                </label>
-                <input
-                  type="number"
-                  id="health-multiplier"
-                  name="health-multiplier"
-                  step="0.1"
-                  min="0.1"
-                  max="10"
-                  value={props.healthMultiplier}
-                  onChange={(e) =>
-                    props.setHealthMultiplier(parseFloat(e.target.value))
-                  }
-                />
-              </div>
-            </li>
-            <li className="weapon-select-item">
-              <div>
-                <label htmlFor="damage-multiplier">Damage Multiplier: </label>
-                <input
-                  type="number"
-                  id="damage-multiplier"
-                  name="damage-multiplier"
-                  step="0.1"
-                  min="0.1"
-                  max="5"
-                  value={props.damageMultiplier}
-                  onChange={(e) =>
-                    props.setDamageMultiplier(parseFloat(e.target.value))
-                  }
-                />
-              </div>
-            </li>
-            <li className="weapon-select-item">
-              <div>
-                <label htmlFor="body-damage-multiplier">
-                  Body Damage Multiplier:{" "}
-                </label>
-                <input
-                  type="number"
-                  id="body-damage-multiplier"
-                  name="body-damage-multiplier"
-                  step="0.1"
-                  min="0"
-                  max="4"
-                  value={props.bodyDamageMultiplier}
-                  onChange={(e) =>
-                    props.setBodyDamageMultiplier(parseFloat(e.target.value))
-                  }
-                />
-              </div>
-            </li>
-          </div>
-        </ul>
-      </div>
-    </li>
-  );
-
   let saveDialogue = <span>Save Current Configuration</span>;
   const configLoader = props.configLoader;
   const loadable = [];
-  for (const name of configLoader.listConfigs()) {
+
+  const configs = configLoader.listConfigs();
+  configs.sort(Intl.Collator().compare);
+  for (const name of configs) {
     loadable.push(
-      <>
+      <div className="config-loader-container" key={name}>
         <div
           className="config-name"
           onClick={() => {
             configLoader.loadConfig(name);
           }}
-          key={name}
         >
           {name}
         </div>
@@ -184,7 +118,7 @@ function TopNav(props: NavProps) {
             delete
           </span>
         </div>
-      </>
+      </div>
     );
   }
   if (saveFocused) {
@@ -214,8 +148,8 @@ function TopNav(props: NavProps) {
     );
   }
   weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select" key="save load">
-      <div className="top-nav-label">SAVE / LOAD</div>
+    <li className="top-nav-weapon-select " key="save load">
+      <div className="top-nav-label select-save-load">SAVE / LOAD</div>
       <div className="weapon-select-dropdown-container">
         <ul className="weapon-select-dropdown">
           <div
@@ -232,6 +166,93 @@ function TopNav(props: NavProps) {
           </div>
           <div className="weapon-select-items-container-saveload">
             {loadable}
+          </div>
+        </ul>
+      </div>
+    </li>
+  );
+  weaponSelectDropdowns.push(
+    <li className="top-nav-weapon-select" key="settings">
+      <div className="top-nav-label">
+        {" "}
+        <span className="material-symbols-outlined">settings</span>
+      </div>
+      <div className="weapon-select-dropdown-container">
+        <ul className="weapon-select-dropdown">
+          <div
+            className="weapon-select-add-all"
+            onClick={() => {
+              props.setModifiers(DefaultModifiers);
+            }}
+          >
+            Reset
+          </div>
+          <div className="weapon-select-items-container-settings">
+            <li className="weapon-select-item">
+              {" "}
+              <div>
+                <label htmlFor="health-multiplier">
+                  Soldier Max Health Multiplier:{" "}
+                </label>
+                <input
+                  type="number"
+                  className="modifier-multiplier-input"
+                  id="health-multiplier"
+                  name="health-multiplier"
+                  step="0.1"
+                  min="0.1"
+                  max="10"
+                  value={props.modifiers.healthMultiplier}
+                  onChange={(e) => {
+                    const cloned = structuredClone(props.modifiers);
+                    cloned.healthMultiplier = parseFloat(e.target.value);
+                    props.setModifiers(cloned);
+                  }}
+                />
+              </div>
+            </li>
+            <li className="weapon-select-item">
+              <div>
+                <label htmlFor="damage-multiplier">Damage Multiplier: </label>
+                <input
+                  type="number"
+                  className="modifier-multiplier-input"
+                  id="damage-multiplier"
+                  name="damage-multiplier"
+                  step="0.1"
+                  min="0.1"
+                  max="5"
+                  value={props.modifiers.damageMultiplier}
+                  onChange={(e) => {
+                    const cloned = structuredClone(props.modifiers);
+                    cloned.damageMultiplier = parseFloat(e.target.value);
+                    props.setModifiers(cloned);
+                  }}
+                />
+              </div>
+            </li>
+            <li className="weapon-select-item">
+              <div>
+                <label htmlFor="body-damage-multiplier">
+                  Body Damage Multiplier:{" "}
+                </label>
+                <input
+                  className="modifier-multiplier-input"
+                  type="number"
+                  id="body-damage-multiplier"
+                  name="body-damage-multiplier"
+                  step="0.1"
+                  min="0"
+                  max="4"
+                  value={props.modifiers.bodyDamageMultiplier}
+                  onChange={(e) => {
+                    const cloned = structuredClone(props.modifiers);
+                    cloned.bodyDamageMultiplier = parseFloat(e.target.value);
+                    props.setModifiers(cloned);
+                  }}
+                />
+              </div>
+            </li>
           </div>
         </ul>
       </div>
