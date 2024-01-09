@@ -159,6 +159,7 @@ li:hover div.weapon-select-dropdown-container {
   border: none;
   float: right;
   font-size: 12pt;
+  text-align: center;
 }
 
 .modifier-multiplier-input:focus,
