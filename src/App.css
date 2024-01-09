@@ -16,7 +16,8 @@
 
 .chart-outer-container {
   /* background-color: rgba(0, 0, 0, 0.7); */
-  background-color: #000c;
+  background-color: #01010180;
+  /* background-color: var(--battle-grey); */
   padding: 2rem;
   margin-bottom: 0.5rem;
 }

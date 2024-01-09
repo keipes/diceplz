@@ -3,6 +3,7 @@
   top: 0px;
   left: 0;
   background-color: black;
+  /* background-color: var(--battle-grey); */
   z-index: 100;
   width: 100%;
   text-align: left;
@@ -11,11 +12,30 @@
   user-select: none;
 }
 
-.top-nav-title-container {
+/* .top-nav-title-container {
   height: 6rem;
-}
+} */
 .top-nav-title {
   cursor: pointer;
+  margin-left: 1rem;
+  margin-right: 0.5rem;
+  line-height: 4rem;
+  /* font-size: 4rem; */
+  margin-block-start: 0;
+  margin-block-end: 0;
+  font-size: 2.6rem;
+  color: var(--battle-white);
+}
+
+/* .top-nav h1 {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    font-size: 2.6rem;
+    color: var(--battle-white);
+  } */
+
+.top-nav-title:hover {
+  color: var(--battle-blue);
 }
 
 .top-nav ul,
@@ -36,21 +56,24 @@
   width: auto;
 }
 
-.top-nav h1 {
-  margin-block-start: 0;
-  margin-block-end: 0;
-  font-size: 2.6rem;
-  color: var(--battle-white);
-}
-
 .top-nav-label {
   color: #ffffff;
   display: block;
-  font: bold 1.3rem/2rem sans-serif;
-  padding: 1rem 0 1rem 2rem;
+  font: bold 1.3rem sans-serif;
+  /* margin: 1rem 0 0rem 1rem; */
+  line-height: 4rem;
   text-align: center;
   text-decoration: none;
   user-select: none;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* #root > div.top-nav > ul > li:nth-child(10) > div.top-nav-label > span */
+
+.top-nav-label .material-symbols-outlined {
+  line-height: 4rem;
+  font-size: 1.8rem;
 }
 
 .top-nav li:hover .top-nav-label {

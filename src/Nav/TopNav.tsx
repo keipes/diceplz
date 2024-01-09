@@ -177,12 +177,14 @@ function TopNav(props: NavProps) {
       <div className="top-nav">
         <ul>
           <li className="top-nav-title-container" key="123">
-            <h1
-              className="top-nav-title"
-              onClick={() => window.location.reload()}
-            >
-              DicePlz
-            </h1>
+            <a href="https://diceplz.com">
+              <h1
+                className="top-nav-title"
+                onClick={() => window.location.reload()}
+              >
+                DP
+              </h1>
+            </a>
           </li>
           {weaponSelectDropdowns}
         </ul>
