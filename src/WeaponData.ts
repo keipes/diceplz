@@ -62,11 +62,59 @@ function GetStatsForConfiguration(config: WeaponConfiguration) {
   throw new Error("no stats for config");
 }
 
+function GetInitialStatsForWeapon(weapon: Weapon) {
+  for (const stat of weapon.stats) {
+    if (
+      (weapon.name == "BFP.50" || weapon.name == "M44") &&
+      stat.barrelType == "Factory" &&
+      stat.ammoType == "High Power"
+    ) {
+      return stat;
+    }
+    if (
+      weapon.name == "BG57" &&
+      stat.barrelType == "Factory" &&
+      stat.ammoType == "Close Combat"
+    ) {
+      return stat;
+    }
+    if (
+      (weapon.name == "SUPER 500" ||
+        weapon.name == "12M AUTO" ||
+        weapon.name == "MCS-880" ||
+        weapon.name == "NVK-S22") &&
+      stat.barrelType == "Factory" &&
+      stat.ammoType == "#01 Buckshot"
+    ) {
+      return stat;
+    }
+    if (
+      weapon.name == "GHOSTMAKER R10" &&
+      stat.barrelType == "Factory" &&
+      stat.ammoType == "Standard Bolt"
+    ) {
+      return stat;
+    }
+    if (
+      weapon.name == "BSV-M" &&
+      stat.barrelType == "Factory" &&
+      stat.ammoType == "Subsonic"
+    ) {
+      return stat;
+    }
+    if (stat.barrelType == "Factory" && stat.ammoType == "Standard") {
+      return stat;
+    }
+  }
+  return weapon.stats[0];
+}
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
   GetWeaponByName,
   GetStatsForConfiguration,
+  GetInitialStatsForWeapon,
   // WeaponStats,
 };
 

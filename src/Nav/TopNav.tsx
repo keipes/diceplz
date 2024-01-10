@@ -5,7 +5,13 @@ import {
   DefaultModifiers,
   Modifiers,
 } from "../Data/ConfigLoader";
-import { GetCategoryWeapons, WeaponCategories } from "../WeaponData";
+import {
+  GetCategoryWeapons,
+  GetInitialStatsForWeapon,
+  Weapon,
+  WeaponCategories,
+  WeaponStats,
+} from "../WeaponData";
 import "./TopNav.css";
 import { useState, useMemo } from "react";
 
@@ -43,11 +49,12 @@ function TopNav(props: NavProps) {
           className="weapon-select-item"
           key={weapon.name}
           onClick={() => {
+            const stats = GetInitialStatsForWeapon(weapon);
             props.weaponConfig.AddWeapon({
               name: weapon.name,
               visible: true,
-              barrelType: weapon.stats[0].barrelType,
-              ammoType: weapon.stats[0].ammoType,
+              barrelType: stats.barrelType,
+              ammoType: stats.ammoType,
             });
           }}
         >
@@ -68,11 +75,12 @@ function TopNav(props: NavProps) {
                   if (weapon.stats.length == 0) {
                     console.warn("no stats for " + weapon.name);
                   } else {
+                    const stats = GetInitialStatsForWeapon(weapon);
                     toAdd.push({
                       name: weapon.name,
                       visible: true,
-                      barrelType: weapon.stats[0].barrelType,
-                      ammoType: weapon.stats[0].ammoType,
+                      barrelType: stats.barrelType,
+                      ammoType: stats.ammoType,
                     });
                   }
                 }

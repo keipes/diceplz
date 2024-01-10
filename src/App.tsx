@@ -163,8 +163,8 @@ function App() {
       }
     }
   }
-  let remainder = highestRangeSeen % 10;
-  highestRangeSeen += 10 - remainder;
+  let remainder = highestRangeSeen % 100;
+  // highestRangeSeen += 100 - remainder;
   let mainContentClass = "main-content";
   if (!configuratorOpen) {
     mainContentClass += " configurator-closed";
