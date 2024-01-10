@@ -163,6 +163,10 @@ function App() {
       }
     }
   }
+  if (requiredRanges.size == 1) {
+    highestRangeSeen = 100;
+    requiredRanges.set(highestRangeSeen, true);
+  }
   let remainder = highestRangeSeen % 100;
   // highestRangeSeen += 100 - remainder;
   let mainContentClass = "main-content";
