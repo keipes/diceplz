@@ -1,12 +1,14 @@
 import { Bar } from "react-chartjs-2";
+import type { ChartData, ChartOptions } from "chart.js";
 import StringHue from "../StringColor.ts";
 import { GetStatsForConfiguration } from "../WeaponData.ts";
 import "./VelocityChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
+import { SortableWeaponData } from "./SharedTypes.ts";
 
 interface VelocityChartProps {
-  weaponConfigurations: Map<String, WeaponConfiguration>;
+  weaponConfigurations: Map<string, WeaponConfiguration>;
 }
 
 function VelocityChart(props: VelocityChartProps) {
@@ -14,20 +16,23 @@ function VelocityChart(props: VelocityChartProps) {
   const datasets = [];
   const data = [];
   const backgroundColors = [];
-  const weaponData = [];
+  const weaponData: SortableWeaponData[] = [];
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    weaponData.push([config, stats]);
+    weaponData.push({ config: config, stats: stats });
   }
   weaponData.sort((a, b) => {
-    return b[1].velocity - a[1].velocity;
+    return (b.stats.velocity || 0) - (a.stats.velocity || 0);
   });
-  for (const [config, stats] of weaponData) {
-    const label = ConfigDisplayName(config);
+  for (const wd of weaponData) {
+    // if (wd.stats.velocity === undefined) continue;
+    let velocity = wd.stats.velocity;
+    if (velocity === undefined) velocity = 1;
+    const label = ConfigDisplayName(wd.config);
     labels.push(label);
     backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
-    data.push(stats.velocity);
+    data.push(velocity);
   }
   datasets.push({
     label: "Velocity",
@@ -35,14 +40,13 @@ function VelocityChart(props: VelocityChartProps) {
     backgroundColor: backgroundColors,
     borderWidth: 0,
   });
-  const chartData = {
+  const chartData: ChartData<"bar"> = {
     labels: labels,
     datasets: datasets,
   };
-  const options = {
+  const options: ChartOptions<"bar"> = {
     maintainAspectRatio: false,
     animation: false,
-    spanGaps: true,
     interaction: {
       intersect: false,
       mode: "index",
@@ -50,7 +54,7 @@ function VelocityChart(props: VelocityChartProps) {
     plugins: {
       tooltip: {
         itemSort: function (a, b) {
-          return b.raw - a.raw;
+          return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           label: function (ctx) {
@@ -69,7 +73,6 @@ function VelocityChart(props: VelocityChartProps) {
         },
       },
     },
-    stepped: true,
     scales: {
       y: {
         title: {

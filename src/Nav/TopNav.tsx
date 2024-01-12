@@ -1,5 +1,4 @@
-import { clone } from "chart.js/helpers";
-import { AddWeaponFn, WeaponConfig } from "../App";
+import { WeaponConfig } from "../App";
 import {
   ConfigLoader,
   DefaultModifiers,
@@ -8,16 +7,10 @@ import {
 import {
   GetCategoryWeapons,
   GetInitialStatsForWeapon,
-  Weapon,
   WeaponCategories,
-  WeaponStats,
 } from "../WeaponData";
 import "./TopNav.css";
-import { useState, useMemo } from "react";
-
-interface NumSetterFn {
-  (value: number): void;
-}
+import { useState } from "react";
 
 interface SetModifiersFn {
   (modifiers: Modifiers): void;
@@ -33,9 +26,9 @@ interface NavProps {
 function TopNav(props: NavProps) {
   const [saveFocused, setSaveFocused] = useState(false);
   const [saveInputValue, setSaveInputValue] = useState("");
-  const [configsList, setConfigsList] = useState(
-    useMemo(() => props.configLoader.listConfigs(), [])
-  );
+  // const [configsList, setConfigsList] = useState(
+  //   useMemo(() => props.configLoader.listConfigs(), [])
+  // );
   const weaponSelectDropdowns = [];
   for (const category of WeaponCategories) {
     const weaponSelectItems = [];
@@ -120,7 +113,7 @@ function TopNav(props: NavProps) {
             className="config-delete material-symbols-outlined"
             onClick={() => {
               configLoader.deleteConfig(name);
-              setConfigsList(configLoader.listConfigs());
+              // setConfigsList(configLoader.listConfigs());
             }}
           >
             delete
@@ -140,7 +133,7 @@ function TopNav(props: NavProps) {
           } else {
             configLoader.saveConfig(saveInputValue);
           }
-          setConfigsList(configLoader.listConfigs());
+          // setConfigsList(configLoader.listConfigs());
           setSaveInputValue("");
         }}
       >

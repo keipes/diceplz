@@ -1,13 +1,15 @@
 import { Bar } from "react-chartjs-2";
+import type { ChartData, ChartOptions } from "chart.js";
 import StringHue from "../StringColor.ts";
 import { GetStatsForConfiguration } from "../WeaponData.ts";
 import { useState } from "react";
 import "./RPMChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
+import { SortableWeaponData } from "./SharedTypes.ts";
 
 interface RPMChartProps {
-  weaponConfigurations: Map<String, WeaponConfiguration>;
+  weaponConfigurations: Map<string, WeaponConfiguration>;
 }
 
 function RPMChart(props: RPMChartProps) {
@@ -22,30 +24,32 @@ function RPMChart(props: RPMChartProps) {
   const backgroundColors = [];
   const singleData = [];
   const singleBackgroundColors = [];
-  const weaponData = [];
+  const weaponData: SortableWeaponData[] = [];
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    weaponData.push([config, stats]);
+    weaponData.push({ config: config, stats: stats });
   }
   weaponData.sort((a, b) => {
     const aValues = [];
     const bValues = [];
     if (showAuto) {
-      aValues.push(a[1].rpmAuto || 0);
-      bValues.push(b[1].rpmAuto || 0);
+      aValues.push(a.stats.rpmAuto || 0);
+      bValues.push(b.stats.rpmAuto || 0);
     }
     if (showBurst) {
-      aValues.push(a[1].rpmBurst || 0);
-      bValues.push(b[1].rpmBurst || 0);
+      aValues.push(a.stats.rpmBurst || 0);
+      bValues.push(b.stats.rpmBurst || 0);
     }
     if (showSingle) {
-      aValues.push(a[1].rpmSingle || 0);
-      bValues.push(b[1].rpmSingle || 0);
+      aValues.push(a.stats.rpmSingle || 0);
+      bValues.push(b.stats.rpmSingle || 0);
     }
     return Math.max(...bValues) - Math.max(...aValues);
   });
-  for (const [config, stats] of weaponData) {
+  for (const wd of weaponData) {
+    const stats = wd.stats;
+    const config = wd.config;
     const weaponName = ConfigDisplayName(config);
     labels.push(weaponName);
     if (showAuto) {
@@ -110,14 +114,13 @@ function RPMChart(props: RPMChartProps) {
       borderWidth: 0,
     });
   }
-  const chartData = {
+  const chartData: ChartData<"bar"> = {
     labels: labels,
     datasets: datasets,
   };
-  const options = {
+  const options: ChartOptions<"bar"> = {
     maintainAspectRatio: false,
     animation: false,
-    spanGaps: true,
     interaction: {
       intersect: false,
       mode: "index",
@@ -144,7 +147,6 @@ function RPMChart(props: RPMChartProps) {
         },
       },
     },
-    stepped: true,
     scales: {
       y: {
         title: {

@@ -1,7 +1,6 @@
 import { GetWeaponByName } from "../WeaponData.ts";
 import { WeaponConfig } from "../App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "../LabelMaker.ts";
 import { ConfigHSL } from "../StringColor.ts";
 
 interface WeaponProps {

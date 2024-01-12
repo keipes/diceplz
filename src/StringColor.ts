@@ -1,7 +1,7 @@
 import { ConfigDisplayName } from "./LabelMaker";
 import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
 
-const cyrb53 = function (str, seed = 0) {
+const cyrb53 = function (str: string, seed = 0) {
   let h1 = 0xdeadbeef ^ seed,
     h2 = 0x41c6ce57 ^ seed;
   for (let i = 0, ch; i < str.length; i++) {
@@ -16,7 +16,8 @@ const cyrb53 = function (str, seed = 0) {
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
 
-const StringHue = function (str: string) {
+const StringHue = function (str: string | undefined) {
+  if (str === undefined) return 255;
   return (cyrb53(str) / Math.pow(2, 53)) * 255;
 };
 

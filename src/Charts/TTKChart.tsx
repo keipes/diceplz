@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import type { ChartData, ChartOptions } from "chart.js";
 import StringHue from "../StringColor.ts";
 import {
   GetStatsForConfiguration,
@@ -20,7 +21,7 @@ interface TTKChartProps {
 }
 
 interface RPMSelectorFn {
-  (stats: WeaponStats): number;
+  (stats: WeaponStats): number | undefined;
 }
 
 const damageToTTK = function (
@@ -30,7 +31,11 @@ const damageToTTK = function (
   healthMultiplier: number
 ) {
   const btk = Math.ceil((healthMultiplier * 100) / damage);
-  return Math.round((1000 / (rpmSelector(stats) / 60)) * (btk - 1));
+  const rpm = rpmSelector(stats);
+  if (rpm === undefined) {
+    return null;
+  }
+  return Math.round((1000 / (rpm / 60)) * (btk - 1));
 };
 
 const FIREMODE_AUTO = "auto";
@@ -66,7 +71,7 @@ function TTKChart(props: TTKChartProps) {
   const requiredRanges = props.requiredRanges;
   const datasets = [];
 
-  for (const [id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const weapon = GetWeaponByName(config.name);
@@ -80,8 +85,11 @@ function TTKChart(props: TTKChartProps) {
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
       let pelletMultiplier = 1;
-      if (weapon.pelletCounts && weapon.pelletCounts[config.ammoType]) {
-        pelletMultiplier = weapon.pelletCounts[config.ammoType];
+      if (weapon.pelletCounts) {
+        const pelletCount = weapon.pelletCounts[config.ammoType];
+        if (pelletCount !== undefined) {
+          pelletMultiplier = pelletCount;
+        }
       }
       damage = dropoff.damage * damageMultiplier * pelletMultiplier;
       for (let i = lastRange + 1; i < range; i++) {
@@ -141,6 +149,7 @@ function TTKChart(props: TTKChartProps) {
       data: data,
       fill: false,
       borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
+      stepped: true,
     });
   }
 
@@ -152,11 +161,11 @@ function TTKChart(props: TTKChartProps) {
       labels.push("");
     }
   }
-  const chartData = {
+  const chartData: ChartData<"line"> = {
     labels: labels,
     datasets: datasets,
   };
-  const options = {
+  const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
     spanGaps: true,
@@ -167,11 +176,12 @@ function TTKChart(props: TTKChartProps) {
     plugins: {
       tooltip: {
         itemSort: function (a, b) {
-          return b.raw - a.raw;
+          return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           labelColor: (ctx) => {
             return {
+              borderColor: "white",
               backgroundColor:
                 "hsl(" + StringHue(ctx.dataset.label) + ", 50%, 50%)",
             };
@@ -189,7 +199,6 @@ function TTKChart(props: TTKChartProps) {
         },
       },
     },
-    stepped: true,
     scales: {
       y: {
         title: {
@@ -203,7 +212,6 @@ function TTKChart(props: TTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
-          beginAtZero: true,
         },
       },
       x: {
@@ -218,7 +226,6 @@ function TTKChart(props: TTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
-          beginAtZero: true,
           autoSkip: false,
         },
       },

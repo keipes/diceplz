@@ -15,7 +15,7 @@ interface ConfigLoader {
 }
 
 interface SetConfigurationsFn {
-  (configs: Map<String, WeaponConfiguration>): void;
+  (configs: Map<string, WeaponConfiguration>): void;
 }
 
 interface Modifiers {

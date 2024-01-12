@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import type { ChartData, ChartOptions } from "chart.js";
 import StringHue from "../StringColor.ts";
 import { GetStatsForConfiguration } from "../WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
@@ -6,7 +7,7 @@ import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
 
 interface BTKChartProps {
-  weaponConfigurations: Map<String, WeaponConfiguration>;
+  weaponConfigurations: Map<string, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
@@ -17,7 +18,7 @@ function BTKChart(props: BTKChartProps) {
   const requiredRanges = props.requiredRanges;
   const datasets = [];
 
-  for (const [id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];
@@ -65,6 +66,7 @@ function BTKChart(props: BTKChartProps) {
       fill: false,
       borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
       tension: 0.1,
+      stepped: true,
     });
   }
 
@@ -76,11 +78,11 @@ function BTKChart(props: BTKChartProps) {
       labels.push("");
     }
   }
-  const chartData = {
+  const chartData: ChartData<"line"> = {
     labels: labels,
     datasets: datasets,
   };
-  const options = {
+  const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
     spanGaps: true,
@@ -91,11 +93,12 @@ function BTKChart(props: BTKChartProps) {
     plugins: {
       tooltip: {
         itemSort: function (a, b) {
-          return b.raw - a.raw;
+          return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           labelColor: (ctx) => {
             return {
+              borderColor: "white",
               backgroundColor:
                 "hsl(" + StringHue(ctx.dataset.label) + ", 50%, 50%)",
             };
@@ -113,7 +116,7 @@ function BTKChart(props: BTKChartProps) {
         },
       },
     },
-    stepped: true,
+    // stepped: true,
     scales: {
       y: {
         title: {
@@ -127,7 +130,6 @@ function BTKChart(props: BTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
-          beginAtZero: true,
         },
       },
       x: {
@@ -142,7 +144,6 @@ function BTKChart(props: BTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
-          beginAtZero: true,
           autoSkip: false,
         },
       },

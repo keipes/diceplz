@@ -1,7 +1,6 @@
 import "./WeaponConfigurator.css";
 import { WeaponConfig } from "../App";
 import Weapon from "./Weapon";
-import { useState } from "react";
 
 interface WeaponConfiguratorProps {
   configurations: Map<string, WeaponConfiguration>;

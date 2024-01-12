@@ -1,25 +1,28 @@
 import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
-import weaponData from "./assets/weapons.json";
+import _weaponData from "./assets/weapons.json";
+const weaponData: WeaponDataJSON = _weaponData;
 
+interface WeaponDataJSON {
+  categories: WeaponCategory[];
+}
+
+interface WeaponCategory {
+  name: string;
+  weapons: Weapon[];
+}
 interface Weapon {
   name: string;
   stats: WeaponStats[];
-  pelletCounts?: Record<string, number>;
+  pelletCounts?: Record<string, number | undefined>;
 }
-
-// interface PelletCounts {
-//     ammoType
-// }
-
 interface WeaponStats {
-  name: string;
   barrelType: string;
   ammoType: string;
   dropoffs: DamageRange[];
-  rpmSingle: number;
-  rpmBurst: number;
-  rpmAuto: number;
-  velocity: number;
+  rpmSingle?: number;
+  rpmBurst?: number;
+  rpmAuto?: number;
+  velocity?: number;
   pelletCount?: number;
 }
 
@@ -28,9 +31,29 @@ interface DamageRange {
   range: number;
 }
 
-const WeaponCategories: string[] = Object.keys(weaponData);
+// interface WeaponStats extends WeaponStatsRaw {
+//   name: string;
+// }
+
+interface CategorySelectorFn {}
+const CategorySelectors: Map<string, CategorySelectorFn> = new Map();
+const CategoriesByString: Map<string, WeaponCategory> = new Map();
+const WeaponCategories: string[] = [];
+for (const category of weaponData.categories) {
+  WeaponCategories.push(category.name);
+  CategoriesByString.set(category.name, category);
+}
+
+for (const category of WeaponCategories) {
+  CategorySelectors.set(category, () => {});
+}
+
 function GetCategoryWeapons(category: string): Weapon[] {
-  return weaponData[category];
+  const categoryData = CategoriesByString.get(category);
+  if (categoryData) {
+    return categoryData.weapons;
+  }
+  throw new Error("Undefined category: " + String(category));
 }
 
 const weaponsByName = new Map<string, Weapon>();
