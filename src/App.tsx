@@ -194,9 +194,15 @@ function App() {
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmAuto"}
           modifiers={modifiers}
-          title={"TTK Auto"}
+          title={"Time To Kill"}
         />
-        <TTKChart
+        <BTKChart
+          weaponConfigurations={weaponConfigurations}
+          requiredRanges={requiredRanges}
+          highestRangeSeen={highestRangeSeen}
+          modifiers={modifiers}
+        />
+        {/* <TTKChart
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
@@ -211,19 +217,14 @@ function App() {
           rpmSelector={"rpmBurst"}
           modifiers={modifiers}
           title={"TTK Burst"}
-        />
+        /> */}
         <DamageChart
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           modifiers={modifiers}
         />
-        <BTKChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
-          modifiers={modifiers}
-        />
+
         <RPMChart weaponConfigurations={weaponConfigurations} />
         <VelocityChart weaponConfigurations={weaponConfigurations} />
       </div>

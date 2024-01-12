@@ -118,7 +118,7 @@ function BTKChart(props: BTKChartProps) {
       y: {
         title: {
           display: true,
-          text: "shots",
+          text: "hits",
           color: "white",
         },
         grid: {
@@ -150,7 +150,7 @@ function BTKChart(props: BTKChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>BTK</h2>
+      <h2>Bullets To Kill</h2>
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>

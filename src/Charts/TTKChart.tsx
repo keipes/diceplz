@@ -8,6 +8,7 @@ import {
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
+import { useState } from "react";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -18,20 +19,53 @@ interface TTKChartProps {
   modifiers: Modifiers;
 }
 
+interface RPMSelectorFn {
+  (stats: WeaponStats): number;
+}
+
 const damageToTTK = function (
   stats: WeaponStats,
   damage: number,
-  rpmSelector: string,
+  rpmSelector: RPMSelectorFn,
   healthMultiplier: number
 ) {
   const btk = Math.ceil((healthMultiplier * 100) / damage);
-  return Math.round((1000 / (stats[rpmSelector] / 60)) * (btk - 1));
+  return Math.round((1000 / (rpmSelector(stats) / 60)) * (btk - 1));
 };
 
+const FIREMODE_AUTO = "auto";
+const FIREMODE_BURST = "burst";
+const FIREMODE_SINGLE = "single";
+const SELECTOR_AUTO: RPMSelectorFn = (stats: WeaponStats) => stats.rpmAuto;
+const SELECTOR_BURST: RPMSelectorFn = (stats: WeaponStats) => stats.rpmBurst;
+const SELECTOR_SINGLE: RPMSelectorFn = (stats: WeaponStats) => stats.rpmSingle;
+
 function TTKChart(props: TTKChartProps) {
+  const [selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
+  let autoClass = "abs-selector";
+  let burstClass = "abs-selector";
+  let singleClass = "abs-selector";
+  let rpmSelector: RPMSelectorFn = (_) => {
+    throw new Error("Undefined weapon selector.");
+  };
+  switch (selectedFireMode) {
+    case FIREMODE_AUTO:
+      autoClass += " enabled";
+      rpmSelector = SELECTOR_AUTO;
+      break;
+    case FIREMODE_BURST:
+      burstClass += " enabled";
+      rpmSelector = SELECTOR_BURST;
+      break;
+    case FIREMODE_SINGLE:
+      singleClass += " enabled";
+      rpmSelector = SELECTOR_SINGLE;
+      break;
+  }
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
   const datasets = [];
+
   for (const [id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -56,7 +90,7 @@ function TTKChart(props: TTKChartProps) {
             damageToTTK(
               stats,
               lastDamage,
-              props.rpmSelector,
+              rpmSelector,
               props.modifiers.healthMultiplier
             )
           );
@@ -70,7 +104,7 @@ function TTKChart(props: TTKChartProps) {
         damageToTTK(
           stats,
           damage,
-          props.rpmSelector,
+          rpmSelector,
           props.modifiers.healthMultiplier
         )
       );
@@ -82,7 +116,7 @@ function TTKChart(props: TTKChartProps) {
             damageToTTK(
               stats,
               damage,
-              props.rpmSelector,
+              rpmSelector,
               props.modifiers.healthMultiplier
             )
           );
@@ -95,7 +129,7 @@ function TTKChart(props: TTKChartProps) {
           damageToTTK(
             stats,
             damage,
-            props.rpmSelector,
+            rpmSelector,
             props.modifiers.healthMultiplier
           )
         );
@@ -190,9 +224,30 @@ function TTKChart(props: TTKChartProps) {
       },
     },
   };
+
   return (
     <div className="chart-outer-container">
       <h2>{props.title}</h2>
+      <div className="button-container">
+        <button
+          className={autoClass}
+          onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
+        >
+          Auto
+        </button>
+        <button
+          className={burstClass}
+          onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
+        >
+          Burst
+        </button>
+        <button
+          className={singleClass}
+          onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
+        >
+          Single
+        </button>
+      </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>
