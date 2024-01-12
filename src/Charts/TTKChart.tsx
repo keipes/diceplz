@@ -160,7 +160,7 @@ function TTKChart(props: TTKChartProps) {
       y: {
         title: {
           display: true,
-          text: "ms",
+          text: "milliseconds",
           color: "white",
         },
         grid: {
