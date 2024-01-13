@@ -121,7 +121,7 @@ function BTKChart(props: BTKChartProps) {
       y: {
         title: {
           display: true,
-          text: "hits",
+          text: "bullets",
           color: "white",
         },
         grid: {

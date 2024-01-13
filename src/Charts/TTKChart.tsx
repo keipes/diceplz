@@ -46,30 +46,56 @@ const SELECTOR_BURST: RPMSelectorFn = (stats: WeaponStats) => stats.rpmBurst;
 const SELECTOR_SINGLE: RPMSelectorFn = (stats: WeaponStats) => stats.rpmSingle;
 
 function TTKChart(props: TTKChartProps) {
-  const [selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
+  const [_selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
   let autoClass = "abs-selector";
   let burstClass = "abs-selector";
   let singleClass = "abs-selector";
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
-  switch (selectedFireMode) {
-    case FIREMODE_AUTO:
-      autoClass += " enabled";
-      rpmSelector = SELECTOR_AUTO;
-      break;
-    case FIREMODE_BURST:
-      burstClass += " enabled";
-      rpmSelector = SELECTOR_BURST;
-      break;
-    case FIREMODE_SINGLE:
-      singleClass += " enabled";
-      rpmSelector = SELECTOR_SINGLE;
-      break;
-  }
+
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
   const datasets = [];
+  let seenAuto = false;
+  let seenBurst = false;
+  let seenSingle = false;
+  let selectedFireMode = _selectedFireMode;
+  for (const [_id, config] of props.weaponConfigurations) {
+    const stats = GetStatsForConfiguration(config);
+    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
+    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
+    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
+  }
+  switch (_selectedFireMode) {
+    case FIREMODE_AUTO:
+      if (!seenAuto) {
+        if (seenBurst) {
+          selectedFireMode = FIREMODE_BURST;
+        } else if (seenSingle) {
+          selectedFireMode = FIREMODE_SINGLE;
+        }
+      }
+      break;
+    case FIREMODE_BURST:
+      if (!seenBurst) {
+        if (seenAuto) {
+          selectedFireMode = FIREMODE_AUTO;
+        } else if (seenSingle) {
+          selectedFireMode = FIREMODE_SINGLE;
+        }
+      }
+      break;
+    case FIREMODE_SINGLE:
+      if (!seenSingle) {
+        if (seenAuto) {
+          selectedFireMode = FIREMODE_AUTO;
+        } else if (seenBurst) {
+          selectedFireMode = FIREMODE_BURST;
+        }
+      }
+      break;
+  }
 
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
@@ -82,6 +108,9 @@ function TTKChart(props: TTKChartProps) {
     let damage = 0;
     const damageMultiplier =
       props.modifiers.damageMultiplier * props.modifiers.bodyDamageMultiplier;
+    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
+    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
+    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
       let pelletMultiplier = 1;
@@ -90,6 +119,20 @@ function TTKChart(props: TTKChartProps) {
         if (pelletCount !== undefined) {
           pelletMultiplier = pelletCount;
         }
+      }
+      switch (selectedFireMode) {
+        case FIREMODE_AUTO:
+          if (seenAuto) autoClass += " enabled";
+          rpmSelector = SELECTOR_AUTO;
+          break;
+        case FIREMODE_BURST:
+          if (seenBurst) burstClass += " enabled";
+          rpmSelector = SELECTOR_BURST;
+          break;
+        case FIREMODE_SINGLE:
+          if (seenSingle) singleClass += " enabled";
+          rpmSelector = SELECTOR_SINGLE;
+          break;
       }
       damage = dropoff.damage * damageMultiplier * pelletMultiplier;
       for (let i = lastRange + 1; i < range; i++) {
@@ -153,6 +196,20 @@ function TTKChart(props: TTKChartProps) {
     });
   }
 
+  switch (selectedFireMode) {
+    case FIREMODE_AUTO:
+      if (seenAuto) autoClass += " enabled";
+      rpmSelector = SELECTOR_AUTO;
+      break;
+    case FIREMODE_BURST:
+      if (seenBurst) burstClass += " enabled";
+      rpmSelector = SELECTOR_BURST;
+      break;
+    case FIREMODE_SINGLE:
+      if (seenSingle) singleClass += " enabled";
+      rpmSelector = SELECTOR_SINGLE;
+      break;
+  }
   const labels = [];
   for (let i = 0; i <= highestRangeSeen; i++) {
     if (requiredRanges.has(i) || i == highestRangeSeen) {
@@ -239,18 +296,21 @@ function TTKChart(props: TTKChartProps) {
         <button
           className={autoClass}
           onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
+          disabled={!seenAuto}
         >
           Auto
         </button>
         <button
           className={burstClass}
           onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
+          disabled={!seenBurst}
         >
           Burst
         </button>
         <button
           className={singleClass}
           onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
+          disabled={!seenSingle}
         >
           Single
         </button>

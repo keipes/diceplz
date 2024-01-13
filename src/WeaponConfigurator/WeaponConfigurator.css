@@ -6,6 +6,7 @@
   height: 30vh;
   width: 100%;
   transition: all 0.2s ease;
+  background-color: black;
 }
 
 .wcf-container-closed {

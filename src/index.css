@@ -51,11 +51,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #000;
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
+
+button:hover:not([disabled]) {
   border-color: var(--battle-blue);
   border-width: 1px;
   color: var(--battle-blue);
@@ -63,6 +64,21 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+button:focus {
+  outline: none;
+}
+.btn-enabled {
+  color: var(--battle-blue);
+}
+
+.button-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 10px;
+  max-width: 20vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* @media (prefers-color-scheme: light) {

@@ -13,9 +13,9 @@ interface RPMChartProps {
 }
 
 function RPMChart(props: RPMChartProps) {
-  const [showAuto, setShowAuto] = useState(true);
-  const [showSingle, setShowSingle] = useState(true);
-  const [showBurst, setShowBurst] = useState(true);
+  const [_showAuto, setShowAuto] = useState(true);
+  const [_showSingle, setShowSingle] = useState(true);
+  const [_showBurst, setShowBurst] = useState(true);
   const labels = [];
   const datasets = [];
   const data = [];
@@ -25,11 +25,20 @@ function RPMChart(props: RPMChartProps) {
   const singleData = [];
   const singleBackgroundColors = [];
   const weaponData: SortableWeaponData[] = [];
+  let seenAuto = false;
+  let seenBurst = false;
+  let seenSingle = false;
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
+    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
+    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
+    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
     weaponData.push({ config: config, stats: stats });
   }
+  const showAuto = _showAuto && seenAuto;
+  const showSingle = _showSingle && seenSingle;
+  const showBurst = _showBurst && seenBurst;
   weaponData.sort((a, b) => {
     const aValues = [];
     const bValues = [];
@@ -127,9 +136,6 @@ function RPMChart(props: RPMChartProps) {
     },
     plugins: {
       tooltip: {
-        //   itemSort: function(a, b) {
-        //     return b.raw - a.raw;
-        //   },
         callbacks: {
           label: function (ctx) {
             if (ctx.parsed.y == null) {
@@ -151,7 +157,7 @@ function RPMChart(props: RPMChartProps) {
       y: {
         title: {
           display: true,
-          text: "rpm",
+          text: "rounds",
           color: "white",
         },
         grid: {
@@ -180,25 +186,31 @@ function RPMChart(props: RPMChartProps) {
   let autoClass = "abs-selector";
   let burstClass = "abs-selector";
   let singleClass = "abs-selector";
-  if (showAuto) autoClass += " enabled";
-  if (showBurst) burstClass += " enabled";
-  if (showSingle) singleClass += " enabled";
+  if (showAuto) autoClass += " btn-enabled";
+  if (showBurst) burstClass += " btn-enabled";
+  if (showSingle) singleClass += " btn-enabled";
   return (
     <div className="chart-outer-container">
-      <h2>RPM</h2>
+      <h2>Rounds Per Minute</h2>
       <div className="button-container">
-        <button className={autoClass} onClick={(_) => setShowAuto(!showAuto)}>
+        <button
+          className={autoClass}
+          onClick={(_) => setShowAuto(!showAuto)}
+          disabled={!seenAuto}
+        >
           Auto
         </button>
         <button
           className={burstClass}
           onClick={(_) => setShowBurst(!showBurst)}
+          disabled={!seenBurst}
         >
           Burst
         </button>
         <button
           className={singleClass}
           onClick={(_) => setShowSingle(!showSingle)}
+          disabled={!seenSingle}
         >
           Single
         </button>
