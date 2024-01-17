@@ -112,22 +112,27 @@
   grid-template-columns: 1fr 30px 30px 30px;
   height: 2.2rem;
   margin-bottom: 0.6rem;
+  /* vertical-align: center; */
 }
 .wcf-header-item {
   display: grid;
   overflow: hidden;
   height: 2.2rem;
+  /* position: absolute; */
+  /* bottom: 0; */
 }
 
 .wcf-header-button {
   cursor: pointer;
   user-select: none;
-}
-.wcf-duplicate:hover,
-.wcf-visibility:hover {
-  color: var(--battle-blue);
+  height: 1.8rem;
 }
 
-.wcf-close:hover {
-  color: var(--battle-red);
+.wcf-visibility {
+  position: relative;
+  top: 0.2rem;
+}
+.wcf-close {
+  position: relative;
+  top: 0.2rem;
 }

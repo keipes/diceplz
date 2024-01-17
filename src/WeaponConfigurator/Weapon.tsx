@@ -3,6 +3,11 @@ import { WeaponConfig } from "../App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 import { ConfigHSL } from "../StringColor.ts";
 
+import copySvg from "../icons/content_copy_FILL0_wght400_GRAD0_opsz24.svg";
+import visibilitySvg from "../icons/visibility_FILL0_wght400_GRAD0_opsz24.svg";
+import visibilityOffSvg from "../icons/visibility_off_FILL0_wght400_GRAD0_opsz24.svg";
+import deleteSvg from "../icons/delete_FILL0_wght400_GRAD0_opsz24.svg";
+
 interface WeaponProps {
   id: string;
   config: WeaponConfiguration;
@@ -80,38 +85,48 @@ function Weapon(props: WeaponProps) {
   if (!config.visible) {
     visibility += "_off";
   }
+  let visibilitySource = visibilitySvg;
+  if (!config.visible) {
+    visibilitySource = visibilityOffSvg;
+  }
   return (
     <div className="wcf-weapon" style={style}>
       <div className="wcf-header">
         <div className="wcf-header-item wcf-name" style={nameStyle}>
           {config.name}
         </div>
-        <span
-          className="wcf-header-item wcf-header-button wcf-duplicate material-symbols-outlined"
+        <img
+          className={
+            "config-delete wcf-header-item wcf-header-button wcf-duplicate svg-white svg-hover-blue"
+          }
+          src={copySvg}
           onClick={() => {
             props.weaponConfig.DuplicateWeapon(props.id);
           }}
-        >
-          content_copy
-        </span>
-        <span
-          className="wcf-header-item wcf-header-button wcf-visibility material-symbols-outlined"
+          alt="duplicate"
+        />
+        <img
+          className={
+            "wcf-header-item wcf-header-button wcf-visibility svg-white svg-hover-blue"
+          }
+          src={visibilitySource}
           onClick={() => {
             const cloned = JSON.parse(JSON.stringify(props.config));
             cloned.visible = !cloned.visible;
             props.weaponConfig.UpdateWeapon(props.id, cloned);
           }}
-        >
-          {visibility}
-        </span>
-        <span
-          className="wcf-header-item wcf-header-button wcf-close material-symbols-outlined"
+          alt="toggle visibility"
+        />
+        <img
+          className={
+            "wcf-header-item wcf-header-button wcf-close svg-white svg-hover-red"
+          }
+          src={deleteSvg}
           onClick={() => {
             props.weaponConfig.RemoveWeapon(props.id);
           }}
-        >
-          delete
-        </span>
+          alt="delete"
+        />
       </div>
 
       <div className="wcf-weapon-selector">

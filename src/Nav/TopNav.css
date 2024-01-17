@@ -3,7 +3,6 @@
   top: 0px;
   left: 0;
   background-color: black;
-  /* background-color: var(--battle-grey); */
   z-index: 100;
   width: 100%;
   text-align: left;
@@ -12,27 +11,16 @@
   user-select: none;
 }
 
-/* .top-nav-title-container {
-  height: 6rem;
-} */
 .top-nav-title {
   cursor: pointer;
   margin-left: 1rem;
   margin-right: 0.5rem;
   line-height: 4rem;
-  /* font-size: 4rem; */
   margin-block-start: 0;
   margin-block-end: 0;
   font-size: 2.6rem;
   color: var(--battle-white);
 }
-
-/* .top-nav h1 {
-    margin-block-start: 0;
-    margin-block-end: 0;
-    font-size: 2.6rem;
-    color: var(--battle-white);
-  } */
 
 .top-nav-title:hover {
   color: var(--battle-blue);
@@ -60,7 +48,6 @@
   color: #ffffff;
   display: block;
   font: bold 1.3rem sans-serif;
-  /* margin: 1rem 0 0rem 1rem; */
   line-height: 4rem;
   text-align: center;
   text-decoration: none;
@@ -68,8 +55,6 @@
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
-
-/* #root > div.top-nav > ul > li:nth-child(10) > div.top-nav-label > span */
 
 .top-nav-label .material-symbols-outlined {
   line-height: 4rem;
@@ -143,11 +128,9 @@ li:hover div.weapon-select-dropdown-container {
   grid-template-columns: repeat(1, 1fr);
 }
 .weapon-select-item:hover {
-  /* background: #DF4B05; */
   color: var(--battle-blue);
 }
 .weapon-select-item {
-  /* background-color:#000000; */
   cursor: pointer;
   font-size: 12pt;
   font-weight: 600;
@@ -171,23 +154,21 @@ li:hover div.weapon-select-dropdown-container {
   display: grid;
   grid-template-columns: 1fr;
 }
-/* .select-save-load {
-  margin-left: 4rem;
-} */
+
+.config-loader-container:hover > .config-name {
+  color: var(--battle-blue);
+}
+
 .config-loader-container {
   display: grid;
   grid-template-columns: 1fr 2rem;
 }
+
 .config-name {
   cursor: pointer;
   font-size: 12pt;
   font-weight: 600;
   line-height: 2rem;
-}
-
-.config-name:hover {
-  /* background: #DF4B05; */
-  color: var(--battle-blue);
 }
 
 .config-delete.material-symbols-outlined {
@@ -198,6 +179,18 @@ li:hover div.weapon-select-dropdown-container {
   cursor: pointer;
 }
 
-.config-delete:hover {
-  color: var(--battle-red);
+.config-delete {
+  cursor: pointer;
+  position: relative;
+  top: 0.3rem;
+}
+
+.top-nav-icon {
+  height: 1.8rem;
+  position: relative;
+  top: 0.4rem;
+}
+
+.save-config {
+  cursor: text;
 }

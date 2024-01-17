@@ -12,6 +12,10 @@ import {
 import "./TopNav.css";
 import { useState } from "react";
 
+import settingsSvg from "../icons/settings_FILL0_wght400_GRAD0_opsz24.svg";
+import infoSvg from "../icons/info_FILL0_wght400_GRAD0_opsz24.svg";
+import deleteSvg from "../icons/delete_FILL0_wght400_GRAD0_opsz24.svg";
+
 interface SetModifiersFn {
   (modifiers: Modifiers): void;
 }
@@ -91,7 +95,9 @@ function TopNav(props: NavProps) {
     );
   }
 
-  let saveDialogue = <span>Save Current Configuration</span>;
+  let saveDialogue = (
+    <span className="save-config">Save Current Configuration</span>
+  );
   const configLoader = props.configLoader;
   const loadable = [];
 
@@ -109,15 +115,14 @@ function TopNav(props: NavProps) {
           {name}
         </div>
         <div>
-          <span
-            className="config-delete material-symbols-outlined"
+          <img
+            className={"config-delete svg-white svg-hover-red"}
+            src={deleteSvg}
             onClick={() => {
               configLoader.deleteConfig(name);
-              // setConfigsList(configLoader.listConfigs());
             }}
-          >
-            delete
-          </span>
+            alt="delete"
+          />
         </div>
       </div>
     );
@@ -176,7 +181,11 @@ function TopNav(props: NavProps) {
     <li className="top-nav-weapon-select" key="settings">
       <div className="top-nav-label">
         {" "}
-        <span className="material-symbols-outlined">settings</span>
+        <img
+          className={"top-nav-icon svg-white svg-hover-blue"}
+          src={settingsSvg}
+          alt="settings"
+        />
       </div>
       <div className="weapon-select-dropdown-container">
         <ul className="weapon-select-dropdown">
@@ -264,7 +273,11 @@ function TopNav(props: NavProps) {
     <li className="top-nav-weapon-select" key="info">
       <div className="top-nav-label">
         {" "}
-        <span className="material-symbols-outlined">info</span>
+        <img
+          className={"top-nav-icon svg-white svg-hover-blue"}
+          src={infoSvg}
+          alt="info"
+        />
       </div>
       <div className="weapon-select-dropdown-container">
         <ul className="weapon-select-dropdown">

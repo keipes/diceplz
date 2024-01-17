@@ -3,6 +3,9 @@ import { WeaponConfig } from "../App";
 import Weapon from "./Weapon";
 import { SyntheticEvent, useState } from "react";
 
+import expandMoreSvg from "../icons/expand_more_FILL0_wght400_GRAD0_opsz24.svg";
+import expandLessSvg from "../icons/expand_less_FILL0_wght400_GRAD0_opsz24.svg";
+
 interface WeaponConfiguratorProps {
   configurations: Map<string, WeaponConfiguration>;
   weaponConfig: WeaponConfig;
@@ -61,26 +64,22 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   }
 
   let containerClass = "wcf-container";
-  let expansionSymbol = "expand_more";
+  let expansionSource = expandMoreSvg;
   const containerStyle = {
     height: height + "px",
   };
   if (!props.open) {
-    expansionSymbol = "expand_less";
+    expansionSource = expandLessSvg;
     containerClass = "wcf-container-closed";
     containerStyle.height = "2.2rem";
   }
   mouseMoveHandler = (e) => {
     if (dragging) {
-      // e.preventDefault();
-      // e.stopPropagation();
       const newHeight = window.innerHeight - e.clientY;
       setHeight(newHeight);
     }
   };
   mouseUpHandler = (_) => {
-    // e.preventDefault();
-    // e.stopPropagation();
     setDragging(false);
   };
   const dontDragKids = (e: SyntheticEvent) => e.stopPropagation();
@@ -96,10 +95,15 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           }}
         >
           <span></span>
-          <span onMouseDown={dontDragKids} className="configurator-toggle">
-            <span className=" material-symbols-outlined" onClick={toggle}>
-              {expansionSymbol}
-            </span>
+          <span
+            onMouseDown={dontDragKids}
+            className="configurator-toggle svg-white svg-hover-blue"
+          >
+            <img
+              onClick={toggle}
+              src={expansionSource}
+              alt="toggle configurator"
+            />
           </span>
           <span
             onMouseDown={dontDragKids}
