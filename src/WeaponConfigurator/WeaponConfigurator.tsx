@@ -32,7 +32,7 @@ interface WeaponConfiguration {
 interface MouseEventHandler {
   (e: MouseEvent): void;
 }
-
+let offset = 0;
 // assign mousemove and mouseup handlers to window, so
 // dragging can continue even if the mouse leaves the
 // configurator
@@ -80,7 +80,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   }
   mouseMoveHandler = (e) => {
     if (dragging) {
-      const newHeight = window.innerHeight - e.clientY;
+      const newHeight = window.innerHeight - e.clientY + offset;
       setHeight(newHeight);
       props.setBottomPadding(newHeight);
     }
@@ -98,6 +98,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
             e.preventDefault();
             e.stopPropagation();
             if (props.open) {
+              offset = height - (window.innerHeight - e.clientY);
               setDragging(true);
             }
           }}
