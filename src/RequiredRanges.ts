@@ -10,10 +10,10 @@ const RequiredRanges = function (
   converter: DamageConverter
 ): Set<number> {
   const values = new Set<number>();
+  let highestRangeSeen = 0;
   for (const [_, configuration] of configurations) {
     const stat = GetStatsForConfiguration(configuration);
     const seenConvertedDamages = new Set<number>();
-
     for (const dropoff of stat.dropoffs) {
       const convertedDamage = converter(configuration, dropoff.damage);
       if (seenConvertedDamages.has(convertedDamage)) {
@@ -21,8 +21,12 @@ const RequiredRanges = function (
         values.add(dropoff.range);
         seenConvertedDamages.add(convertedDamage);
       }
+      if (dropoff.range > highestRangeSeen) {
+        highestRangeSeen = dropoff.range;
+      }
     }
   }
+  values.add(highestRangeSeen);
   return values;
 };
 
