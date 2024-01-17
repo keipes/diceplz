@@ -8,6 +8,7 @@ import { Modifiers } from "../Data/ConfigLoader.ts";
 import { useState } from "react";
 import RequiredRanges from "../RequiredRanges.ts";
 import { TTK } from "../Conversions.ts";
+import "./TTKChart.css";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -108,21 +109,6 @@ function TTKChart(props: TTKChartProps) {
     seenBurst = seenBurst || typeof stats.rpmBurst === "number";
     seenSingle = seenSingle || typeof stats.rpmSingle === "number";
   }
-  switch (selectedFireMode) {
-    case FIREMODE_AUTO:
-      if (seenAuto) autoClass += " enabled";
-      rpmSelector = SELECTOR_AUTO;
-      break;
-    case FIREMODE_BURST:
-      if (seenBurst) burstClass += " enabled";
-      rpmSelector = SELECTOR_BURST;
-      break;
-    case FIREMODE_SINGLE:
-      if (seenSingle) singleClass += " enabled";
-      rpmSelector = SELECTOR_SINGLE;
-      break;
-  }
-
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -177,21 +163,6 @@ function TTKChart(props: TTKChartProps) {
       borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
       stepped: true,
     });
-  }
-
-  switch (selectedFireMode) {
-    case FIREMODE_AUTO:
-      if (seenAuto) autoClass += " enabled";
-      rpmSelector = SELECTOR_AUTO;
-      break;
-    case FIREMODE_BURST:
-      if (seenBurst) burstClass += " enabled";
-      rpmSelector = SELECTOR_BURST;
-      break;
-    case FIREMODE_SINGLE:
-      if (seenSingle) singleClass += " enabled";
-      rpmSelector = SELECTOR_SINGLE;
-      break;
   }
   const labels = [];
   for (let i = 0; i <= highestRangeSeen; i++) {
