@@ -1,15 +1,13 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue from "../StringColor.ts";
-import {
-  GetStatsForConfiguration,
-  GetWeaponByName,
-  WeaponStats,
-} from "../WeaponData.ts";
+import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
 import { useState } from "react";
+import RequiredRanges from "../RequiredRanges.ts";
+import { TTK } from "../Conversions.ts";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -24,20 +22,6 @@ interface RPMSelectorFn {
   (stats: WeaponStats): number | undefined;
 }
 
-const damageToTTK = function (
-  stats: WeaponStats,
-  damage: number,
-  rpmSelector: RPMSelectorFn,
-  healthMultiplier: number
-) {
-  const btk = Math.ceil((healthMultiplier * 100) / damage);
-  const rpm = rpmSelector(stats);
-  if (rpm === undefined) {
-    return null;
-  }
-  return Math.round((1000 / (rpm / 60)) * (btk - 1));
-};
-
 const FIREMODE_AUTO = "auto";
 const FIREMODE_BURST = "burst";
 const FIREMODE_SINGLE = "single";
@@ -47,6 +31,7 @@ const SELECTOR_SINGLE: RPMSelectorFn = (stats: WeaponStats) => stats.rpmSingle;
 
 function TTKChart(props: TTKChartProps) {
   const [_selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
+
   let autoClass = "abs-selector";
   let burstClass = "abs-selector";
   let singleClass = "abs-selector";
@@ -55,7 +40,6 @@ function TTKChart(props: TTKChartProps) {
   };
 
   const highestRangeSeen = props.highestRangeSeen;
-  const requiredRanges = props.requiredRanges;
   const datasets = [];
   let seenAuto = false;
   let seenBurst = false;
@@ -96,94 +80,93 @@ function TTKChart(props: TTKChartProps) {
       }
       break;
   }
+  switch (selectedFireMode) {
+    case FIREMODE_AUTO:
+      if (seenAuto) autoClass += " enabled";
+      rpmSelector = SELECTOR_AUTO;
+      break;
+    case FIREMODE_BURST:
+      if (seenBurst) burstClass += " enabled";
+      rpmSelector = SELECTOR_BURST;
+      break;
+    case FIREMODE_SINGLE:
+      if (seenSingle) singleClass += " enabled";
+      rpmSelector = SELECTOR_SINGLE;
+      break;
+  }
+  const requiredRanges = RequiredRanges(
+    props.weaponConfigurations,
+    (config, damage) => {
+      const stat = GetStatsForConfiguration(config);
+      return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
+    }
+  );
+  for (const [_id, config] of props.weaponConfigurations) {
+    if (!config.visible) continue;
+    const stats = GetStatsForConfiguration(config);
+    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
+    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
+    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
+  }
+  switch (selectedFireMode) {
+    case FIREMODE_AUTO:
+      if (seenAuto) autoClass += " enabled";
+      rpmSelector = SELECTOR_AUTO;
+      break;
+    case FIREMODE_BURST:
+      if (seenBurst) burstClass += " enabled";
+      rpmSelector = SELECTOR_BURST;
+      break;
+    case FIREMODE_SINGLE:
+      if (seenSingle) singleClass += " enabled";
+      rpmSelector = SELECTOR_SINGLE;
+      break;
+  }
 
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    const weapon = GetWeaponByName(config.name);
     const data = [];
     let lastDamage = 0;
     let lastRange = 0;
     let range = 0;
     let damage = 0;
-    const damageMultiplier =
-      props.modifiers.damageMultiplier * props.modifiers.bodyDamageMultiplier;
-    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
-    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
-    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
     for (let dropoff of stats.dropoffs) {
       range = dropoff.range;
-      let pelletMultiplier = 1;
-      if (weapon.pelletCounts) {
-        const pelletCount = weapon.pelletCounts[config.ammoType];
-        if (pelletCount !== undefined) {
-          pelletMultiplier = pelletCount;
-        }
-      }
-      switch (selectedFireMode) {
-        case FIREMODE_AUTO:
-          if (seenAuto) autoClass += " enabled";
-          rpmSelector = SELECTOR_AUTO;
-          break;
-        case FIREMODE_BURST:
-          if (seenBurst) burstClass += " enabled";
-          rpmSelector = SELECTOR_BURST;
-          break;
-        case FIREMODE_SINGLE:
-          if (seenSingle) singleClass += " enabled";
-          rpmSelector = SELECTOR_SINGLE;
-          break;
-      }
-      damage = dropoff.damage * damageMultiplier * pelletMultiplier;
+      damage = dropoff.damage;
       for (let i = lastRange + 1; i < range; i++) {
-        if (requiredRanges.has(i)) {
-          data.push(
-            damageToTTK(
-              stats,
-              lastDamage,
-              rpmSelector,
-              props.modifiers.healthMultiplier
-            )
-          );
+        const rpm = rpmSelector(stats);
+        if (requiredRanges.has(i) && rpm) {
+          data.push(TTK(config, props.modifiers, lastDamage, rpm));
         } else {
           data.push(null);
         }
       }
       lastDamage = damage;
       lastRange = range;
-      data.push(
-        damageToTTK(
-          stats,
-          damage,
-          rpmSelector,
-          props.modifiers.healthMultiplier
-        )
-      );
+      const rpm = rpmSelector(stats);
+      if (requiredRanges.has(dropoff.range) && rpm) {
+        data.push(TTK(config, props.modifiers, damage, rpm));
+      } else {
+        data.push(null);
+      }
     }
     if (damage > 0) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
-        if (requiredRanges.has(i)) {
-          data.push(
-            damageToTTK(
-              stats,
-              damage,
-              rpmSelector,
-              props.modifiers.healthMultiplier
-            )
-          );
+        const rpm = rpmSelector(stats);
+        if (requiredRanges.has(i) && rpm) {
+          data.push(TTK(config, props.modifiers, damage, rpm));
         } else {
           data.push(null);
         }
       }
       if (range != highestRangeSeen) {
-        data.push(
-          damageToTTK(
-            stats,
-            damage,
-            rpmSelector,
-            props.modifiers.healthMultiplier
-          )
-        );
+        const rpm = rpmSelector(stats);
+        if (rpm) {
+          data.push(TTK(config, props.modifiers, damage, rpm));
+        } else {
+          data.push(null);
+        }
       }
     }
     const label = ConfigDisplayName(config);

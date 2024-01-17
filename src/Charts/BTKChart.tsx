@@ -5,6 +5,8 @@ import { GetStatsForConfiguration } from "../WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
+import { BTK } from "../Conversions.ts";
+import RequiredRanges from "../RequiredRanges.ts";
 
 interface BTKChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -15,9 +17,13 @@ interface BTKChartProps {
 
 function BTKChart(props: BTKChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
-  const requiredRanges = props.requiredRanges;
   const datasets = [];
-
+  const requiredRanges = RequiredRanges(
+    props.weaponConfigurations,
+    (config, damage) => {
+      return BTK(config, props.modifiers, damage);
+    }
+  );
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -27,15 +33,8 @@ function BTKChart(props: BTKChartProps) {
     let range = 0;
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
-      //   for (let i = 0; i < stats.dropoffs.length; i = i + 1) {
+      damage = BTK(config, props.modifiers, dropoff.damage);
       range = dropoff.range;
-      damage =
-        dropoff.damage *
-        props.modifiers.damageMultiplier *
-        props.modifiers.bodyDamageMultiplier;
-      const btk = Math.ceil((props.modifiers.healthMultiplier * 100) / damage);
-      damage = btk;
-      // damage = Math.round(damage * 100) / 100;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(lastDamage);
@@ -45,7 +44,11 @@ function BTKChart(props: BTKChartProps) {
       }
       lastDamage = damage;
       lastRange = range;
-      data.push(damage);
+      if (requiredRanges.has(range)) {
+        data.push(lastDamage);
+      } else {
+        data.push(null);
+      }
     }
     if (damage > 0) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
@@ -116,7 +119,6 @@ function BTKChart(props: BTKChartProps) {
         },
       },
     },
-    // stepped: true,
     scales: {
       y: {
         title: {
