@@ -107,8 +107,9 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           <span
             onMouseDown={dontDragKids}
             className="configurator-toggle svg-white svg-hover-blue"
+            onClick={toggle}
           >
-            <img onClick={toggle} src={expansionSource} />
+            <img src={expansionSource} />
           </span>
           <span
             onMouseDown={dontDragKids}
