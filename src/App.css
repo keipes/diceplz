@@ -38,13 +38,13 @@
   margin-top: 4.5rem;
   margin-left: 2em;
   margin-right: 1em;
-  padding-bottom: 30vh;
-  transition: all 0.2s ease;
+  /* padding-bottom: 30vh; */
+  /* transition: all 0.2s ease; */
 }
 
 .configurator-closed {
   /* background-color: white;
   border: 1px solid red; */
   padding-bottom: 2.5vh;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
 }

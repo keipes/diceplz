@@ -79,7 +79,7 @@ interface WeaponConfig {
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
-
+  const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
@@ -173,6 +173,12 @@ function App() {
   if (!configuratorOpen) {
     mainContentClass += " configurator-closed";
   }
+  const mainContentStyle = {
+    paddingBottom: bottomPadding + "px",
+  };
+  if (!configuratorOpen) {
+    mainContentStyle.paddingBottom = "2.5vh";
+  }
   return (
     <>
       <TopNav
@@ -186,8 +192,9 @@ function App() {
         weaponConfig={wpnCfg}
         open={configuratorOpen}
         setOpen={setConfiguratorOpen}
+        setBottomPadding={setBottomPadding}
       />
-      <div className={mainContentClass}>
+      <div className={mainContentClass} style={mainContentStyle}>
         <TTKChart
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}

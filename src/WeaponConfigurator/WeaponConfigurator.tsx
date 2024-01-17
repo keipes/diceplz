@@ -6,11 +6,16 @@ import { SyntheticEvent, useState } from "react";
 import expandMoreSvg from "../icons/expand_more_FILL0_wght400_GRAD0_opsz24.svg";
 import expandLessSvg from "../icons/expand_less_FILL0_wght400_GRAD0_opsz24.svg";
 
+interface SetBottomPaddingFn {
+  (padding: number): void;
+}
+
 interface WeaponConfiguratorProps {
   configurations: Map<string, WeaponConfiguration>;
   weaponConfig: WeaponConfig;
   open: boolean;
   setOpen: SetOpenFn;
+  setBottomPadding: SetBottomPaddingFn;
 }
 
 interface SetOpenFn {
@@ -77,6 +82,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
     if (dragging) {
       const newHeight = window.innerHeight - e.clientY;
       setHeight(newHeight);
+      props.setBottomPadding(newHeight);
     }
   };
   mouseUpHandler = (_) => {
