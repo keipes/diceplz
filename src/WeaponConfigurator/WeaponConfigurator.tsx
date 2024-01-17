@@ -78,7 +78,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
       setHeight(newHeight);
     }
   };
-  mouseUpHandler = (e) => {
+  mouseUpHandler = (_) => {
     // e.preventDefault();
     // e.stopPropagation();
     setDragging(false);
