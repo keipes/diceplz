@@ -91,7 +91,9 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setDragging(true);
+            if (props.open) {
+              setDragging(true);
+            }
           }}
         >
           <span></span>

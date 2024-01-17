@@ -18,6 +18,9 @@
   width: 100%;
   /* transition: all 0.2s ease; */
 }
+.wcf-container-closed .wcf-header-bar {
+  cursor: default;
+}
 
 .wcf-header-bar {
   background-color: black;
