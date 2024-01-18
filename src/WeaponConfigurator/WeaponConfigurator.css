@@ -23,7 +23,7 @@
 }
 
 .wcf-header-bar {
-  background-color: black;
+  background-color: #0009;
   height: 2.2rem;
   display: grid;
   grid-template-columns: 150px 1fr 150px;
@@ -80,7 +80,7 @@
   border-radius: 0;
   border-color: rgb(216, 216, 216);
   color: white;
-  background-color: black;
+  background-color: #0000;
   font-weight: 600;
 }
 
@@ -111,7 +111,6 @@
 .wcf-header {
   display: grid;
   font-size: 18px;
-  background-color: black;
   grid-template-columns: 1fr 30px 30px 30px;
   height: 2.2rem;
   margin-bottom: 0.6rem;

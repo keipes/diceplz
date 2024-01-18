@@ -21,8 +21,6 @@ function ReloadChart(props: ReloadChartProps) {
   const tacticalData = [];
   const tacticalBackgroundColors = [];
   const backgroundColors = [];
-  const singleData = [];
-  const singleBackgroundColors = [];
   const weaponData: SortableWeaponData[] = [];
   let seenAuto = false;
   let seenBurst = false;
