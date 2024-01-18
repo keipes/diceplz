@@ -12,7 +12,7 @@ interface WeaponCategory {
 }
 
 interface AmmoStat {
-  magazineSize?: number;
+  magSize?: number;
   tacticalReload?: number;
   emptyReload?: number;
   headshotMultiplier?: number;
