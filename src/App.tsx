@@ -27,6 +27,7 @@ import {
   LocalStoreConfigLoader,
 } from "./Data/ConfigLoader.ts";
 import BTKChart from "./Charts/BTKChart.tsx";
+import ReloadChart from "./Charts/ReloadChart.tsx";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -231,7 +232,7 @@ function App() {
           highestRangeSeen={highestRangeSeen}
           modifiers={modifiers}
         />
-
+        <ReloadChart weaponConfigurations={weaponConfigurations} />
         <RPMChart weaponConfigurations={weaponConfigurations} />
         <VelocityChart weaponConfigurations={weaponConfigurations} />
       </div>
