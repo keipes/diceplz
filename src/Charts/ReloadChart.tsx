@@ -22,25 +22,31 @@ function ReloadChart(props: ReloadChartProps) {
   const tacticalBackgroundColors = [];
   const backgroundColors = [];
   const weaponData: SortableWeaponData[] = [];
-  let seenAuto = false;
-  let seenBurst = false;
-  let seenSingle = false;
+  let seenEmpty = false;
+  let seenTactical = false;
   for (const [_, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
-    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
-    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
-    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
     weaponData.push({ config: config, stats: stats });
+    const weapon = GetWeaponByName(config.name);
+    if (weapon.ammoStats) {
+      const ammoStat = weapon.ammoStats[config.ammoType];
+      if (ammoStat) {
+        if (ammoStat.emptyReload) {
+          seenEmpty = true;
+        }
+        if (ammoStat.tacticalReload) {
+          seenTactical = true;
+        }
+      }
+    }
   }
-  const showEmpty = _showEmpty && seenAuto;
-  const showTactical = _showTactical && seenBurst;
+  const showEmpty = _showEmpty && seenEmpty;
+  const showTactical = _showTactical && seenTactical;
   weaponData.sort((a, b) => {
     const aValues: number[] = [];
     const bValues: number[] = [];
-
     const aWeapon = GetWeaponByName(a.config.name);
-    // let aTime = 0;
     if (aWeapon.ammoStats) {
       const ammoStat = aWeapon.ammoStats[a.config.ammoType];
       if (ammoStat) {
@@ -50,10 +56,8 @@ function ReloadChart(props: ReloadChartProps) {
         if (showTactical && ammoStat.tacticalReload) {
           aValues.push(ammoStat.tacticalReload);
         }
-        // aTime = ammoStat.emptyReload;
       }
     }
-    // let bTime = 0;
     const bWeapon = GetWeaponByName(b.config.name);
     if (bWeapon.ammoStats) {
       const ammoStat = bWeapon.ammoStats[a.config.ammoType];
@@ -64,18 +68,8 @@ function ReloadChart(props: ReloadChartProps) {
         if (showTactical && ammoStat.tacticalReload) {
           bValues.push(ammoStat.tacticalReload);
         }
-        // bTime = ammoStat.emptyReload;
       }
     }
-    // return aTime - bTime;
-    // if (showEmpty) {
-    //   aValues.push(a.stats.rpmAuto || 0);
-    //   bValues.push(b.stats.rpmAuto || 0);
-    // }
-    // if (showTactical) {
-    //   aValues.push(a.stats.rpmBurst || 0);
-    //   bValues.push(b.stats.rpmBurst || 0);
-    // }
     return Math.max(...aValues) - Math.max(...bValues);
   });
   for (const wd of weaponData) {
@@ -198,14 +192,14 @@ function ReloadChart(props: ReloadChartProps) {
         <button
           className={emptyClass}
           onClick={(_) => setShowEmpty(!showEmpty)}
-          disabled={!seenAuto}
+          disabled={!seenEmpty}
         >
           Empty
         </button>
         <button
           className={tacticalClass}
           onClick={(_) => setShowTactical(!showTactical)}
-          disabled={!seenBurst}
+          disabled={!seenTactical}
         >
           Tactical
         </button>
