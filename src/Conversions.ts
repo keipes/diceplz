@@ -5,10 +5,10 @@ import { GetWeaponByName } from "./WeaponData";
 const pelletMultiplier = (config: WeaponConfiguration) => {
   const weapon = GetWeaponByName(config.name);
   let pelletMultiplier = 1;
-  if (weapon.pelletCounts) {
-    const pelletCount = weapon.pelletCounts[config.ammoType];
-    if (pelletCount !== undefined) {
-      pelletMultiplier = pelletCount;
+  if (weapon.ammoStats) {
+    const ammoStats = weapon.ammoStats[config.ammoType];
+    if (ammoStats && ammoStats.pelletCount !== undefined) {
+      pelletMultiplier = ammoStats.pelletCount;
     }
   }
   return pelletMultiplier;

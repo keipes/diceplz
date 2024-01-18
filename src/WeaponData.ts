@@ -10,10 +10,19 @@ interface WeaponCategory {
   name: string;
   weapons: Weapon[];
 }
+
+interface AmmoStat {
+  magazineSize?: number;
+  tacticalReload?: number;
+  emptyReload?: number;
+  headshotMultiplier?: number;
+  pelletCount?: number;
+}
+
 interface Weapon {
   name: string;
   stats: WeaponStats[];
-  pelletCounts?: Record<string, number | undefined>;
+  ammoStats?: Record<string, AmmoStat | undefined>;
 }
 interface WeaponStats {
   barrelType: string;
@@ -23,7 +32,6 @@ interface WeaponStats {
   rpmBurst?: number;
   rpmAuto?: number;
   velocity?: number;
-  pelletCount?: number;
 }
 
 interface DamageRange {
