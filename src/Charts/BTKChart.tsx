@@ -7,6 +7,7 @@ import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
 import { BTK } from "../Conversions.ts";
 import RequiredRanges from "../RequiredRanges.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface BTKChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -153,7 +154,14 @@ function BTKChart(props: BTKChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>Bullets To Kill</h2>
+      <ChartHeader
+        title={"BTK"}
+        description="BTK (Bullets to Kill) is calculated by dividing the target's health
+          points by the weapon's damage per bullet. The result, rounded up to
+          the nearest whole number, represents the minimum bullets needed to
+          eliminate the target. For instance, if a weapon deals 25 damage per
+          bullet and the target has 100 health points, the BTK would be 4."
+      />
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>

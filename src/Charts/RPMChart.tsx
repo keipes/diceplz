@@ -7,6 +7,7 @@ import "./RPMChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface RPMChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -191,7 +192,10 @@ function RPMChart(props: RPMChartProps) {
   if (showSingle) singleClass += " btn-enabled";
   return (
     <div className="chart-outer-container">
-      <h2>Rounds Per Minute</h2>
+      <ChartHeader
+        title="Rounds Per Minute"
+        description="The number of rounds fired per minute."
+      />
       <div className="button-container">
         <button
           className={autoClass}

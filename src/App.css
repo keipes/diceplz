@@ -7,6 +7,15 @@
   /* background-color: var(--battle-grey); */
 }
 
+.chart-outer-container {
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  background-color: #01010180;
+  /* background-color: var(--battle-grey); */
+  padding: 2rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
 .chart-container {
   position: relative;
   height: 30vh;
@@ -14,18 +23,6 @@
   max-width: 1280px;
 }
 
-.chart-outer-container {
-  /* background-color: rgba(0, 0, 0, 0.7); */
-  background-color: #01010180;
-  /* background-color: var(--battle-grey); */
-  padding: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.chart-outer-container > h2 {
-  margin: 0;
-  margin-bottom: 1rem;
-}
 .disclosure > p {
   margin: 0;
 }

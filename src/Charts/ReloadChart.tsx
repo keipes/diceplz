@@ -7,6 +7,7 @@ import { useState } from "react";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface ReloadChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -187,7 +188,10 @@ function ReloadChart(props: ReloadChartProps) {
   if (showTactical) tacticalClass += " btn-enabled";
   return (
     <div className="chart-outer-container">
-      <h2>Reload Time</h2>
+      <ChartHeader
+        title="Reload Time"
+        description="Time to reload the weapon. Empty reload is when the weapon is completely out of ammo. Tactical reload is when the weapon still has ammo in the magazine."
+      />
       <div className="button-container">
         <button
           className={emptyClass}

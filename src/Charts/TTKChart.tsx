@@ -9,6 +9,7 @@ import { useState } from "react";
 import RequiredRanges from "../RequiredRanges.ts";
 import { TTK } from "../Conversions.ts";
 import "./TTKChart.css";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -245,7 +246,10 @@ function TTKChart(props: TTKChartProps) {
 
   return (
     <div className="chart-outer-container">
-      <h2>{props.title}</h2>
+      <ChartHeader
+        title={props.title}
+        description="TTK (Time to Kill) is determined by the formula: TTK = (BTK - 1) / (RPM * 60 / 1000). This considers the Bullets to Kill (BTK), subtracting 1, and dividing by the weapon's Rate of Fire (RPM) converted to rounds per second. The result indicates the time it takes to eliminate an opponent with the weapon, incorporating both damage and firing rate."
+      />
       <div className="button-container">
         <button
           className={autoClass}

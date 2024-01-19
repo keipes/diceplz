@@ -1,0 +1,32 @@
+.chart-title {
+  margin: 0;
+  margin-bottom: 1rem;
+  cursor: help;
+  user-select: none;
+  display: inline-block;
+}
+
+.chart-header {
+  margin: 0 auto;
+}
+
+.chart-description {
+  position: absolute;
+  /* width: 0%; */
+  top: 0;
+  margin-right: 2rem;
+  background-color: black;
+  box-shadow: 0 0 0.5rem black;
+  padding: 1rem;
+  opacity: 0;
+  z-index: 100;
+  font-size: 12pt;
+  border-radius: 0.5rem;
+  text-align: justify;
+  pointer-events: none;
+}
+
+.chart-description-open {
+  opacity: 1;
+  pointer-events: auto;
+}

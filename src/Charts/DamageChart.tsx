@@ -5,6 +5,7 @@ import { GetStatsForConfiguration } from "../WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { Modifiers } from "../Data/ConfigLoader.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -27,7 +28,6 @@ function DamageChart(props: DamageChartProps) {
     let range = 0;
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
-      //   for (let i = 0; i < stats.dropoffs.length; i = i + 1) {
       range = dropoff.range;
       damage =
         dropoff.damage *
@@ -151,7 +151,10 @@ function DamageChart(props: DamageChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>Damage</h2>
+      <ChartHeader
+        title="Damage"
+        description="Weapon damage changes with distance through a step-function damage drop-off, altering values at distinct ranges instead of a gradual decrease or increase."
+      />
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>

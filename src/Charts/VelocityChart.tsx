@@ -6,6 +6,7 @@ import "./VelocityChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface VelocityChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -106,7 +107,7 @@ function VelocityChart(props: VelocityChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>Velocity</h2>
+      <ChartHeader title="Velocity" description="Muzzle velocity." />
       <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>

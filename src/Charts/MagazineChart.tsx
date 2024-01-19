@@ -6,6 +6,7 @@ import { GetStatsForConfiguration, GetWeaponByName } from "../WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
+import ChartHeader from "./ChartHeader.tsx";
 
 interface MagazineChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -134,7 +135,10 @@ function MagazineChart(props: MagazineChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <h2>Magazine Capacity</h2>
+      <ChartHeader
+        title="Magazine Size"
+        description="The number of rounds in a magazine."
+      />
       <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>

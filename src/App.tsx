@@ -203,7 +203,7 @@ function App() {
           highestRangeSeen={highestRangeSeen}
           rpmSelector={"rpmAuto"}
           modifiers={modifiers}
-          title={"Time To Kill"}
+          title={"TTK"}
         />
         <BTKChart
           weaponConfigurations={weaponConfigurations}
