@@ -137,7 +137,7 @@ function MagazineChart(props: MagazineChartProps) {
     <div className="chart-outer-container">
       <ChartHeader
         title="Magazine Size"
-        description="The number of rounds in a magazine."
+        description="The number of rounds in a magazine. Still working on these, some ammo options (extended, drum) are missing."
       />
       <div className="chart-container">
         <Bar data={chartData} options={options} />

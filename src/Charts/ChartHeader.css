@@ -11,7 +11,7 @@
 }
 
 .chart-description {
-  position: absolute;
+  position: fixed;
   /* width: 0%; */
   top: 0;
   margin-right: 2rem;
@@ -24,9 +24,12 @@
   border-radius: 0.5rem;
   text-align: justify;
   pointer-events: none;
+  width: 400px;
+  transition: opacity 0.2s ease;
 }
 
 .chart-description-open {
   opacity: 1;
   pointer-events: auto;
+  transition: opacity 0.2s ease;
 }
