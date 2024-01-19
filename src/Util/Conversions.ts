@@ -1,6 +1,6 @@
-import { Modifiers } from "./Data/ConfigLoader";
-import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
-import { GetWeaponByName } from "./WeaponData";
+import { Modifiers } from "../Data/ConfigLoader";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { GetWeaponByName } from "../Data/WeaponData";
 
 const pelletMultiplier = (config: WeaponConfiguration) => {
   const weapon = GetWeaponByName(config.name);

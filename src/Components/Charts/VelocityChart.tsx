@@ -1,10 +1,10 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration } from "../WeaponData.ts";
+import StringHue from "../../Util/StringColor.ts";
+import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import "./VelocityChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "../LabelMaker.ts";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 

@@ -1,5 +1,5 @@
-import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
-import _weaponData from "./assets/weapons.json";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import _weaponData from "../assets/weapons.json";
 const weaponData: WeaponDataJSON = _weaponData;
 
 interface WeaponDataJSON {

@@ -1,5 +1,5 @@
 import { ConfigDisplayName } from "./LabelMaker";
-import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
 
 const cyrb53 = function (str: string, seed = 0) {
   let h1 = 0xdeadbeef ^ seed,

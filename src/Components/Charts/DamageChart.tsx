@@ -1,30 +1,24 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration } from "../WeaponData.ts";
+import StringHue from "../../Util/StringColor.ts";
+import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "../LabelMaker.ts";
-import { Modifiers } from "../Data/ConfigLoader.ts";
-import { BTK } from "../Conversions.ts";
-import RequiredRanges from "../RequiredRanges.ts";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
+import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 
-interface BTKChartProps {
+interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
 }
 
-function BTKChart(props: BTKChartProps) {
+function DamageChart(props: DamageChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
+  const requiredRanges = props.requiredRanges;
   const datasets = [];
-  const requiredRanges = RequiredRanges(
-    props.weaponConfigurations,
-    (config, damage) => {
-      return BTK(config, props.modifiers, damage);
-    }
-  );
+
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -34,8 +28,12 @@ function BTKChart(props: BTKChartProps) {
     let range = 0;
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
-      damage = BTK(config, props.modifiers, dropoff.damage);
       range = dropoff.range;
+      damage =
+        dropoff.damage *
+        props.modifiers.damageMultiplier *
+        props.modifiers.bodyDamageMultiplier;
+      damage = Math.round(damage * 100) / 100;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
           data.push(lastDamage);
@@ -45,11 +43,7 @@ function BTKChart(props: BTKChartProps) {
       }
       lastDamage = damage;
       lastRange = range;
-      if (requiredRanges.has(range)) {
-        data.push(lastDamage);
-      } else {
-        data.push(null);
-      }
+      data.push(damage);
     }
     if (damage > 0) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
@@ -120,11 +114,12 @@ function BTKChart(props: BTKChartProps) {
         },
       },
     },
+    // stepped: true,
     scales: {
       y: {
         title: {
           display: true,
-          text: "bullets",
+          text: "damage",
           color: "white",
         },
         grid: {
@@ -133,6 +128,7 @@ function BTKChart(props: BTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
+          // beginAtZero: true,
         },
       },
       x: {
@@ -147,6 +143,7 @@ function BTKChart(props: BTKChartProps) {
         min: 0,
         ticks: {
           color: "white",
+          // beginAtZero: true,
           autoSkip: false,
         },
       },
@@ -155,12 +152,8 @@ function BTKChart(props: BTKChartProps) {
   return (
     <div className="chart-outer-container">
       <ChartHeader
-        title={"BTK"}
-        description="BTK (Bullets to Kill) is calculated by dividing the target's health
-          points by the weapon's damage per bullet. The result, rounded up to
-          the nearest whole number, represents the minimum bullets needed to
-          eliminate the target. For instance, if a weapon deals 25 damage per
-          bullet and the target has 100 health points, the BTK would be 4."
+        title="Damage"
+        description="Weapon damage changes with distance through a step-function damage drop-off, altering values at distinct ranges instead of a gradual decrease or increase."
       />
       <div className="chart-container">
         <Line data={chartData} options={options} />
@@ -169,4 +162,4 @@ function BTKChart(props: BTKChartProps) {
   );
 }
 
-export default BTKChart;
+export default DamageChart;

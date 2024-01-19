@@ -3,8 +3,7 @@ import { WeaponConfig } from "../App";
 import Weapon from "./Weapon";
 import { SyntheticEvent, useState } from "react";
 
-import expandMoreSvg from "../icons/expand_more_FILL0_wght400_GRAD0_opsz24.svg";
-import expandLessSvg from "../icons/expand_less_FILL0_wght400_GRAD0_opsz24.svg";
+import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
@@ -69,14 +68,18 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   }
 
   let containerClass = "wcf-container";
-  let expansionSource = expandMoreSvg;
   const containerStyle = {
     height: height + "px",
   };
   if (!props.open) {
-    expansionSource = expandLessSvg;
     containerClass = "wcf-container-closed";
     containerStyle.height = "2.2rem";
+  }
+  let expansionIcon;
+  if (props.open) {
+    expansionIcon = <ExpandMoreIcon />;
+  } else {
+    expansionIcon = <ExpandLessIcon />;
   }
   mouseMoveHandler = (e) => {
     if (dragging) {
@@ -109,7 +112,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
             className="configurator-toggle svg-white svg-hover-blue"
             onClick={toggle}
           >
-            <img src={expansionSource} />
+            {expansionIcon}
           </span>
           <span
             onMouseDown={dontDragKids}

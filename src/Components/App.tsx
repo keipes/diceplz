@@ -19,13 +19,13 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import { GetStatsForConfiguration } from "./WeaponData.ts";
+import { GetStatsForConfiguration } from "../Data/WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
   DefaultModifiers,
   LocalStoreConfigLoader,
-} from "./Data/ConfigLoader.ts";
+} from "../Data/ConfigLoader.ts";
 import BTKChart from "./Charts/BTKChart.tsx";
 import ReloadChart from "./Charts/ReloadChart.tsx";
 import MagazineChart from "./Charts/MagazineChart.tsx";

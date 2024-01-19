@@ -1,13 +1,16 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../StringColor.ts";
-import { GetStatsForConfiguration, WeaponStats } from "../WeaponData.ts";
+import StringHue from "../../Util/StringColor.ts";
+import {
+  GetStatsForConfiguration,
+  WeaponStats,
+} from "../../Data/WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
-import { ConfigDisplayName } from "../LabelMaker.ts";
-import { Modifiers } from "../Data/ConfigLoader.ts";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
+import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useState } from "react";
-import RequiredRanges from "../RequiredRanges.ts";
-import { TTK } from "../Conversions.ts";
+import RequiredRanges from "../../Util/RequiredRanges.ts";
+import { TTK } from "../../Util/Conversions.ts";
 import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
 

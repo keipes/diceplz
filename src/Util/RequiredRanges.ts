@@ -1,5 +1,5 @@
-import { WeaponConfiguration } from "./WeaponConfigurator/WeaponConfigurator";
-import { GetStatsForConfiguration } from "./WeaponData";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { GetStatsForConfiguration } from "../Data/WeaponData";
 
 interface DamageConverter {
   (config: WeaponConfiguration, damage: number): number;

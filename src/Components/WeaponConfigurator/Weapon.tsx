@@ -1,13 +1,15 @@
-import { GetWeaponByName } from "../WeaponData.ts";
+import { GetWeaponByName } from "../../Data/WeaponData.ts";
 import { WeaponConfig } from "../App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
-import { ConfigHSL } from "../StringColor.ts";
+import { ConfigHSL } from "../../Util/StringColor.ts";
 
-import copySvg from "../icons/content_copy_FILL0_wght400_GRAD0_opsz24.svg";
-import visibilitySvg from "../icons/visibility_FILL0_wght400_GRAD0_opsz24.svg";
-import visibilityOffSvg from "../icons/visibility_off_FILL0_wght400_GRAD0_opsz24.svg";
-import deleteSvg from "../icons/delete_FILL0_wght400_GRAD0_opsz24.svg";
-
+import {
+  ContentCopyIcon,
+  DeleteIcon,
+  VisibilityIcon,
+  VisibilityOffIcon,
+} from "../Icons.tsx";
+import {} from "../Icons.tsx";
 interface WeaponProps {
   id: string;
   config: WeaponConfiguration;
@@ -85,9 +87,11 @@ function Weapon(props: WeaponProps) {
   if (!config.visible) {
     visibility += "_off";
   }
-  let visibilitySource = visibilitySvg;
-  if (!config.visible) {
-    visibilitySource = visibilityOffSvg;
+  let visibilitySvg;
+  if (config.visible) {
+    visibilitySvg = <VisibilityIcon alt="toggle visibility" />;
+  } else {
+    visibilitySvg = <VisibilityOffIcon alt="toggle visibility" />;
   }
   return (
     <div className="wcf-weapon" style={style}>
@@ -95,38 +99,39 @@ function Weapon(props: WeaponProps) {
         <div className="wcf-header-item wcf-name" style={nameStyle}>
           {config.name}
         </div>
-        <img
+
+        <span
           className={
             "config-delete wcf-header-item wcf-header-button wcf-duplicate svg-white svg-hover-blue"
           }
-          src={copySvg}
           onClick={() => {
             props.weaponConfig.DuplicateWeapon(props.id);
           }}
-          alt="duplicate"
-        />
-        <img
+        >
+          <ContentCopyIcon alt="duplicate" />
+        </span>
+        <span
           className={
             "wcf-header-item wcf-header-button wcf-visibility svg-white svg-hover-blue"
           }
-          src={visibilitySource}
           onClick={() => {
             const cloned = JSON.parse(JSON.stringify(props.config));
             cloned.visible = !cloned.visible;
             props.weaponConfig.UpdateWeapon(props.id, cloned);
           }}
-          alt="toggle visibility"
-        />
-        <img
+        >
+          {visibilitySvg}
+        </span>
+        <span
           className={
             "wcf-header-item wcf-header-button wcf-close svg-white svg-hover-red"
           }
-          src={deleteSvg}
           onClick={() => {
             props.weaponConfig.RemoveWeapon(props.id);
           }}
-          alt="delete"
-        />
+        >
+          <DeleteIcon />
+        </span>
       </div>
 
       <div className="wcf-weapon-selector">
@@ -139,7 +144,6 @@ function Weapon(props: WeaponProps) {
           value={props.config.barrelType}
           name="barrel"
           id="barrel"
-          // onChange={barrelChangeHandler}
           onChange={(e) => {
             const cloned = JSON.parse(JSON.stringify(props.config));
             cloned.barrelType = e.target.value;
@@ -161,7 +165,6 @@ function Weapon(props: WeaponProps) {
           value={props.config.ammoType}
           name="ammo"
           id="ammo"
-          // onChange={ammoChangeHandler}
           onChange={(e) => {
             const cloned = JSON.parse(JSON.stringify(props.config));
             cloned.ammoType = e.target.value;

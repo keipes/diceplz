@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
 
 interface StringVoidFn {
   (value: string): void;
