@@ -297,10 +297,10 @@ function TopNav(props: NavProps) {
             <div className="disclosure">
               <p>
                 Weapon stats are from{" "}
-                <a href="https://docs.google.com/spreadsheets/d/1UQsYeC3LiFEvgBt18AarXYvFN3DWzFN3DqRnyRHC0wc/edit#gid=1516150144">
+                <a href="https://docs.google.com/spreadsheets/d/1jNUxS27k9Qsx6SlnqBRV7eM92kp6_KYWQs_2rTBbRdg">
                   Sorrow's Scribbles
                 </a>{" "}
-                as of patch 6.2.0
+                as of patch 7.2.0
               </p>
             </div>
           </div>
