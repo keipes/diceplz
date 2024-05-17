@@ -1,6 +1,6 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   WeaponStats,
@@ -13,6 +13,7 @@ import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { TTK } from "../../Util/Conversions.ts";
 import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -21,6 +22,7 @@ interface TTKChartProps {
   rpmSelector: string;
   title: string;
   modifiers: Modifiers;
+  settings: Settings;
 }
 
 interface RPMSelectorFn {
@@ -113,6 +115,7 @@ function TTKChart(props: TTKChartProps) {
     seenBurst = seenBurst || typeof stats.rpmBurst === "number";
     seenSingle = seenSingle || typeof stats.rpmSingle === "number";
   }
+  const configColors = new Map();
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -160,11 +163,16 @@ function TTKChart(props: TTKChartProps) {
       }
     }
     const label = ConfigDisplayName(config);
+    if (props.settings.useAmmoColorsForGraph) {
+      configColors.set(label, ConfigAmmoColor(config));
+    } else {
+      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
+    }
     datasets.push({
       label: label,
       data: data,
       fill: false,
-      borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
+      borderColor: configColors.get(label),
       stepped: true,
     });
   }
@@ -197,8 +205,7 @@ function TTKChart(props: TTKChartProps) {
           labelColor: (ctx) => {
             return {
               borderColor: "white",
-              backgroundColor:
-                "hsl(" + StringHue(ctx.dataset.label) + ", 50%, 50%)",
+              backgroundColor: configColors.get(ctx.dataset.label)
             };
           },
           label: function (ctx) {

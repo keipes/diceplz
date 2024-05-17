@@ -1,15 +1,17 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import "./VelocityChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface VelocityChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
+  settings: Settings;
 }
 
 function VelocityChart(props: VelocityChartProps) {
@@ -32,7 +34,11 @@ function VelocityChart(props: VelocityChartProps) {
     if (velocity === undefined) velocity = 1;
     const label = ConfigDisplayName(wd.config);
     labels.push(label);
-    backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
+    if (props.settings.useAmmoColorsForGraph) {
+      backgroundColors.push(ConfigAmmoColor(wd.config));
+    } else {
+      backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
+    }
     data.push(velocity);
   }
   datasets.push({

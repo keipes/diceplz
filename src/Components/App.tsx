@@ -29,6 +29,7 @@ import {
 import BTKChart from "./Charts/BTKChart.tsx";
 import ReloadChart from "./Charts/ReloadChart.tsx";
 import MagazineChart from "./Charts/MagazineChart.tsx";
+import { InitialSettings, SetUseAmmoColorsForGraph } from "../Data/SettingsLoader.ts";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -81,6 +82,7 @@ interface WeaponConfig {
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
+  const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
   const setWeaponConfigurations = (
@@ -186,6 +188,10 @@ function App() {
       <TopNav
         weaponConfig={wpnCfg}
         configLoader={configLoader}
+        settings={settings}
+        setUseAmmoColorsForGraph={(value: boolean) => {
+          setSettings(SetUseAmmoColorsForGraph(value));
+        }}
         modifiers={modifiers}
         setModifiers={setModifiers}
       />
@@ -201,6 +207,7 @@ function App() {
           weaponConfigurations={weaponConfigurations}
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
+          settings={settings}
           rpmSelector={"rpmAuto"}
           modifiers={modifiers}
           title={"TTK"}
@@ -210,6 +217,7 @@ function App() {
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           modifiers={modifiers}
+          settings={settings}
         />
         {/* <TTKChart
           weaponConfigurations={weaponConfigurations}
@@ -232,11 +240,12 @@ function App() {
           requiredRanges={requiredRanges}
           highestRangeSeen={highestRangeSeen}
           modifiers={modifiers}
+          settings={settings}
         />
-        <RPMChart weaponConfigurations={weaponConfigurations} />
-        <VelocityChart weaponConfigurations={weaponConfigurations} />
-        <ReloadChart weaponConfigurations={weaponConfigurations} />
-        <MagazineChart weaponConfigurations={weaponConfigurations} />
+        <RPMChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+        <VelocityChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+        <ReloadChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+        <MagazineChart weaponConfigurations={weaponConfigurations} settings={settings}/>
       </div>
     </>
   );

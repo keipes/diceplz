@@ -25,5 +25,22 @@ const ConfigHSL = function (config: WeaponConfiguration) {
   return "hsl(" + StringHue(ConfigDisplayName(config)) + ", 50%, 50%)";
 };
 
+const ConfigAmmoColor = function (config: WeaponConfiguration) {
+  switch (config.ammoType) {
+    case "Close Combat":
+      return "#7fffff"
+    case "Standard":
+      return "#7fff7f"
+    case "High Power":
+      return "#ff7f7f"
+    case "Subsonic":
+      return "#7f7fff"
+    case "Armor Piercing":
+      return "#ffff7f"
+    default:
+      return "#fff";
+  }
+}
+
 export default StringHue;
-export { ConfigHSL };
+export { ConfigHSL, ConfigAmmoColor };

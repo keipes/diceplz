@@ -1,24 +1,26 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
   highestRangeSeen: number;
   requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
+  settings: Settings;
 }
 
 function DamageChart(props: DamageChartProps) {
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
   const datasets = [];
-
+  const configColors = new Map();
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -58,11 +60,16 @@ function DamageChart(props: DamageChartProps) {
       }
     }
     const label = ConfigDisplayName(config);
+    if (props.settings.useAmmoColorsForGraph) {
+      configColors.set(label, ConfigAmmoColor(config));
+    } else {
+      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
+    }
     datasets.push({
       label: label,
       data: data,
       fill: false,
-      borderColor: "hsl(" + StringHue(label) + ", 50%, 50%)",
+      borderColor: configColors.get(label),
       tension: 0.1,
       stepped: true,
     });
@@ -97,8 +104,7 @@ function DamageChart(props: DamageChartProps) {
           labelColor: (ctx) => {
             return {
               borderColor: "white",
-              backgroundColor:
-                "hsl(" + StringHue(ctx.dataset.label) + ", 50%, 50%)",
+              backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
           label: function (ctx) {

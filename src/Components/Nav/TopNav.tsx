@@ -4,6 +4,7 @@ import {
   DefaultModifiers,
   Modifiers,
 } from "../../Data/ConfigLoader";
+import { Settings } from "../../Data/SettingsLoader";
 import {
   GetCategoryWeapons,
   GetInitialStatsForWeapon,
@@ -18,9 +19,16 @@ interface SetModifiersFn {
   (modifiers: Modifiers): void;
 }
 
+interface BooleanVoidFn {
+  (value: boolean): void;
+}
+
 interface NavProps {
   weaponConfig: WeaponConfig;
   configLoader: ConfigLoader;
+  // settingsLoader: SettingsLoader;
+  setUseAmmoColorsForGraph: BooleanVoidFn,
+  settings: Settings,
   modifiers: Modifiers;
   setModifiers: SetModifiersFn;
 }
@@ -268,6 +276,23 @@ function TopNav(props: NavProps) {
                     const cloned = structuredClone(props.modifiers);
                     cloned.bodyDamageMultiplier = parseFloat(e.target.value);
                     props.setModifiers(cloned);
+                  }}
+                />
+              </div>
+            </li>
+            <li className="weapon-select-item">
+              <div>
+                <label htmlFor="alternate-weapon-colors">
+                  Assign Graph Colors By Ammo Type:{" "}
+                </label>
+                <input
+                  type="checkbox"
+                  className="use-alternate-weapon-colors"
+                  id="alternate-weapon-colors"
+                  name="alternate-weapon-colors"
+                  checked={props.settings.useAmmoColorsForGraph}
+                  onChange={(e) => {
+                    props.setUseAmmoColorsForGraph(e.target.checked);
                   }}
                 />
               </div>

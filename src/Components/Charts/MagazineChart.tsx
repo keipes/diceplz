@@ -1,6 +1,6 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   GetWeaponByName,
@@ -10,9 +10,11 @@ import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.ts
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface MagazineChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
+  settings: Settings;
 }
 
 function MagazineChart(props: MagazineChartProps) {
@@ -63,7 +65,11 @@ function MagazineChart(props: MagazineChartProps) {
     if (velocity === undefined) velocity = 1;
     const label = ConfigDisplayName(wd.config);
     labels.push(label);
-    backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
+    if (props.settings.useAmmoColorsForGraph) {
+      backgroundColors.push(ConfigAmmoColor(wd.config));
+    } else {
+      backgroundColors.push("hsl(" + StringHue(label) + ", 50%, 50%)");
+    }
     data.push(ammoStat.magSize);
   }
   datasets.push({

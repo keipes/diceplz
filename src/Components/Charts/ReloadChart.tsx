@@ -1,6 +1,6 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   GetWeaponByName,
@@ -11,9 +11,11 @@ import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.ts
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface ReloadChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
+  settings: Settings;
 }
 
 function ReloadChart(props: ReloadChartProps) {
@@ -85,25 +87,31 @@ function ReloadChart(props: ReloadChartProps) {
     if (weapon.ammoStats) {
       ammoStats = weapon.ammoStats[config.ammoType];
     }
+    let color;
+    if (props.settings.useAmmoColorsForGraph) {
+      color = ConfigAmmoColor(config);
+    } else {
+      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+    }
     if (showEmpty) {
       if (ammoStats && ammoStats.emptyReload) {
         data.push(ammoStats.emptyReload);
-        backgroundColors.push("hsl(" + StringHue(weaponName) + ", 50%, 50%)");
+        backgroundColors.push(color);
       } else {
         data.push(null);
-        backgroundColors.push("hsl(" + StringHue(weaponName) + ", 50%, 50%)");
+        backgroundColors.push(color);
       }
     }
     if (showTactical) {
       if (ammoStats && ammoStats.tacticalReload) {
         tacticalData.push(ammoStats.tacticalReload);
         tacticalBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       } else {
         tacticalData.push(null);
         tacticalBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       }
     }

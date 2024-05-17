@@ -150,6 +150,10 @@ li:hover div.weapon-select-dropdown-container {
   color: var(--battle-blue);
 }
 
+.use-alternate-weapon-colors {
+  float: right;
+}
+
 .weapon-select-items-container-saveload {
   display: grid;
   grid-template-columns: 1fr;

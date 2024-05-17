@@ -1,6 +1,6 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue from "../../Util/StringColor.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { useState } from "react";
 import "./RPMChart.css";
@@ -8,9 +8,11 @@ import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.ts
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
+import { Settings } from "../../Data/SettingsLoader.ts";
 
 interface RPMChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
+  settings: Settings;
 }
 
 function RPMChart(props: RPMChartProps) {
@@ -62,25 +64,31 @@ function RPMChart(props: RPMChartProps) {
     const config = wd.config;
     const weaponName = ConfigDisplayName(config);
     labels.push(weaponName);
+    let color;
+    if (props.settings.useAmmoColorsForGraph) {
+      color = ConfigAmmoColor(config);
+    } else {
+      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+    }
     if (showAuto) {
       if (stats.rpmAuto) {
         data.push(stats.rpmAuto);
-        backgroundColors.push("hsl(" + StringHue(weaponName) + ", 50%, 50%)");
+        backgroundColors.push(color);
       } else {
         data.push(null);
-        backgroundColors.push("hsl(" + StringHue(weaponName) + ", 50%, 50%)");
+        backgroundColors.push(color);
       }
     }
     if (showBurst) {
       if (stats.rpmBurst) {
         burstData.push(stats.rpmBurst);
         burstBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       } else {
         burstData.push(null);
         burstBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       }
     }
@@ -89,12 +97,12 @@ function RPMChart(props: RPMChartProps) {
       if (stats.rpmSingle) {
         singleData.push(stats.rpmSingle);
         singleBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       } else {
         singleData.push(null);
         singleBackgroundColors.push(
-          "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+          color
         );
       }
     }
