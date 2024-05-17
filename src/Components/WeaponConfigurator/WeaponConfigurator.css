@@ -84,6 +84,22 @@
   font-weight: 600;
 }
 
+.wcf-selector-ammo-standard {
+  color: #7fff7f;
+}
+.wcf-selector-ammo-closecombat {
+  color: #7fffff;
+}
+.wcf-selector-ammo-highpower {
+  color: #ff7f7f;
+}
+.wcf-selector-ammo-subsonic {
+  color: #7f7fff;
+}
+.wcf-selector-ammo-armorpiercing {
+  color: #ffff7f;
+}
+
 .wcf-selector-option {
   line-height: 2.8rem;
 }

@@ -161,7 +161,7 @@ function Weapon(props: WeaponProps) {
         </label>
         <span></span>
         <select
-          className="wcf-selector-select"
+          className={"wcf-selector-select wcf-selector-ammo-" + props.config.ammoType.replace(/\s/g, '').toLowerCase()}
           value={props.config.ammoType}
           name="ammo"
           id="ammo"
