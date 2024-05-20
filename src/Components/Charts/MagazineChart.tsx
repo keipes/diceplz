@@ -11,6 +11,8 @@ import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { useContext } from "react";
+import { ThemeContext } from "../App.tsx";
 
 interface MagazineChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -18,6 +20,7 @@ interface MagazineChartProps {
 }
 
 function MagazineChart(props: MagazineChartProps) {
+  const theme = useContext(ThemeContext);
   const labels = [];
   const datasets = [];
   const data = [];
@@ -91,6 +94,9 @@ function MagazineChart(props: MagazineChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
@@ -116,28 +122,28 @@ function MagazineChart(props: MagazineChartProps) {
         title: {
           display: true,
           text: "rounds",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
         title: {
           display: false,
           text: "weapon",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
     },

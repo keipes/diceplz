@@ -5,13 +5,14 @@ import {
   GetStatsForConfiguration,
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
-import { useState } from "react";
+import { useContext, useState } from "react";
 // import "./ReloadChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { ThemeContext } from "../App.tsx";
 
 interface ReloadChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -19,6 +20,7 @@ interface ReloadChartProps {
 }
 
 function ReloadChart(props: ReloadChartProps) {
+  const theme = useContext(ThemeContext);
   const [_showEmpty, setShowEmpty] = useState(true);
   const [_showTactical, setShowTactical] = useState(true);
   const labels = [];
@@ -146,6 +148,9 @@ function ReloadChart(props: ReloadChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         callbacks: {
           label: function (ctx) {
             if (ctx.parsed.y == null) {
@@ -168,14 +173,14 @@ function ReloadChart(props: ReloadChartProps) {
         title: {
           display: true,
           text: "seconds",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
@@ -188,7 +193,7 @@ function ReloadChart(props: ReloadChartProps) {
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
     },

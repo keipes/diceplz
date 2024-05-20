@@ -6,7 +6,7 @@
   /* height: 30vh; */
   width: 100%;
   /* transition: all 0.2s ease; */
-  background-color: #000d;
+  background-color: var(--wcf-container);
 }
 
 .wcf-container-closed {
@@ -23,7 +23,7 @@
 }
 
 .wcf-header-bar {
-  background-color: #0009;
+  background-color: var(--wcf-header);
   height: 2.2rem;
   display: grid;
   grid-template-columns: 150px 1fr 150px;
@@ -78,9 +78,14 @@
 
 .wcf-selector-select {
   border-radius: 0;
-  border-color: rgb(216, 216, 216);
+  /* border-color: rgb(216, 216, 216);
   color: white;
-  background-color: #000;
+  background-color: #000; */
+
+  border-color: rgb(216, 216, 216);
+  color: var(--font-color);
+  background-color: var(--wcf-container);
+
   font-weight: 600;
 }
 

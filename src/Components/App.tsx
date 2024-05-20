@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import "./App.css";
 import DamageChart from "./Charts/DamageChart.tsx";
 import TTKChart from "./Charts/TTKChart.tsx";
@@ -80,11 +80,39 @@ interface WeaponConfig {
   Reset: ResetFn;
 }
 
+interface Theme {
+  highlightColor: string
+  tooltipBg: string,
+  tooltipTitle: string,
+  tooltipBody: string
+}
+
+const LightTheme: Theme = {
+  highlightColor: "black",
+  tooltipBg: "white",
+  tooltipTitle: "black",
+  tooltipBody: "black"
+}
+
+const DarkTheme: Theme = {
+  highlightColor: "white",
+  tooltipBg: "black",
+  tooltipTitle: "white",
+  tooltipBody: "white"
+}
+const ThemeContext = createContext(DarkTheme);
+
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
+  const [darkMode, setDarkMode] = useState(!(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches));
+  useEffect(() => {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      setDarkMode(event.matches);
+    });
+  }, []);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
   ) => {
@@ -185,73 +213,77 @@ function App() {
   }
   return (
     <>
-      <TopNav
-        weaponConfig={wpnCfg}
-        configLoader={configLoader}
-        settings={settings}
-        setUseAmmoColorsForGraph={(value: boolean) => {
-          setSettings(SetUseAmmoColorsForGraph(value));
-        }}
-        modifiers={modifiers}
-        setModifiers={setModifiers}
-      />
-      <WeaponConfigurator
-        configurations={weaponConfigurations}
-        weaponConfig={wpnCfg}
-        open={configuratorOpen}
-        setOpen={setConfiguratorOpen}
-        setBottomPadding={setBottomPadding}
-      />
-      <div className={mainContentClass} style={mainContentStyle}>
-        <TTKChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
+      <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
+        <TopNav
+          weaponConfig={wpnCfg}
+          configLoader={configLoader}
           settings={settings}
-          rpmSelector={"rpmAuto"}
+          setUseAmmoColorsForGraph={(value: boolean) => {
+            setSettings(SetUseAmmoColorsForGraph(value));
+          }}
           modifiers={modifiers}
-          title={"TTK"}
+          setModifiers={setModifiers}
         />
-        <BTKChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
-          modifiers={modifiers}
-          settings={settings}
+        <WeaponConfigurator
+          configurations={weaponConfigurations}
+          weaponConfig={wpnCfg}
+          open={configuratorOpen}
+          setOpen={setConfiguratorOpen}
+          setBottomPadding={setBottomPadding}
         />
-        {/* <TTKChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
-          rpmSelector={"rpmSingle"}
-          modifiers={modifiers}
-          title={"TTK Single"}
-        />
-        <TTKChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
-          rpmSelector={"rpmBurst"}
-          modifiers={modifiers}
-          title={"TTK Burst"}
-        /> */}
-        <DamageChart
-          weaponConfigurations={weaponConfigurations}
-          requiredRanges={requiredRanges}
-          highestRangeSeen={highestRangeSeen}
-          modifiers={modifiers}
-          settings={settings}
-        />
-        <RPMChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-        <VelocityChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-        <ReloadChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-        <MagazineChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-      </div>
+        <div className={mainContentClass} style={mainContentStyle}>
+          <TTKChart
+            weaponConfigurations={weaponConfigurations}
+            requiredRanges={requiredRanges}
+            highestRangeSeen={highestRangeSeen}
+            settings={settings}
+            rpmSelector={"rpmAuto"}
+            modifiers={modifiers}
+            title={"TTK"}
+          />
+          <BTKChart
+            weaponConfigurations={weaponConfigurations}
+            requiredRanges={requiredRanges}
+            highestRangeSeen={highestRangeSeen}
+            modifiers={modifiers}
+            settings={settings}
+          />
+          {/* <TTKChart
+            weaponConfigurations={weaponConfigurations}
+            requiredRanges={requiredRanges}
+            highestRangeSeen={highestRangeSeen}
+            rpmSelector={"rpmSingle"}
+            modifiers={modifiers}
+            title={"TTK Single"}
+          />
+          <TTKChart
+            weaponConfigurations={weaponConfigurations}
+            requiredRanges={requiredRanges}
+            highestRangeSeen={highestRangeSeen}
+            rpmSelector={"rpmBurst"}
+            modifiers={modifiers}
+            title={"TTK Burst"}
+          /> */}
+          <DamageChart
+            weaponConfigurations={weaponConfigurations}
+            requiredRanges={requiredRanges}
+            highestRangeSeen={highestRangeSeen}
+            modifiers={modifiers}
+            settings={settings}
+          />
+          <RPMChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+          <VelocityChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+          <ReloadChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+          <MagazineChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+        </div>
+      </ThemeContext.Provider>
     </>
   );
 }
 
 export default App;
+
+export {ThemeContext};
 export type {
   WeaponSelections,
   AddWeaponFn,

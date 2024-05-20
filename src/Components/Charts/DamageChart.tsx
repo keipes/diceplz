@@ -7,6 +7,8 @@ import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { ThemeContext } from "../App.tsx";
+import { useContext } from "react";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -17,6 +19,7 @@ interface DamageChartProps {
 }
 
 function DamageChart(props: DamageChartProps) {
+  const theme = useContext(ThemeContext);
   const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = props.requiredRanges;
   const datasets = [];
@@ -97,13 +100,16 @@ function DamageChart(props: DamageChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           labelColor: (ctx) => {
             return {
-              borderColor: "white",
+              borderColor: theme.highlightColor,
               backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
@@ -126,14 +132,14 @@ function DamageChart(props: DamageChartProps) {
         title: {
           display: true,
           text: "damage",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
           // beginAtZero: true,
         },
       },
@@ -141,14 +147,14 @@ function DamageChart(props: DamageChartProps) {
         title: {
           display: true,
           text: "meters",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
           // beginAtZero: true,
           autoSkip: false,
         },

@@ -9,6 +9,8 @@ import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { useContext } from "react";
+import { ThemeContext } from "../App.tsx";
 
 interface BTKChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -19,6 +21,7 @@ interface BTKChartProps {
 }
 
 function BTKChart(props: BTKChartProps) {
+  const theme = useContext(ThemeContext);
   const highestRangeSeen = props.highestRangeSeen;
   const datasets = [];
   const requiredRanges = RequiredRanges(
@@ -104,13 +107,16 @@ function BTKChart(props: BTKChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           labelColor: (ctx) => {
             return {
-              borderColor: "white",
+              borderColor: theme.highlightColor,
               backgroundColor: configColors.get(ctx.dataset.label)
             };
           },
@@ -132,28 +138,28 @@ function BTKChart(props: BTKChartProps) {
         title: {
           display: true,
           text: "bullets",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
         title: {
           display: true,
           text: "meters",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
           autoSkip: false,
         },
       },

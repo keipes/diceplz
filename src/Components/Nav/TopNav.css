@@ -2,7 +2,7 @@
   position: fixed;
   top: 0px;
   left: 0;
-  background-color: black;
+  background-color: var(--nav-bg);
   z-index: 100;
   width: 100%;
   text-align: left;
@@ -19,11 +19,11 @@
   margin-block-start: 0;
   margin-block-end: 0;
   font-size: 2.6rem;
-  color: var(--battle-white);
+  color: var(--font-color);
 }
 
 .top-nav-title:hover {
-  color: var(--battle-blue);
+  color: var(--font-highlight);
 }
 
 .top-nav ul,
@@ -45,7 +45,7 @@
 }
 
 .top-nav-label {
-  color: #ffffff;
+  color: var(--font-color);
   display: block;
   font: bold 1.3rem sans-serif;
   line-height: 4rem;
@@ -62,7 +62,7 @@
 }
 
 .top-nav li:hover .top-nav-label {
-  color: var(--battle-blue);
+  color: var(--font-highlight);
 }
 
 .weapon-select-dropdown-container {
@@ -81,7 +81,7 @@ ul.weapon-select-dropdown {
   padding: 1rem;
   z-index: 1;
   font-size: 1rem;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--weapon-dropdown-bg);
   border-radius: 4px;
 }
 
@@ -97,7 +97,7 @@ li:hover div.weapon-select-dropdown-container {
 }
 
 .weapon-select-add-all {
-  border-bottom: 1px solid var(--battle-white);
+  border-bottom: 1px solid var(--divider-color);
   text-align: center;
   font-size: 13pt;
   cursor: pointer;

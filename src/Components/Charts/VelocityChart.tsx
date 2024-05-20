@@ -8,6 +8,8 @@ import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { useContext } from "react";
+import { ThemeContext } from "../App.tsx";
 
 interface VelocityChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -15,6 +17,7 @@ interface VelocityChartProps {
 }
 
 function VelocityChart(props: VelocityChartProps) {
+  const theme = useContext(ThemeContext);
   const labels = [];
   const datasets = [];
   const data = [];
@@ -60,6 +63,9 @@ function VelocityChart(props: VelocityChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
@@ -85,28 +91,28 @@ function VelocityChart(props: VelocityChartProps) {
         title: {
           display: true,
           text: "m / s",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
         title: {
           display: false,
           text: "weapon",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
     },

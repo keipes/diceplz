@@ -8,12 +8,13 @@ import {
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { TTK } from "../../Util/Conversions.ts";
 import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { ThemeContext } from "../App.tsx";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -38,6 +39,7 @@ const SELECTOR_SINGLE: RPMSelectorFn = (stats: WeaponStats) => stats.rpmSingle;
 
 function TTKChart(props: TTKChartProps) {
   const [_selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
+  const theme = useContext(ThemeContext);
 
   let autoClass = "abs-selector";
   let burstClass = "abs-selector";
@@ -198,13 +200,16 @@ function TTKChart(props: TTKChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           labelColor: (ctx) => {
             return {
-              borderColor: "white",
+              borderColor: theme.highlightColor,
               backgroundColor: configColors.get(ctx.dataset.label)
             };
           },
@@ -226,28 +231,28 @@ function TTKChart(props: TTKChartProps) {
         title: {
           display: true,
           text: "milliseconds",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
         title: {
           display: true,
           text: "meters",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
           autoSkip: false,
         },
       },

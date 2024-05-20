@@ -17,13 +17,50 @@
   --battle-black: #121212;
   --battle-bg-blue: #001621;
 
-  color: var(--battle-white);
-  background-color: var(--battle-bg-blue);
+  background-color: var(--root-bg);
+  color: var(--font-color);
+
+  --font-highlight: var(--battle-blue);
 }
 
-.svg-white {
-  filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(121deg)
-    brightness(108%) contrast(108%);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --root-bg: var(-battle-bg-blue);
+    --chart-background: #01010180;
+    --chart-desc-bg: black;
+    --font-color: var(--battle-white);
+    --weapon-dropdown-bg: rgba(0, 0, 0, 0.9);
+    --nav-bg: black;
+    --divider-color: var(--battle-white);
+    --button-bg: black;
+    --wcf-header: #0009;
+    --wcf-container: #000d;
+  }
+
+  .svg-white {
+    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(121deg)
+      brightness(108%) contrast(108%);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --root-bg: #eee;
+    --chart-background: white;
+    --chart-desc-bg: white;
+    --font-color: var(--battle-black);
+    --nav-bg: white;
+    --weapon-dropdown-bg: rgba(255, 255, 255, 0.95);
+    --divider-color: var(--battle-black);
+    --button-bg: #ccc;
+    --wcf-header: #ddd;
+    --wcf-container: #fffe;
+  }
+
+  .svg-white {
+    filter: invert(0%) sepia(0%) saturate(7500%) hue-rotate(121deg)
+      brightness(108%) contrast(108%);
+  }
 }
 
 .svg-hover-red:hover {
@@ -66,7 +103,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #000;
+  background-color: var(--button-bg);
   cursor: pointer;
   transition: border-color 0.25s;
 }

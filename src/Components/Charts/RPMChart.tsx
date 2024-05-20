@@ -2,13 +2,14 @@ import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./RPMChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
+import { ThemeContext } from "../App.tsx";
 
 interface RPMChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -16,6 +17,7 @@ interface RPMChartProps {
 }
 
 function RPMChart(props: RPMChartProps) {
+  const theme = useContext(ThemeContext);
   const [_showAuto, setShowAuto] = useState(true);
   const [_showSingle, setShowSingle] = useState(true);
   const [_showBurst, setShowBurst] = useState(true);
@@ -145,6 +147,9 @@ function RPMChart(props: RPMChartProps) {
     },
     plugins: {
       tooltip: {
+        backgroundColor: theme.tooltipBg,
+        bodyColor: theme.tooltipBody,
+        titleColor: theme.tooltipTitle,
         callbacks: {
           label: function (ctx) {
             if (ctx.parsed.y == null) {
@@ -167,14 +172,14 @@ function RPMChart(props: RPMChartProps) {
         title: {
           display: true,
           text: "rounds",
-          color: "white",
+          color: theme.highlightColor,
         },
         grid: {
           color: "rgba(38, 255, 223, 0.1)",
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
       x: {
@@ -187,7 +192,7 @@ function RPMChart(props: RPMChartProps) {
         },
         min: 0,
         ticks: {
-          color: "white",
+          color: theme.highlightColor,
         },
       },
     },

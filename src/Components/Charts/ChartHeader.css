@@ -15,7 +15,7 @@
   /* width: 0%; */
   top: 0;
   margin-right: 2rem;
-  background-color: black;
+  background-color: var(--chart-desc-bg);
   box-shadow: 0 0 0.5rem black;
   padding: 1rem;
   opacity: 0;
