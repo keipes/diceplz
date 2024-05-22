@@ -47,7 +47,7 @@ function MagazineChart(props: MagazineChartProps) {
     const bWeapon = GetWeaponByName(b.config.name);
     let bCapacity = 0;
     if (bWeapon.ammoStats) {
-      const ammoStat = bWeapon.ammoStats[a.config.ammoType];
+      const ammoStat = bWeapon.ammoStats[b.config.ammoType];
       if (ammoStat) {
         if (ammoStat.magSize) {
           bCapacity = ammoStat.magSize;

@@ -68,7 +68,7 @@ function ReloadChart(props: ReloadChartProps) {
     }
     const bWeapon = GetWeaponByName(b.config.name);
     if (bWeapon.ammoStats) {
-      const ammoStat = bWeapon.ammoStats[a.config.ammoType];
+      const ammoStat = bWeapon.ammoStats[b.config.ammoType];
       if (ammoStat) {
         if (showEmpty && ammoStat.emptyReload) {
           bValues.push(ammoStat.emptyReload);
@@ -78,7 +78,15 @@ function ReloadChart(props: ReloadChartProps) {
         }
       }
     }
-    return Math.max(...aValues) - Math.max(...bValues);
+    let aMax = Math.max(...aValues);
+    if (aMax == -Infinity) {
+      aMax = Infinity;
+    }
+    let bMax = Math.max(...bValues);
+    if (bMax == -Infinity) {
+      bMax = Infinity;
+    }
+    return aMax - bMax;
   });
   for (const wd of weaponData) {
     const config = wd.config;
@@ -93,7 +101,7 @@ function ReloadChart(props: ReloadChartProps) {
     if (props.settings.useAmmoColorsForGraph) {
       color = ConfigAmmoColor(config);
     } else {
-      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)";
     }
     if (showEmpty) {
       if (ammoStats && ammoStats.emptyReload) {
@@ -107,14 +115,10 @@ function ReloadChart(props: ReloadChartProps) {
     if (showTactical) {
       if (ammoStats && ammoStats.tacticalReload) {
         tacticalData.push(ammoStats.tacticalReload);
-        tacticalBackgroundColors.push(
-          color
-        );
+        tacticalBackgroundColors.push(color);
       } else {
         tacticalData.push(null);
-        tacticalBackgroundColors.push(
-          color
-        );
+        tacticalBackgroundColors.push(color);
       }
     }
   }
