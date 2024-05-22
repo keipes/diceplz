@@ -8,4 +8,9 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 4096,
   },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+  },
 });
