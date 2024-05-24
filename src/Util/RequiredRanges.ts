@@ -26,6 +26,9 @@ const RequiredRanges = function (
       }
     }
   }
+  for (let i = 0; i < highestRangeSeen; i++) {
+    values.add(i);
+  }
   values.add(highestRangeSeen);
   return values;
 };

@@ -192,6 +192,11 @@ function TTKChart(props: TTKChartProps) {
       intersect: false,
       mode: "index",
     },
+    elements: {
+      point: {
+        pointStyle: false
+      }
+    },
     plugins: {
       tooltip: {
         backgroundColor: theme.tooltipBg,
@@ -206,6 +211,10 @@ function TTKChart(props: TTKChartProps) {
               borderColor: theme.highlightColor,
               backgroundColor: configColors.get(ctx.dataset.label)
             };
+          },
+          title: function(ctx ) {
+            const index = ctx[0].dataIndex;
+            return index == highestRangeSeen ? String(ctx[0].dataIndex) + "+ meters" : String(ctx[0].dataIndex) + " meters";
           },
           label: function (ctx) {
             let label = ctx.dataset.label || "";

@@ -44,7 +44,7 @@ function DamageChart(props: DamageChartProps) {
         if (requiredRanges.has(i)) {
           data.push(lastDamage);
         } else {
-          data.push(null);
+          data.push(lastDamage);
         }
       }
       lastDamage = damage;
@@ -56,7 +56,7 @@ function DamageChart(props: DamageChartProps) {
         if (requiredRanges.has(i)) {
           data.push(damage);
         } else {
-          data.push(null);
+          data.push(damage);
         }
       }
       if (range != highestRangeSeen) {
@@ -99,6 +99,11 @@ function DamageChart(props: DamageChartProps) {
       intersect: false,
       mode: "index",
     },
+    elements: {
+      point: {
+        pointStyle: false
+      }
+    },
     plugins: {
       tooltip: {
         backgroundColor: theme.tooltipBg,
@@ -114,6 +119,10 @@ function DamageChart(props: DamageChartProps) {
               backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
+          title: function(ctx ) {
+            const index = ctx[0].dataIndex;
+            return index == highestRangeSeen ? String(ctx[0].dataIndex) + "+ meters" : String(ctx[0].dataIndex) + " meters";
+          },
           label: function (ctx) {
             let label = ctx.dataset.label || "";
             if (label) {
@@ -127,41 +136,7 @@ function DamageChart(props: DamageChartProps) {
         },
       },
     },
-    // stepped: true,
     scales: GenerateScales("meters", "damage", theme.highlightColor),
-    // scales: {
-    //   y: {
-    //     title: {
-    //       display: true,
-    //       text: "damage",
-    //       color: theme.highlightColor,
-    //     },
-    //     grid: {
-    //       color: "rgba(75, 192, 192, 0.2)",
-    //     },
-    //     min: 0,
-    //     ticks: {
-    //       color: theme.highlightColor,
-    //       // beginAtZero: true,
-    //     },
-    //   },
-    //   x: {
-    //     title: {
-    //       display: true,
-    //       text: "meters",
-    //       color: theme.highlightColor,
-    //     },
-    //     grid: {
-    //       color: "rgba(75, 192, 192, 0.2)",
-    //     },
-    //     min: 0,
-    //     ticks: {
-    //       color: theme.highlightColor,
-    //       // beginAtZero: true,
-    //       autoSkip: false,
-    //     },
-    //   },
-    // },
   };
   return (
     <div className="chart-outer-container">
