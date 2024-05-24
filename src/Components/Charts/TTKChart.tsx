@@ -11,7 +11,6 @@ import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useContext, useState } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { TTK } from "../../Util/Conversions.ts";
-import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
@@ -232,21 +231,21 @@ function TTKChart(props: TTKChartProps) {
       />
       <div className="button-container">
         <button
-          className={selectedFireMode === FIREMODE_AUTO ? "abs-selector enabled" : "abs-selector"}
+          className={selectedFireMode === FIREMODE_AUTO ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
           disabled={!seenAuto}
         >
           Auto
         </button>
         <button
-          className={selectedFireMode === FIREMODE_BURST ? "abs-selector enabled" : "abs-selector"}
+          className={selectedFireMode === FIREMODE_BURST ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
           disabled={!seenBurst}
         >
           Burst
         </button>
         <button
-          className={selectedFireMode === FIREMODE_SINGLE ? "abs-selector enabled" : "abs-selector"}
+          className={selectedFireMode === FIREMODE_SINGLE ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
           disabled={!seenSingle}
         >

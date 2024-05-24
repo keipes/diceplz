@@ -3,7 +3,6 @@ import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { useContext, useState } from "react";
-import "./RPMChart.css";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
