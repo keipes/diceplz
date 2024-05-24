@@ -170,12 +170,6 @@ function RPMChart(props: RPMChartProps) {
     },
     scales: GenerateScales("", "rounds", theme.highlightColor)
   };
-  let autoClass = "abs-selector";
-  let burstClass = "abs-selector";
-  let singleClass = "abs-selector";
-  if (showAuto) autoClass += " btn-enabled";
-  if (showBurst) burstClass += " btn-enabled";
-  if (showSingle) singleClass += " btn-enabled";
   return (
     <div className="chart-outer-container">
       <ChartHeader
@@ -184,21 +178,21 @@ function RPMChart(props: RPMChartProps) {
       />
       <div className="button-container">
         <button
-          className={autoClass}
+          className={showAuto ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setShowAuto(!showAuto)}
           disabled={!seenAuto}
         >
           Auto
         </button>
         <button
-          className={burstClass}
+          className={showBurst ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setShowBurst(!showBurst)}
           disabled={!seenBurst}
         >
           Burst
         </button>
         <button
-          className={singleClass}
+          className={showSingle ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setShowSingle(!showSingle)}
           disabled={!seenSingle}
         >

@@ -175,10 +175,6 @@ function ReloadChart(props: ReloadChartProps) {
     },
     scales: GenerateScales("", "seconds", theme.highlightColor),
   };
-  let emptyClass = "abs-selector";
-  let tacticalClass = "abs-selector";
-  if (showEmpty) emptyClass += " btn-enabled";
-  if (showTactical) tacticalClass += " btn-enabled";
   return (
     <div className="chart-outer-container">
       <ChartHeader
@@ -187,14 +183,14 @@ function ReloadChart(props: ReloadChartProps) {
       />
       <div className="button-container">
         <button
-          className={emptyClass}
+          className={showEmpty ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setShowEmpty(!showEmpty)}
           disabled={!seenEmpty}
         >
           Empty
         </button>
         <button
-          className={tacticalClass}
+          className={showTactical ? "abs-selector btn-enabled" : "abs-selector"}
           onClick={(_) => setShowTactical(!showTactical)}
           disabled={!seenTactical}
         >
