@@ -13,6 +13,7 @@ import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
 import { ThemeContext } from "../App.tsx";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface MagazineChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -117,36 +118,7 @@ function MagazineChart(props: MagazineChartProps) {
         },
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "rounds",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-      x: {
-        title: {
-          display: false,
-          text: "weapon",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-    },
+    scales: GenerateScales("", "rounds", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">

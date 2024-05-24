@@ -15,6 +15,7 @@ import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -41,9 +42,6 @@ function TTKChart(props: TTKChartProps) {
   const [_selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
   const theme = useContext(ThemeContext);
 
-  let autoClass = "abs-selector";
-  let burstClass = "abs-selector";
-  let singleClass = "abs-selector";
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
@@ -91,15 +89,12 @@ function TTKChart(props: TTKChartProps) {
   }
   switch (selectedFireMode) {
     case FIREMODE_AUTO:
-      if (seenAuto) autoClass += " enabled";
       rpmSelector = SELECTOR_AUTO;
       break;
     case FIREMODE_BURST:
-      if (seenBurst) burstClass += " enabled";
       rpmSelector = SELECTOR_BURST;
       break;
     case FIREMODE_SINGLE:
-      if (seenSingle) singleClass += " enabled";
       rpmSelector = SELECTOR_SINGLE;
       break;
   }
@@ -226,37 +221,7 @@ function TTKChart(props: TTKChartProps) {
         },
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "milliseconds",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "meters",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-          autoSkip: false,
-        },
-      },
-    },
+    scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
   };
 
   return (
@@ -267,21 +232,21 @@ function TTKChart(props: TTKChartProps) {
       />
       <div className="button-container">
         <button
-          className={autoClass}
+          className={selectedFireMode === FIREMODE_AUTO ? "abs-selector enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
           disabled={!seenAuto}
         >
           Auto
         </button>
         <button
-          className={burstClass}
+          className={selectedFireMode === FIREMODE_BURST ? "abs-selector enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
           disabled={!seenBurst}
         >
           Burst
         </button>
         <button
-          className={singleClass}
+          className={selectedFireMode === FIREMODE_SINGLE ? "abs-selector enabled" : "abs-selector"}
           onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
           disabled={!seenSingle}
         >

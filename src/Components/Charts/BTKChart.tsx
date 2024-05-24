@@ -11,6 +11,7 @@ import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
 import { ThemeContext } from "../App.tsx";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface BTKChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -133,37 +134,7 @@ function BTKChart(props: BTKChartProps) {
         },
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "bullets",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "meters",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-          autoSkip: false,
-        },
-      },
-    },
+    scales: GenerateScales("meters", "bullets", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">

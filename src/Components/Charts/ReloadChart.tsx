@@ -13,6 +13,7 @@ import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface ReloadChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -172,35 +173,7 @@ function ReloadChart(props: ReloadChartProps) {
         },
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "seconds",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-      x: {
-        title: {
-          display: false,
-          text: "weapon",
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-    },
+    scales: GenerateScales("", "seconds", theme.highlightColor),
   };
   let emptyClass = "abs-selector";
   let tacticalClass = "abs-selector";

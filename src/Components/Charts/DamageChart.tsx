@@ -9,6 +9,7 @@ import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
 import { useContext } from "react";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -127,39 +128,40 @@ function DamageChart(props: DamageChartProps) {
       },
     },
     // stepped: true,
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "damage",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-          // beginAtZero: true,
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "meters",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(75, 192, 192, 0.2)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-          // beginAtZero: true,
-          autoSkip: false,
-        },
-      },
-    },
+    scales: GenerateScales("meters", "damage", theme.highlightColor),
+    // scales: {
+    //   y: {
+    //     title: {
+    //       display: true,
+    //       text: "damage",
+    //       color: theme.highlightColor,
+    //     },
+    //     grid: {
+    //       color: "rgba(75, 192, 192, 0.2)",
+    //     },
+    //     min: 0,
+    //     ticks: {
+    //       color: theme.highlightColor,
+    //       // beginAtZero: true,
+    //     },
+    //   },
+    //   x: {
+    //     title: {
+    //       display: true,
+    //       text: "meters",
+    //       color: theme.highlightColor,
+    //     },
+    //     grid: {
+    //       color: "rgba(75, 192, 192, 0.2)",
+    //     },
+    //     min: 0,
+    //     ticks: {
+    //       color: theme.highlightColor,
+    //       // beginAtZero: true,
+    //       autoSkip: false,
+    //     },
+    //   },
+    // },
   };
   return (
     <div className="chart-outer-container">

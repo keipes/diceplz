@@ -10,6 +10,7 @@ import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
 import { ThemeContext } from "../App.tsx";
+import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface VelocityChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -86,36 +87,7 @@ function VelocityChart(props: VelocityChartProps) {
         },
       },
     },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "m / s",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-      x: {
-        title: {
-          display: false,
-          text: "weapon",
-          color: theme.highlightColor,
-        },
-        grid: {
-          color: "rgba(38, 255, 223, 0.1)",
-        },
-        min: 0,
-        ticks: {
-          color: theme.highlightColor,
-        },
-      },
-    },
+    scales: GenerateScales("", "m / s", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">
