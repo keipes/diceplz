@@ -16,6 +16,30 @@ import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
+
+
+import { Tooltip } from 'chart.js';
+
+/**
+ * Custom positioner
+ * @function Tooltip.positioners.myCustomPositioner
+ * @param elements {Chart.Element[]} the tooltip elements
+ * @param eventPosition {Point} the position of the event in canvas coordinates
+ * @returns {TooltipPosition} the tooltip position
+ */
+Tooltip.positioners.myCustomPositioner = function(elements, eventPosition) {
+    // A reference to the tooltip model
+    const tooltip = this;
+
+    /* ... */
+
+    return {
+        x: 0,
+        y: 0
+        // You may also include xAlign and yAlign to override those tooltip options.
+    };
+};
+
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
   highestRangeSeen: number;
@@ -202,6 +226,7 @@ function TTKChart(props: TTKChartProps) {
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
+        position: "myCustomPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
