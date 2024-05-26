@@ -1,5 +1,13 @@
 import { Line } from "react-chartjs-2";
-import type { ChartData, ChartOptions } from "chart.js";
+import {
+  ChartType,
+  Interaction,
+  InteractionItem,
+  TooltipPositionerFunction,
+  type ChartData,
+  type ChartOptions,
+  type InteractionModeFunction,
+} from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
@@ -15,6 +23,69 @@ import "./TTKChart.css";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
+// import { getRelativePosition } from "chart.js/helpers";
+
+// declare module 'chart.js' {
+//   interface InteractionModeMap {
+//     myCustomMode: InteractionModeFunction;
+//   }
+// }
+
+// /**
+//  * Custom interaction mode
+//  * @function Interaction.modes.myCustomMode
+//  * @param {Chart} chart - the chart we are returning items from
+//  * @param {Event} e - the event we are find things at
+//  * @param {InteractionOptions} options - options to use
+//  * @param {boolean} [useFinalPosition] - use final element position (animation target)
+//  * @return {InteractionItem[]} - items that are found
+//  */
+// //import { Chart } from 'chart.js'; // Import the Chart type
+
+// Interaction.modes.myCustomMode = function(chart, e, options, useFinalPosition) { // Add the Chart type to the chart parameter
+//   const position = getRelativePosition(e, chart);
+
+//   const items: InteractionItem[] = [];
+//   Interaction.evaluateInteractionItems(chart, 'x', position, (element, datasetIndex, index) => {
+//     if (element.inXRange(position.x, useFinalPosition) && myCustomLogic(element)) {
+//       items.push({element, datasetIndex, index});
+//     }
+//   });
+//   return items;
+// };
+declare module "chart.js" {
+  interface TooltipPositionerMap {
+    myCustomPositioner: TooltipPositionerFunction<ChartType>;
+  }
+}
+
+import { Tooltip } from "chart.js";
+
+/**
+ * Custom positioner
+ * @function Tooltip.positioners.myCustomPositioner
+ * @param elements {Chart.Element[]} the tooltip elements
+ * @param eventPosition {Point} the position of the event in canvas coordinates
+ * @returns {TooltipPosition} the tooltip position
+ */
+Tooltip.positioners.myCustomPositioner = function (elements, eventPosition) {
+  // A reference to the tooltip model
+  const tooltip = this;
+
+  /* ... */
+  const padding = tooltip.chart.width / 80;
+  let offset = tooltip.width / 2 + padding;
+  if (eventPosition.x + tooltip.width + padding > tooltip.chart.width) {
+    offset = -offset;
+  }
+  return {
+    x: eventPosition.x + offset,
+    y: tooltip.chart.chartArea.bottom,
+    xAlign: "center",
+    yAlign: "bottom",
+    // You may also include xAlign and yAlign to override those tooltip options.
+  };
+};
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
@@ -180,7 +251,7 @@ function TTKChart(props: TTKChartProps) {
   }
   const labels = [];
   for (let i = 0; i <= highestRangeSeen; i++) {
-    if (requiredRanges.has(i) || i == highestRangeSeen) {
+    if ((requiredRanges.has(i) && i % 10 == 0) || i == highestRangeSeen) {
       labels.push(i);
     } else {
       labels.push("");
@@ -194,12 +265,49 @@ function TTKChart(props: TTKChartProps) {
     maintainAspectRatio: false,
     animation: false,
     spanGaps: true,
+    // events: {
+    onHover: (event, activeElements) => {
+      const element = activeElements[0];
+      if (element) {
+        // console.log(element);
+        // element.datasetIndex;
+        // const _data = data[element.datasetIndex];
+        // const dataset = element.dataset;
+        // const index = element.dataIndex;
+        // const label = dataset.label;
+        // const value = dataset.data[index];
+        // console.log(label, index, value);
+      }
+    },
+    // },
+    elements: {
+      point: {
+        radius: 0,
+        // hitRadius: 0,
+      },
+    },
     interaction: {
       intersect: false,
       mode: "index",
+      // axis: "x",
+    },
+    hover: {
+      mode: "index",
+      intersect: false,
     },
     plugins: {
       tooltip: {
+        filter: function (tooltipItem, index, array, data) {
+          // console.log(tooltipItem.raw);
+          // console.log(index);
+          // console.log(array);
+          // console.log(data);
+          // console.log("----");
+          return true;
+          // return tooltipItem.value !== null;
+        },
+        intersect: false,
+        position: "myCustomPositioner",
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
@@ -210,7 +318,7 @@ function TTKChart(props: TTKChartProps) {
           labelColor: (ctx) => {
             return {
               borderColor: theme.highlightColor,
-              backgroundColor: configColors.get(ctx.dataset.label)
+              backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
           label: function (ctx) {
@@ -222,6 +330,11 @@ function TTKChart(props: TTKChartProps) {
               label += ctx.parsed.y;
             }
             return label;
+          },
+          title: function (ctx) {
+            // console.log(ctx[0].dataIndex);
+            // console.log(ctx[0].label);
+            return String(ctx[0].label ? ctx[0].label : ctx[0].dataIndex);
           },
         },
       },
@@ -236,7 +349,7 @@ function TTKChart(props: TTKChartProps) {
         grid: {
           color: "rgba(75, 192, 192, 0.2)",
         },
-        min: 0,
+        // min: 0,
         ticks: {
           color: theme.highlightColor,
         },

@@ -18,6 +18,7 @@ const cyrb53 = function (str: string, seed = 0) {
 
 const StringHue = function (str: string | undefined) {
   if (str === undefined) return 255;
+  // console.log((cyrb53(str) / Math.pow(2, 53)) * 255);
   return (cyrb53(str) / Math.pow(2, 53)) * 255;
 };
 
@@ -28,19 +29,19 @@ const ConfigHSL = function (config: WeaponConfiguration) {
 const ConfigAmmoColor = function (config: WeaponConfiguration) {
   switch (config.ammoType) {
     case "Close Combat":
-      return "#7fffff"
+      return "#7fffff";
     case "Standard":
-      return "#7fff7f"
+      return "#7fff7f";
     case "High Power":
-      return "#ff7f7f"
+      return "#ff7f7f";
     case "Subsonic":
-      return "#7f7fff"
+      return "#7f7fff";
     case "Armor Piercing":
-      return "#ffff7f"
+      return "#ffff7f";
     default:
       return "#fff";
   }
-}
+};
 
 export default StringHue;
 export { ConfigHSL, ConfigAmmoColor };
