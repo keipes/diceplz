@@ -11,7 +11,7 @@ import {
   WeaponCategories,
 } from "../../Data/WeaponData";
 import "./TopNav.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { SettingsIcon, InfoIcon, DeleteIcon } from "../Icons";
 
@@ -27,8 +27,8 @@ interface NavProps {
   weaponConfig: WeaponConfig;
   configLoader: ConfigLoader;
   // settingsLoader: SettingsLoader;
-  setUseAmmoColorsForGraph: BooleanVoidFn,
-  settings: Settings,
+  setUseAmmoColorsForGraph: BooleanVoidFn;
+  settings: Settings;
   modifiers: Modifiers;
   setModifiers: SetModifiersFn;
 }
@@ -99,6 +99,31 @@ function TopNav(props: NavProps) {
         </div>
       </li>
     );
+    // load a default category of weapons if we're in development
+    if (
+      category == "Assault Rifles" &&
+      window.location.hostname === "localhost"
+    ) {
+      // once = false;
+      useEffect(() => {
+        const toAdd = [];
+        for (const weapon of weapons) {
+          if (weapon.stats.length == 0) {
+            console.warn("no stats for " + weapon.name);
+          } else {
+            const stats = GetInitialStatsForWeapon(weapon);
+            toAdd.push({
+              name: weapon.name,
+              visible: true,
+              barrelType: stats.barrelType,
+              ammoType: stats.ammoType,
+            });
+
+            props.weaponConfig.BulkAddWeapon(toAdd);
+          }
+        }
+      }, []);
+    }
   }
 
   let saveDialogue = (
