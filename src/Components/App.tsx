@@ -29,7 +29,13 @@ import {
 import BTKChart from "./Charts/BTKChart.tsx";
 import ReloadChart from "./Charts/ReloadChart.tsx";
 import MagazineChart from "./Charts/MagazineChart.tsx";
-import { InitialSettings, SetUseAmmoColorsForGraph } from "../Data/SettingsLoader.ts";
+import {
+  InitialSettings,
+  SetUseAmmoColorsForGraph,
+} from "../Data/SettingsLoader.ts";
+
+import "../Util/CustomPositioner.ts";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -81,25 +87,25 @@ interface WeaponConfig {
 }
 
 interface Theme {
-  highlightColor: string
-  tooltipBg: string,
-  tooltipTitle: string,
-  tooltipBody: string
+  highlightColor: string;
+  tooltipBg: string;
+  tooltipTitle: string;
+  tooltipBody: string;
 }
 
 const LightTheme: Theme = {
   highlightColor: "black",
   tooltipBg: "white",
   tooltipTitle: "black",
-  tooltipBody: "black"
-}
+  tooltipBody: "black",
+};
 
 const DarkTheme: Theme = {
   highlightColor: "white",
   tooltipBg: "black",
   tooltipTitle: "white",
-  tooltipBody: "white"
-}
+  tooltipBody: "white",
+};
 const ThemeContext = createContext(DarkTheme);
 
 function App() {
@@ -107,11 +113,18 @@ function App() {
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
-  const [darkMode, setDarkMode] = useState(!(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches));
+  const [darkMode, setDarkMode] = useState(
+    !(
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+    )
+  );
   useEffect(() => {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      setDarkMode(event.matches);
-    });
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        setDarkMode(event.matches);
+      });
   }, []);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
@@ -271,10 +284,22 @@ function App() {
             modifiers={modifiers}
             settings={settings}
           />
-          <RPMChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-          <VelocityChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-          <ReloadChart weaponConfigurations={weaponConfigurations} settings={settings}/>
-          <MagazineChart weaponConfigurations={weaponConfigurations} settings={settings}/>
+          <RPMChart
+            weaponConfigurations={weaponConfigurations}
+            settings={settings}
+          />
+          <VelocityChart
+            weaponConfigurations={weaponConfigurations}
+            settings={settings}
+          />
+          <ReloadChart
+            weaponConfigurations={weaponConfigurations}
+            settings={settings}
+          />
+          <MagazineChart
+            weaponConfigurations={weaponConfigurations}
+            settings={settings}
+          />
         </div>
       </ThemeContext.Provider>
     </>
@@ -283,7 +308,7 @@ function App() {
 
 export default App;
 
-export {ThemeContext};
+export { ThemeContext };
 export type {
   WeaponSelections,
   AddWeaponFn,

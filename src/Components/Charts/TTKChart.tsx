@@ -194,14 +194,15 @@ function TTKChart(props: TTKChartProps) {
     },
     elements: {
       point: {
-        pointStyle: false
-      }
+        radius: 0,
+      },
     },
     plugins: {
       tooltip: {
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
+        position: "myCustomPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
@@ -209,12 +210,14 @@ function TTKChart(props: TTKChartProps) {
           labelColor: (ctx) => {
             return {
               borderColor: theme.highlightColor,
-              backgroundColor: configColors.get(ctx.dataset.label)
+              backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
-          title: function(ctx ) {
+          title: function (ctx) {
             const index = ctx[0].dataIndex;
-            return index == highestRangeSeen ? String(ctx[0].dataIndex) + "+ meters" : String(ctx[0].dataIndex) + " meters";
+            return index == highestRangeSeen
+              ? String(ctx[0].dataIndex) + "+ meters"
+              : String(ctx[0].dataIndex) + " meters";
           },
           label: function (ctx) {
             let label = ctx.dataset.label || "";
@@ -240,21 +243,33 @@ function TTKChart(props: TTKChartProps) {
       />
       <div className="button-container">
         <button
-          className={selectedFireMode === FIREMODE_AUTO ? "abs-selector btn-enabled" : "abs-selector"}
+          className={
+            selectedFireMode === FIREMODE_AUTO
+              ? "abs-selector btn-enabled"
+              : "abs-selector"
+          }
           onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
           disabled={!seenAuto}
         >
           Auto
         </button>
         <button
-          className={selectedFireMode === FIREMODE_BURST ? "abs-selector btn-enabled" : "abs-selector"}
+          className={
+            selectedFireMode === FIREMODE_BURST
+              ? "abs-selector btn-enabled"
+              : "abs-selector"
+          }
           onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
           disabled={!seenBurst}
         >
           Burst
         </button>
         <button
-          className={selectedFireMode === FIREMODE_SINGLE ? "abs-selector btn-enabled" : "abs-selector"}
+          className={
+            selectedFireMode === FIREMODE_SINGLE
+              ? "abs-selector btn-enabled"
+              : "abs-selector"
+          }
           onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
           disabled={!seenSingle}
         >
