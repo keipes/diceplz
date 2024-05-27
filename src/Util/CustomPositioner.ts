@@ -36,8 +36,9 @@ Tooltip.positioners.myCustomPositioner = function (
   }
   return {
     x: eventPosition.x + offset,
-    y: tooltip.chart.chartArea.bottom,
+    // y: tooltip.chart.chartArea.top
+    y: eventPosition.y,
     xAlign: "center",
-    yAlign: "bottom",
+    yAlign: "center",
   };
 };

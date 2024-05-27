@@ -101,14 +101,16 @@ function DamageChart(props: DamageChartProps) {
     },
     elements: {
       point: {
-        pointStyle: false
-      }
+        radius: 0,
+      },
     },
     plugins: {
       tooltip: {
+        // boxHeight: 20,
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
+        position: "myCustomPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
@@ -119,9 +121,11 @@ function DamageChart(props: DamageChartProps) {
               backgroundColor: configColors.get(ctx.dataset.label),
             };
           },
-          title: function(ctx ) {
+          title: function (ctx) {
             const index = ctx[0].dataIndex;
-            return index == highestRangeSeen ? String(ctx[0].dataIndex) + "+ meters" : String(ctx[0].dataIndex) + " meters";
+            return index == highestRangeSeen
+              ? String(ctx[0].dataIndex) + "+ meters"
+              : String(ctx[0].dataIndex) + " meters";
           },
           label: function (ctx) {
             let label = ctx.dataset.label || "";
