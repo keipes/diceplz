@@ -19,7 +19,7 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import { GetStatsForConfiguration } from "../Data/WeaponData.ts";
+import { GetStatsForConfiguration, GetWeaponByName, WeaponStats } from "../Data/WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
@@ -35,6 +35,7 @@ import {
 } from "../Data/SettingsLoader.ts";
 
 import "../Util/CustomPositioner.ts";
+import { TTK } from "../Util/Conversions.ts";
 
 ChartJS.register(
   CategoryScale,
@@ -107,6 +108,18 @@ const DarkTheme: Theme = {
   tooltipBody: "white",
 };
 const ThemeContext = createContext(DarkTheme);
+
+interface StatScorer {
+  (config: WeaponConfiguration, stats: WeaponStats): number;
+}
+
+interface MaximizingFn {
+  (scorer: StatScorer): void
+}
+
+interface Configuration {
+  Maximizer: MaximizingFn
+}
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
@@ -188,6 +201,56 @@ function App() {
   function Reset() {
     setWeaponConfigurations(new Map());
   }
+
+  function MaximizingFn(scoreStat: StatScorer) {
+    const configurations = new Map();
+    let differed = false;
+    for (let [id, config] of weaponConfigurations) {
+      const cloned = JSON.parse(JSON.stringify(config));
+      configurations.set(id, cloned);
+      const weapon = GetWeaponByName(config.name);
+      let score = -Infinity;
+      for (const stat of weapon.stats) {
+        const _score = scoreStat(config, stat);
+        if (_score > score || (_score === score && (
+          (stat.barrelType == 'Factory' && cloned.barrelType !== 'Factory') ||
+          (stat.ammoType == 'Standard' && cloned.ammoType !== 'Standard')))) {
+          score = _score;
+          cloned.barrelType = stat.barrelType;
+          cloned.ammoType = stat.ammoType;
+        }
+      }
+      if (cloned.barrelType !== config.barrelType || cloned.ammoType != config.ammoType) {
+        differed = true;
+      }
+    }
+    if (differed) {
+      setWeaponConfigurations(configurations);
+    }
+  }
+
+  let configurerr: Configuration = {
+    Maximizer: MaximizingFn
+  }
+
+  let confContext = createContext(configurerr);
+
+  let range = 200;
+  MaximizingFn((config, stat) => {
+    let damage = 0;
+    for (let i = 0; i < stat.dropoffs.length; i++) {
+      if (stat.dropoffs[i].range > range) {
+        break;
+      }
+      damage = stat.dropoffs[i].damage;
+    }
+    return -TTK(config, {
+      healthMultiplier: 1,
+      damageMultiplier: 1,
+      bodyDamageMultiplier: 1
+    }, damage, stat.rpmAuto ? stat.rpmAuto: 0);
+  });
+
   const wpnCfg = {
     AddWeapon: AddWeapon,
     DuplicateWeapon: DuplicateWeapon,
