@@ -20,7 +20,7 @@ import {
  */
 let RIGHT_TOOLTIP = false;
 Tooltip.positioners.myCustomPositioner = function (
-  elements: readonly ActiveElement[],
+  _: readonly ActiveElement[],
   eventPosition: Point
 ) {
   const tooltip = this;

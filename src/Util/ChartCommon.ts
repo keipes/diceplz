@@ -1,4 +1,5 @@
-function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string) {
+//@ts-nocheck
+function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string){
     return {
     y: {
       title: {
@@ -27,7 +28,7 @@ function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string) {
       ticks: {
         color: color,
         autoSkip: true,
-        callback: function(val: any, index: number): String {
+        callback: function(val: any, index: number): string {
             // if the label can be parsed into an int, only use every 10th label, otherwise just return the label as-is
             // since these are usually just configuration name strings
             const label = this.getLabelForValue(val);

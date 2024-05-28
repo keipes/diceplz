@@ -41,11 +41,11 @@ const ChartHeader: React.FC<ChartHeaderProps> = (props) => {
           clearTimeout(hoverTimeoutId.current);
           const x = e.clientX;
           const y = e.clientY;
-          hoverTimeoutId.current = setTimeout(() => {
+          hoverTimeoutId.current = ((setTimeout(() => {
             mouseY.current = y;
             mouseX.current = x;
             setDescriptionOpen(true);
-          }, 100);
+          }, 100) as unknown) as number);
         }}
       >
         <h2 className="chart-title">{props.title}</h2>
