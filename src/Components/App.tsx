@@ -19,7 +19,11 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import { GetStatsForConfiguration, GetWeaponByName, WeaponStats } from "../Data/WeaponData.ts";
+import {
+  GetStatsForConfiguration,
+  GetWeaponByName,
+  WeaponStats,
+} from "../Data/WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
@@ -114,11 +118,11 @@ interface StatScorer {
 }
 
 interface MaximizingFn {
-  (scorer: StatScorer): void
+  (scorer: StatScorer): void;
 }
 
 interface Configuration {
-  Maximizer: MaximizingFn
+  Maximizer: MaximizingFn;
 }
 
 function App() {
@@ -212,15 +216,22 @@ function App() {
       let score = -Infinity;
       for (const stat of weapon.stats) {
         const _score = scoreStat(config, stat);
-        if (_score > score || (_score === score && (
-          (stat.barrelType == 'Factory' && cloned.barrelType !== 'Factory') ||
-          (stat.ammoType == 'Standard' && cloned.ammoType !== 'Standard')))) {
+        if (
+          _score > score ||
+          (_score === score &&
+            ((stat.barrelType == "Factory" &&
+              cloned.barrelType !== "Factory") ||
+              (stat.ammoType == "Standard" && cloned.ammoType !== "Standard")))
+        ) {
           score = _score;
           cloned.barrelType = stat.barrelType;
           cloned.ammoType = stat.ammoType;
         }
       }
-      if (cloned.barrelType !== config.barrelType || cloned.ammoType != config.ammoType) {
+      if (
+        cloned.barrelType !== config.barrelType ||
+        cloned.ammoType != config.ammoType
+      ) {
         differed = true;
       }
     }
@@ -230,12 +241,12 @@ function App() {
   }
 
   let configurerr: Configuration = {
-    Maximizer: MaximizingFn
-  }
+    Maximizer: MaximizingFn,
+  };
 
   let confContext = createContext(configurerr);
 
-  let range = 200;
+  let range = 35;
   MaximizingFn((config, stat) => {
     let damage = 0;
     for (let i = 0; i < stat.dropoffs.length; i++) {
@@ -244,11 +255,16 @@ function App() {
       }
       damage = stat.dropoffs[i].damage;
     }
-    return -TTK(config, {
-      healthMultiplier: 1,
-      damageMultiplier: 1,
-      bodyDamageMultiplier: 1
-    }, damage, stat.rpmAuto ? stat.rpmAuto: 0);
+    return -TTK(
+      config,
+      {
+        healthMultiplier: 1,
+        damageMultiplier: 1,
+        bodyDamageMultiplier: 1,
+      },
+      damage,
+      stat.rpmAuto ? stat.rpmAuto : 0
+    );
   });
 
   const wpnCfg = {
