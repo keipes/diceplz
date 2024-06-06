@@ -45,3 +45,11 @@
   padding-bottom: 2.5vh;
   /* transition: all 0.2s ease; */
 }
+
+.hover-blue:hover {
+  color: var(--battle-blue);
+}
+
+.hover-red:hover {
+  color: var(--battle-red);
+}

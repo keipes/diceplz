@@ -40,6 +40,7 @@ import {
 
 import "../Util/CustomPositioner.ts";
 import { TTK } from "../Util/Conversions.ts";
+import { ConfigDisplayName } from "../Util/LabelMaker.ts";
 
 ChartJS.register(
   CategoryScale,
@@ -82,6 +83,14 @@ interface ResetFn {
   (): void;
 }
 
+interface StatScorer {
+  (config: WeaponConfiguration, stats: WeaponStats): number;
+}
+
+interface MaximizingFn {
+  (scorer: StatScorer): void;
+}
+
 interface WeaponConfig {
   AddWeapon: AddWeaponFn;
   BulkAddWeapon: BulkAddWeaponFn;
@@ -89,6 +98,7 @@ interface WeaponConfig {
   DuplicateWeapon: DuplicateWeaponFn;
   UpdateWeapon: UpdateWeaponFn;
   Reset: ResetFn;
+  Maximize: MaximizingFn;
 }
 
 interface Theme {
@@ -113,17 +123,15 @@ const DarkTheme: Theme = {
 };
 const ThemeContext = createContext(DarkTheme);
 
-interface StatScorer {
-  (config: WeaponConfiguration, stats: WeaponStats): number;
-}
-
-interface MaximizingFn {
-  (scorer: StatScorer): void;
-}
-
 interface Configuration {
   Maximizer: MaximizingFn;
 }
+
+const DefaultConfiguratorContext: Configuration = {
+  Maximizer: (scorer: StatScorer) => {throw new Error("not implemented")}
+}
+const ConfiguratorContext = createContext(DefaultConfiguratorContext);
+
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
@@ -244,29 +252,6 @@ function App() {
     Maximizer: MaximizingFn,
   };
 
-  let confContext = createContext(configurerr);
-
-  let range = 35;
-  MaximizingFn((config, stat) => {
-    let damage = 0;
-    for (let i = 0; i < stat.dropoffs.length; i++) {
-      if (stat.dropoffs[i].range > range) {
-        break;
-      }
-      damage = stat.dropoffs[i].damage;
-    }
-    return -TTK(
-      config,
-      {
-        healthMultiplier: 1,
-        damageMultiplier: 1,
-        bodyDamageMultiplier: 1,
-      },
-      damage,
-      stat.rpmAuto ? stat.rpmAuto : 0
-    );
-  });
-
   const wpnCfg = {
     AddWeapon: AddWeapon,
     DuplicateWeapon: DuplicateWeapon,
@@ -274,6 +259,7 @@ function App() {
     UpdateWeapon: UpdateWeapon,
     BulkAddWeapon: BulkAddWeapon,
     Reset: Reset,
+    Maximize: MaximizingFn
   };
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
@@ -291,6 +277,71 @@ function App() {
     highestRangeSeen = 100;
     requiredRanges.set(highestRangeSeen, true);
   }
+
+ // highestRangeSeen;
+ function GetAllOptimalAtEveryRange() {
+  const scores: number[] = [];
+  const ranges: WeaponConfiguration[] = [];
+  for (let [_, config] of weaponConfigurations) {
+    const weapon = GetWeaponByName(config.name);
+    for (const stat of weapon.stats) {
+      let dropoffIndex = 0;
+      let ttk = TTK(
+        config,
+        {
+          healthMultiplier: 1,
+          damageMultiplier: 1,
+          bodyDamageMultiplier: 1,
+        },
+        stat.dropoffs[0].damage,
+        stat.rpmAuto ? stat.rpmAuto : 0
+      );
+      for (let i = 0; i <= highestRangeSeen; i++) {
+        let dropoff = stat.dropoffs[dropoffIndex];
+        if (dropoffIndex < stat.dropoffs.length - 1 && stat.dropoffs[dropoffIndex + 1].range >= i) {
+          dropoffIndex++;
+          dropoff = stat.dropoffs[dropoffIndex];
+          ttk = TTK(
+            config,
+            {
+              healthMultiplier: 1,
+              damageMultiplier: 1,
+              bodyDamageMultiplier: 1,
+            },
+            dropoff.damage,
+            stat.rpmAuto ? stat.rpmAuto : 0
+          );
+        }
+        if (scores[i] === undefined || ttk < scores[i]) {
+          // TODO: prefer standard barrel and ammo if scores are equal
+          const cloned = JSON.parse(JSON.stringify(config));
+          cloned.ammoType = stat.ammoType;
+          cloned.barrelType = stat.barrelType;
+          scores[i] = ttk;
+          ranges[i] = cloned;
+        }
+      }
+    }
+  }
+  console.log(scores);
+  const seen = new Set();
+  const optimalConfigs: WeaponConfiguration[] = [];
+  ranges.filter((value, index, arr) => {
+    let configName = ConfigDisplayName(value);
+    if (!seen.has(configName)) {
+      seen.add(configName);
+      optimalConfigs.push(value);
+      return true;
+    }
+    return false;
+  });
+  console.log(ranges);
+  console.log(seen);
+  console.log([...new Set(ranges)]);
+  console.log(optimalConfigs);
+}
+GetAllOptimalAtEveryRange();
+
   // let remainder = highestRangeSeen % 100;
   // highestRangeSeen += 100 - remainder;
   let mainContentClass = "main-content";
@@ -305,6 +356,7 @@ function App() {
   }
   return (
     <>
+    <ConfiguratorContext.Provider value={configurerr}>
       <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
         <TopNav
           weaponConfig={wpnCfg}
@@ -381,13 +433,14 @@ function App() {
           />
         </div>
       </ThemeContext.Provider>
+      </ConfiguratorContext.Provider>
     </>
   );
 }
 
 export default App;
 
-export { ThemeContext };
+export { ThemeContext, ConfiguratorContext};
 export type {
   WeaponSelections,
   AddWeaponFn,
@@ -395,4 +448,5 @@ export type {
   RemoveWeaponFn,
   UpdateWeaponFn,
   WeaponConfig,
+  StatScorer
 };

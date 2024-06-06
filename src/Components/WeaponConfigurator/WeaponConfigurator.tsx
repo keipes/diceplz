@@ -1,9 +1,11 @@
 import "./WeaponConfigurator.css";
-import { WeaponConfig } from "../App";
+import { StatScorer, WeaponConfig } from "../App";
 import Weapon from "./Weapon";
 import { SyntheticEvent, useState } from "react";
 
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
+import { TTK } from "../../Util/Conversions";
+import AutoConfigure from "./AutoConfigure";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
@@ -48,11 +50,14 @@ window.addEventListener("mouseup", (e) => {
     mouseUpHandler(e);
   }
 });
+let range = 0;
 
 function WeaponConfigurator(props: WeaponConfiguratorProps) {
   const weaponsDisplay = [];
   const [dragging, setDragging] = useState(false);
   const [height, setHeight] = useState(window.innerHeight / 3);
+  const [configOpen, setConfigOpen] = useState(false);
+
   for (const [id, config] of props.configurations) {
     weaponsDisplay.push(
       <Weapon
@@ -91,6 +96,34 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   mouseUpHandler = (_) => {
     setDragging(false);
   };
+
+  const ttkMaximizer: StatScorer = (config, stat) => {
+    let damage = 0;
+    for (let i = 0; i < stat.dropoffs.length; i++) {
+      if (stat.dropoffs[i].range > range) {
+        break;
+      }
+      damage = stat.dropoffs[i].damage;
+    }
+    return -TTK(
+      config,
+      {
+        healthMultiplier: 1,
+        damageMultiplier: 1,
+        bodyDamageMultiplier: 1,
+      },
+      damage,
+      stat.rpmAuto ? stat.rpmAuto : 0
+    );
+  };
+
+  let content;
+  if (configOpen) {
+    content = (<AutoConfigure/>)
+  } else {
+    content = (<div className="wcf">{weaponsDisplay}</div>);
+  }
+  
   const dontDragKids = (e: SyntheticEvent) => e.stopPropagation();
   return (
     <>
@@ -106,7 +139,18 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
             }
           }}
         >
-          <span></span>
+          <span
+            onMouseDown={dontDragKids}
+            className="configurator-optimize hover-blue"
+            onClick={() => {
+              // console.log(range);
+              // props.weaponConfig.Maximize(ttkMaximizer);
+              setConfigOpen(!configOpen);
+              // range = range + 10;
+            }}
+          >
+            Auto Configure
+          </span>
           <span
             onMouseDown={dontDragKids}
             className="configurator-toggle svg-white svg-hover-blue"
@@ -116,14 +160,14 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           </span>
           <span
             onMouseDown={dontDragKids}
-            className="configurator-clear-all"
+            className="configurator-clear-all hover-red"
             onClick={props.weaponConfig.Reset}
           >
             Clear All
           </span>
         </div>
         <div className="wcf-scrollable">
-          <div className="wcf">{weaponsDisplay}</div>
+          {content}
         </div>
       </div>
     </>
