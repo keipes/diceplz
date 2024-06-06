@@ -4,6 +4,7 @@ import Weapon from "./Weapon";
 import { SyntheticEvent, useState } from "react";
 
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
+import AutoConfigure from "./AutoConfigure";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
@@ -53,6 +54,8 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   const weaponsDisplay = [];
   const [dragging, setDragging] = useState(false);
   const [height, setHeight] = useState(window.innerHeight / 3);
+  const [configOpen, setConfigOpen] = useState(false);
+
   for (const [id, config] of props.configurations) {
     weaponsDisplay.push(
       <Weapon
@@ -91,6 +94,14 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   mouseUpHandler = (_) => {
     setDragging(false);
   };
+
+  let content;
+  if (configOpen) {
+    content = <AutoConfigure />;
+  } else {
+    content = <div className="wcf">{weaponsDisplay}</div>;
+  }
+
   const dontDragKids = (e: SyntheticEvent) => e.stopPropagation();
   return (
     <>
@@ -106,7 +117,18 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
             }
           }}
         >
-          <span></span>
+          <span
+            onMouseDown={dontDragKids}
+            className="configurator-optimize hover-blue"
+            onClick={() => {
+              // console.log(range);
+              // props.weaponConfig.Maximize(ttkMaximizer);
+              setConfigOpen(!configOpen);
+              // range = range + 10;
+            }}
+          >
+            Auto Configure
+          </span>
           <span
             onMouseDown={dontDragKids}
             className="configurator-toggle svg-white svg-hover-blue"
@@ -116,15 +138,13 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           </span>
           <span
             onMouseDown={dontDragKids}
-            className="configurator-clear-all"
+            className="configurator-clear-all hover-red"
             onClick={props.weaponConfig.Reset}
           >
             Clear All
           </span>
         </div>
-        <div className="wcf-scrollable">
-          <div className="wcf">{weaponsDisplay}</div>
-        </div>
+        <div className="wcf-scrollable">{content}</div>
       </div>
     </>
   );

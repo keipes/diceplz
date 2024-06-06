@@ -35,6 +35,7 @@
     --button-bg: black;
     --wcf-header: #0009;
     --wcf-container: #000d;
+    --nav-input-bg: var(--battle-grey)
   }
 
   .svg-white {
@@ -55,6 +56,7 @@
     --button-bg: #ccc;
     --wcf-header: #ddd;
     --wcf-container: #fffe;
+    --nav-input-bg: white;
   }
 
   .svg-white {
