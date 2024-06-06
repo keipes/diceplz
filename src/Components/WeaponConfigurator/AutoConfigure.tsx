@@ -86,11 +86,11 @@ function AutoConfigure() {
           {" meters."}
         </>
       </Configurer>
-      <Configurer>
+      {/* <Configurer>
         <>
           <span className={clickClass}>{"Stealthify"}</span>
         </>
-      </Configurer>
+      </Configurer> */}
       <Configurer>
         <>
           {"Maxmize RPM "}
