@@ -10,6 +10,7 @@ import { Settings } from "../../Data/SettingsLoader.ts";
 import { ThemeContext } from "../App.tsx";
 import { useContext } from "react";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
+import RequiredRanges from "../../Util/RequiredRanges.ts";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
@@ -22,7 +23,9 @@ interface DamageChartProps {
 function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
   const highestRangeSeen = props.highestRangeSeen;
-  const requiredRanges = props.requiredRanges;
+  const requiredRanges = RequiredRanges(props.weaponConfigurations, (_, _a) => {
+    return 1;
+  });
   const datasets = [];
   const configColors = new Map();
   for (const [_id, config] of props.weaponConfigurations) {
