@@ -34,7 +34,7 @@ interface MaximizingFn {
 }
 
 interface Selector {
-  (config: WeaponConfiguration, stats: WeaponStats): boolean;
+  (stats: WeaponStats): boolean;
 }
 
 interface SelectingFn {
@@ -50,10 +50,23 @@ interface WeaponConfig {
   UpdateWeapon: UpdateWeaponFn;
   Reset: ResetFn;
   Maximize: MaximizingFn;
+  Select: SelectingFn;
 }
 
 interface SetConfigurationsFn {
   (configs: Map<string, WeaponConfiguration>): void;
+}
+
+function AddConfigToMap(
+  config: WeaponConfiguration,
+  configurations: Map<string, WeaponConfiguration>
+) {
+  let id = crypto.randomUUID();
+  while (configurations.has(id)) {
+    console.warn("Duplicate UUID generated.");
+    id = crypto.randomUUID();
+  }
+  configurations.set(id, config);
 }
 
 class WeaponConfigurations implements WeaponConfig {
@@ -74,24 +87,14 @@ class WeaponConfigurations implements WeaponConfig {
   BulkAddWeapon(configs: WeaponConfiguration[]) {
     const configurations = new Map(this.weaponConfigurations);
     for (const config of configs) {
-      let id = crypto.randomUUID();
-      while (configurations.has(id)) {
-        console.warn("Duplicate UUID generated.");
-        id = crypto.randomUUID();
-      }
-      configurations.set(id, config);
+      AddConfigToMap(config, configurations);
     }
     this.setWeaponConfigurations(configurations);
   }
 
   AddWeapon(config: WeaponConfiguration) {
     const configurations = new Map(this.weaponConfigurations);
-    let id = crypto.randomUUID();
-    while (configurations.has(id)) {
-      console.warn("Duplicate UUID generated.");
-      id = crypto.randomUUID();
-    }
-    configurations.set(id, config);
+    AddConfigToMap(config, configurations);
     this.setWeaponConfigurations(configurations);
   }
 
@@ -119,6 +122,7 @@ class WeaponConfigurations implements WeaponConfig {
     this.setWeaponConfigurations(new Map());
   }
 
+  // From existing weapons, select the highest scoring configurations.
   Maximize(scoreStat: StatScorer) {
     const configurations = new Map();
     let differed = false;
@@ -151,6 +155,32 @@ class WeaponConfigurations implements WeaponConfig {
     if (differed) {
       this.setWeaponConfigurations(configurations);
     }
+  }
+
+  // From existing weapons, select all configs which match the selector. May have more configs in configurator window afterwards.
+  Select(selector: Selector) {
+    const configurations = new Map();
+    const seenWeapons = new Set<string>();
+    for (let [_, config] of this.weaponConfigurations) {
+      seenWeapons.add(config.name);
+    }
+    for (let name of seenWeapons) {
+      const weapon = GetWeaponByName(name);
+      for (const stat of weapon.stats) {
+        if (selector(stat)) {
+          AddConfigToMap(
+            {
+              name,
+              barrelType: stat.barrelType,
+              ammoType: stat.ammoType,
+              visible: true,
+            },
+            configurations
+          );
+        }
+      }
+    }
+    this.setWeaponConfigurations(configurations);
   }
 }
 

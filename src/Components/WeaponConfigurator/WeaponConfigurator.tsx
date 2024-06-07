@@ -120,10 +120,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
             onMouseDown={dontDragKids}
             className="configurator-optimize hover-blue"
             onClick={() => {
-              // console.log(range);
-              // props.weaponConfig.Maximize(ttkMaximizer);
               setConfigOpen(!configOpen);
-              // range = range + 10;
             }}
           >
             Auto Configure
@@ -138,7 +135,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           <span
             onMouseDown={dontDragKids}
             className="configurator-clear-all hover-red"
-            onClick={props.weaponConfig.Reset}
+            onClick={props.weaponConfig.Reset.bind(props.weaponConfig)}
           >
             Clear All
           </span>

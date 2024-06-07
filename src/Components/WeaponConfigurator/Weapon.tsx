@@ -1,5 +1,4 @@
 import { GetWeaponByName } from "../../Data/WeaponData.ts";
-import { WeaponConfig } from "../App.tsx";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 import { ConfigHSL } from "../../Util/StringColor.ts";
 
@@ -10,6 +9,7 @@ import {
   VisibilityOffIcon,
 } from "../Icons.tsx";
 import {} from "../Icons.tsx";
+import { WeaponConfig } from "../../Data/WeaponConfiguration.ts";
 interface WeaponProps {
   id: string;
   config: WeaponConfiguration;
@@ -161,7 +161,10 @@ function Weapon(props: WeaponProps) {
         </label>
         <span></span>
         <select
-          className={"wcf-selector-select wcf-selector-ammo-" + props.config.ammoType.replace(/\s/g, '').toLowerCase()}
+          className={
+            "wcf-selector-select wcf-selector-ammo-" +
+            props.config.ammoType.replace(/\s/g, "").toLowerCase()
+          }
           value={props.config.ammoType}
           name="ammo"
           id="ammo"

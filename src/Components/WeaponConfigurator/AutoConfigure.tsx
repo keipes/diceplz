@@ -86,11 +86,29 @@ function AutoConfigure() {
           {" meters."}
         </>
       </Configurer>
-      {/* <Configurer>
+      <Configurer>
         <>
-          <span className={clickClass}>{"Stealthify"}</span>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.Selector((stat) => {
+                if (stat.ammoType == "Subsonic") {
+                  if (
+                    { "6KU": true, "Type 4": true, PB: true }[stat.barrelType]
+                  ) {
+                    return true;
+                  }
+                }
+                return false;
+              });
+            }}
+          >
+            {
+              "Stealthify (select all suppressed+subsonic configurations for selected weapons, remove weapon if no stealth option exists)."
+            }
+          </span>
         </>
-      </Configurer> */}
+      </Configurer>
       <Configurer>
         <>
           {"Maxmize RPM "}

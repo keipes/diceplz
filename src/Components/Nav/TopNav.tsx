@@ -1,4 +1,3 @@
-import { WeaponConfig } from "../App";
 import {
   ConfigLoader,
   DefaultModifiers,
@@ -14,6 +13,7 @@ import "./TopNav.css";
 import { useEffect, useState } from "react";
 
 import { SettingsIcon, InfoIcon, DeleteIcon } from "../Icons";
+import { WeaponConfig } from "../../Data/WeaponConfiguration";
 
 interface SetModifiersFn {
   (modifiers: Modifiers): void;

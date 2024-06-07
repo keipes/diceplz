@@ -19,11 +19,7 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import {
-  GetStatsForConfiguration,
-  GetWeaponByName,
-  WeaponStats,
-} from "../Data/WeaponData.ts";
+import { GetStatsForConfiguration } from "../Data/WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
@@ -144,15 +140,9 @@ function App() {
   );
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
 
-  function SelectingFn(selector: Selector) {
-    const configurations = new Map();
-    for (let [id, config] of weaponConfigurations) {
-    }
-  }
-
   let configurerr: Configuration = {
     Maximizer: wpnCfg.Maximize.bind(wpnCfg),
-    Selector: SelectingFn,
+    Selector: wpnCfg.Select.bind(wpnCfg),
   };
 
   const requiredRanges = new Map<number, boolean>();
