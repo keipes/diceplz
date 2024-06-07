@@ -42,6 +42,7 @@ interface SelectingFn {
 }
 
 interface WeaponConfig {
+  weaponConfigurations: Map<string, WeaponConfiguration>;
   AddWeapon: AddWeaponFn;
   BulkAddWeapon: BulkAddWeaponFn;
   RemoveWeapon: RemoveWeaponFn;
@@ -56,7 +57,7 @@ interface SetConfigurationsFn {
 }
 
 class WeaponConfigurations implements WeaponConfig {
-  private weaponConfigurations: Map<string, WeaponConfiguration>;
+  weaponConfigurations: Map<string, WeaponConfiguration>;
   private setWeaponConfigurations: SetConfigurationsFn;
 
   constructor(
@@ -154,4 +155,4 @@ class WeaponConfigurations implements WeaponConfig {
 }
 
 export { WeaponConfigurations };
-export type { StatScorer, MaximizingFn, Selector, SelectingFn };
+export type { StatScorer, MaximizingFn, Selector, SelectingFn, WeaponConfig };

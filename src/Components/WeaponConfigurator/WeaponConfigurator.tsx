@@ -1,17 +1,16 @@
 import "./WeaponConfigurator.css";
-import { WeaponConfig } from "../App";
 import Weapon from "./Weapon";
 import { SyntheticEvent, useState } from "react";
 
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
 import AutoConfigure from "./AutoConfigure";
+import { WeaponConfig } from "../../Data/WeaponConfiguration";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
 }
 
 interface WeaponConfiguratorProps {
-  configurations: Map<string, WeaponConfiguration>;
   weaponConfig: WeaponConfig;
   open: boolean;
   setOpen: SetOpenFn;
@@ -56,7 +55,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   const [height, setHeight] = useState(window.innerHeight / 3);
   const [configOpen, setConfigOpen] = useState(false);
 
-  for (const [id, config] of props.configurations) {
+  for (const [id, config] of props.weaponConfig.weaponConfigurations) {
     weaponsDisplay.push(
       <Weapon
         id={id}

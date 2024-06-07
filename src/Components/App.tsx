@@ -265,7 +265,6 @@ function App() {
             setModifiers={setModifiers}
           />
           <WeaponConfigurator
-            configurations={weaponConfigurations}
             weaponConfig={wpnCfg}
             open={configuratorOpen}
             setOpen={setConfiguratorOpen}
