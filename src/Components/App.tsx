@@ -39,6 +39,13 @@ import {
 } from "../Data/SettingsLoader.ts";
 
 import "../Util/CustomPositioner.ts";
+import {
+  MaximizingFn,
+  SelectingFn,
+  Selector,
+  StatScorer,
+  WeaponConfigurations,
+} from "../Data/WeaponConfiguration.ts";
 
 ChartJS.register(
   CategoryScale,
@@ -55,48 +62,6 @@ ChartJS.register(
 interface WeaponSelections {
   ammoType: string;
   barrelType: string;
-}
-
-interface AddWeaponFn {
-  (config: WeaponConfiguration): void;
-}
-
-interface BulkAddWeaponFn {
-  (config: WeaponConfiguration[]): void;
-}
-
-interface DuplicateWeaponFn {
-  (id: string): void;
-}
-
-interface RemoveWeaponFn {
-  (id: string): void;
-}
-
-interface UpdateWeaponFn {
-  (id: string, config: WeaponConfiguration): void;
-}
-
-interface ResetFn {
-  (): void;
-}
-
-interface StatScorer {
-  (config: WeaponConfiguration, stats: WeaponStats): number;
-}
-
-interface MaximizingFn {
-  (scorer: StatScorer): void;
-}
-
-interface WeaponConfig {
-  AddWeapon: AddWeaponFn;
-  BulkAddWeapon: BulkAddWeaponFn;
-  RemoveWeapon: RemoveWeaponFn;
-  DuplicateWeapon: DuplicateWeaponFn;
-  UpdateWeapon: UpdateWeaponFn;
-  Reset: ResetFn;
-  Maximize: MaximizingFn;
 }
 
 interface Theme {
@@ -123,10 +88,14 @@ const ThemeContext = createContext(DarkTheme);
 
 interface Configuration {
   Maximizer: MaximizingFn;
+  Selector: SelectingFn;
 }
 
 const DefaultConfiguratorContext: Configuration = {
   Maximizer: (_: StatScorer) => {
+    throw new Error("not implemented");
+  },
+  Selector: (_: Selector) => {
     throw new Error("not implemented");
   },
 };
@@ -137,6 +106,22 @@ function App() {
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
+  const setWeaponConfigurations = (
+    configurations: Map<string, WeaponConfiguration>
+  ) => {
+    _setWeaponConfigurations(
+      new Map(
+        [...configurations].sort((a, b) => {
+          return Intl.Collator().compare(a[1].name, b[1].name);
+        })
+      )
+    );
+  };
+  const wpnCfg: WeaponConfigurations = new WeaponConfigurations(
+    weaponConfigurations,
+    setWeaponConfigurations
+  );
+
   const [darkMode, setDarkMode] = useState(
     !(
       window.matchMedia &&
@@ -150,17 +135,7 @@ function App() {
         setDarkMode(event.matches);
       });
   }, []);
-  const setWeaponConfigurations = (
-    configurations: Map<string, WeaponConfiguration>
-  ) => {
-    _setWeaponConfigurations(
-      new Map(
-        [...configurations].sort((a, b) => {
-          return Intl.Collator().compare(a[1].name, b[1].name);
-        })
-      )
-    );
-  };
+
   const configLoader = new LocalStoreConfigLoader(
     weaponConfigurations,
     setWeaponConfigurations,
@@ -169,97 +144,17 @@ function App() {
   );
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
 
-  function BulkAddWeapon(configs: WeaponConfiguration[]) {
-    const configurations = new Map(weaponConfigurations);
-    for (const config of configs) {
-      let id = crypto.randomUUID();
-      while (configurations.has(id)) {
-        console.warn("Duplicate UUID generated.");
-        id = crypto.randomUUID();
-      }
-      configurations.set(id, config);
-    }
-    setWeaponConfigurations(configurations);
-  }
-  function AddWeapon(config: WeaponConfiguration) {
-    const configurations = new Map(weaponConfigurations);
-    let id = crypto.randomUUID();
-    while (configurations.has(id)) {
-      console.warn("Duplicate UUID generated.");
-      id = crypto.randomUUID();
-    }
-    configurations.set(id, config);
-    setWeaponConfigurations(configurations);
-  }
-
-  function DuplicateWeapon(id: string) {
-    const config = weaponConfigurations.get(id);
-    if (config) {
-      const cloned = JSON.parse(JSON.stringify(config));
-      AddWeapon(cloned);
-    }
-  }
-  function RemoveWeapon(id: string) {
-    const configurations = new Map(weaponConfigurations);
-    configurations.delete(id);
-    setWeaponConfigurations(configurations);
-  }
-  function UpdateWeapon(id: string, config: WeaponConfiguration) {
-    const configurations = new Map(weaponConfigurations);
-    configurations.set(id, config);
-    setWeaponConfigurations(configurations);
-  }
-  function Reset() {
-    setWeaponConfigurations(new Map());
-  }
-
-  function MaximizingFn(scoreStat: StatScorer) {
+  function SelectingFn(selector: Selector) {
     const configurations = new Map();
-    let differed = false;
     for (let [id, config] of weaponConfigurations) {
-      const cloned = JSON.parse(JSON.stringify(config));
-      configurations.set(id, cloned);
-      const weapon = GetWeaponByName(config.name);
-      let score = -Infinity;
-      for (const stat of weapon.stats) {
-        const _score = scoreStat(config, stat);
-        if (
-          _score > score ||
-          (_score === score &&
-            ((stat.barrelType == "Factory" &&
-              cloned.barrelType !== "Factory") ||
-              (stat.ammoType == "Standard" && cloned.ammoType !== "Standard")))
-        ) {
-          score = _score;
-          cloned.barrelType = stat.barrelType;
-          cloned.ammoType = stat.ammoType;
-        }
-      }
-      if (
-        cloned.barrelType !== config.barrelType ||
-        cloned.ammoType != config.ammoType
-      ) {
-        differed = true;
-      }
-    }
-    if (differed) {
-      setWeaponConfigurations(configurations);
     }
   }
 
   let configurerr: Configuration = {
-    Maximizer: MaximizingFn,
+    Maximizer: wpnCfg.Maximize.bind(wpnCfg),
+    Selector: SelectingFn,
   };
 
-  const wpnCfg = {
-    AddWeapon: AddWeapon,
-    DuplicateWeapon: DuplicateWeapon,
-    RemoveWeapon: RemoveWeapon,
-    UpdateWeapon: UpdateWeapon,
-    BulkAddWeapon: BulkAddWeapon,
-    Reset: Reset,
-    Maximize: MaximizingFn,
-  };
   const requiredRanges = new Map<number, boolean>();
   let highestRangeSeen = 0;
   for (const [_, config] of weaponConfigurations) {
@@ -442,12 +337,4 @@ function App() {
 export default App;
 
 export { ThemeContext, ConfiguratorContext };
-export type {
-  WeaponSelections,
-  AddWeaponFn,
-  DuplicateWeaponFn,
-  RemoveWeaponFn,
-  UpdateWeaponFn,
-  WeaponConfig,
-  StatScorer,
-};
+export type { WeaponSelections };
