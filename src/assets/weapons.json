@@ -1117,6 +1117,10 @@
                   "range": 0
                 },
                 {
+                  "damage": 24,
+                  "range": 10
+                },
+                {
                   "damage": 22,
                   "range": 20
                 },
@@ -1138,8 +1142,8 @@
                 }
               ],
               "velocity": 400,
-              "rpmSingle": 622,
-              "rpmAuto": 898
+              "rpmSingle": 620,
+              "rpmAuto": 900
             },
             {
               "barrelType": "Extended",
@@ -1148,6 +1152,10 @@
                 {
                   "damage": 28,
                   "range": 0
+                },
+                {
+                  "damage": 24,
+                  "range": 10
                 },
                 {
                   "damage": 22,
@@ -1171,7 +1179,7 @@
                 }
               ],
               "velocity": 480,
-              "rpmSingle": 622,
+              "rpmSingle": 620,
               "rpmAuto": 735
             },
             {
@@ -1183,11 +1191,15 @@
                   "range": 0
                 },
                 {
-                  "damage": 20.24,
+                  "damage": 22.080000000000002,
+                  "range": 10
+                },
+                {
+                  "damage": 20.240000000000002,
                   "range": 20
                 },
                 {
-                  "damage": 16.56,
+                  "damage": 16.560000000000002,
                   "range": 30
                 },
                 {
@@ -1199,13 +1211,13 @@
                   "range": 75
                 },
                 {
-                  "damage": 11.04,
+                  "damage": 11.040000000000001,
                   "range": 150
                 }
               ],
               "velocity": 400,
-              "rpmSingle": 622,
-              "rpmAuto": 898
+              "rpmSingle": 620,
+              "rpmAuto": 900
             },
             {
               "barrelType": "Factory",
@@ -1234,7 +1246,7 @@
               ],
               "velocity": 480,
               "rpmSingle": 505,
-              "rpmAuto": 808
+              "rpmAuto": 810
             },
             {
               "barrelType": "Extended",
@@ -1292,7 +1304,7 @@
               ],
               "velocity": 480,
               "rpmSingle": 505,
-              "rpmAuto": 808
+              "rpmAuto": 810
             },
             {
               "barrelType": "Factory",
@@ -1304,7 +1316,7 @@
                 },
                 {
                   "damage": 22,
-                  "range": 10
+                  "range": 20
                 },
                 {
                   "damage": 18,
@@ -1316,8 +1328,8 @@
                 }
               ],
               "velocity": 560,
-              "rpmSingle": 622,
-              "rpmAuto": 735
+              "rpmSingle": 620,
+              "rpmAuto": 810
             },
             {
               "barrelType": "Extended",
@@ -1329,7 +1341,7 @@
                 },
                 {
                   "damage": 22,
-                  "range": 10
+                  "range": 20
                 },
                 {
                   "damage": 18,
@@ -1341,8 +1353,8 @@
                 }
               ],
               "velocity": 610,
-              "rpmSingle": 622,
-              "rpmAuto": 674
+              "rpmSingle": 620,
+              "rpmAuto": 675
             },
             {
               "barrelType": "6KU",
@@ -1354,7 +1366,7 @@
                 },
                 {
                   "damage": 20.24,
-                  "range": 10
+                  "range": 20
                 },
                 {
                   "damage": 16.56,
@@ -1366,8 +1378,8 @@
                 }
               ],
               "velocity": 560,
-              "rpmSingle": 622,
-              "rpmAuto": 735
+              "rpmSingle": 620,
+              "rpmAuto": 810
             },
             {
               "barrelType": "Factory",
@@ -1395,8 +1407,8 @@
                 }
               ],
               "velocity": 400,
-              "rpmSingle": 622,
-              "rpmAuto": 808
+              "rpmSingle": 620,
+              "rpmAuto": 810
             },
             {
               "barrelType": "Extended",
@@ -1424,8 +1436,8 @@
                 }
               ],
               "velocity": 480,
-              "rpmSingle": 622,
-              "rpmAuto": 674
+              "rpmSingle": 620,
+              "rpmAuto": 675
             },
             {
               "barrelType": "6KU",
@@ -1453,8 +1465,8 @@
                 }
               ],
               "velocity": 400,
-              "rpmSingle": 622,
-              "rpmAuto": 808
+              "rpmSingle": 620,
+              "rpmAuto": 810
             }
           ],
           "ammoStats": {
@@ -1478,8 +1490,6 @@
             },
             "High Power": {
               "magSize": 21,
-              "emptyReload": 3.11,
-              "tacticalReload": 2.51,
               "headshotMultiplier": 1.55
             },
             "Subsonic": {
@@ -7724,16 +7734,12 @@
               "ammoType": "Armor Piercing",
               "dropoffs": [
                 {
-                  "damage": 23,
+                  "damage": 21,
                   "range": 0
                 },
                 {
-                  "damage": 18,
-                  "range": 100
-                },
-                {
                   "damage": 17,
-                  "range": 150
+                  "range": 100
                 }
               ],
               "velocity": 965,
@@ -7745,16 +7751,12 @@
               "ammoType": "Armor Piercing",
               "dropoffs": [
                 {
-                  "damage": 21.849999999999998,
+                  "damage": 19.95,
                   "range": 0
                 },
                 {
-                  "damage": 17.099999999999998,
-                  "range": 100
-                },
-                {
                   "damage": 16.15,
-                  "range": 150
+                  "range": 100
                 }
               ],
               "velocity": 750,
@@ -7766,16 +7768,12 @@
               "ammoType": "Armor Piercing",
               "dropoffs": [
                 {
-                  "damage": 20.7,
+                  "damage": 18.900000000000002,
                   "range": 0
                 },
                 {
-                  "damage": 16.2,
-                  "range": 100
-                },
-                {
                   "damage": 15.3,
-                  "range": 150
+                  "range": 100
                 }
               ],
               "velocity": 750,
