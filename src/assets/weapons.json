@@ -992,64 +992,6 @@
               "velocity": 400,
               "rpmSingle": 449,
               "rpmBurst": 567
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 22,
-                  "range": 0
-                },
-                {
-                  "damage": 18,
-                  "range": 15
-                },
-                {
-                  "damage": 16,
-                  "range": 30
-                },
-                {
-                  "damage": 13,
-                  "range": 50
-                },
-                {
-                  "damage": 12,
-                  "range": 75
-                }
-              ],
-              "velocity": 400,
-              "rpmSingle": 449,
-              "rpmBurst": 567
-            },
-            {
-              "barrelType": "GAR45",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 19.8,
-                  "range": 0
-                },
-                {
-                  "damage": 16.2,
-                  "range": 15
-                },
-                {
-                  "damage": 14.4,
-                  "range": 30
-                },
-                {
-                  "damage": 11.7,
-                  "range": 50
-                },
-                {
-                  "damage": 10.8,
-                  "range": 75
-                }
-              ],
-              "velocity": 400,
-              "rpmSingle": 449,
-              "rpmBurst": 567
             }
           ],
           "ammoStats": {
@@ -1063,11 +1005,6 @@
               "magSize": 28,
               "emptyReload": 2.16,
               "tacticalReload": 2.45,
-              "headshotMultiplier": 2
-            },
-            "Default": {
-              "magSize": 21,
-              "emptyReload": 1.42,
               "headshotMultiplier": 2
             }
           }
@@ -3121,56 +3058,6 @@
               "velocity": 420,
               "rpmSingle": 599,
               "rpmAuto": 898
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 22,
-                  "range": 0
-                },
-                {
-                  "damage": 18,
-                  "range": 30
-                },
-                {
-                  "damage": 16,
-                  "range": 50
-                },
-                {
-                  "damage": 13,
-                  "range": 75
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 257,
-              "rpmAuto": 898
-            },
-            {
-              "barrelType": "6KU",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 20.24,
-                  "range": 0
-                },
-                {
-                  "damage": 16.56,
-                  "range": 30
-                },
-                {
-                  "damage": 14.72,
-                  "range": 50
-                },
-                {
-                  "damage": 11.96,
-                  "range": 75
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 257,
-              "rpmAuto": 898
             }
           ],
           "ammoStats": {
@@ -3178,11 +3065,6 @@
               "magSize": 51,
               "emptyReload": 3,
               "headshotMultiplier": 1.55
-            },
-            "Default": {
-              "magSize": 51,
-              "emptyReload": 2.11,
-              "headshotMultiplier": 1.25
             }
           }
         },
@@ -3238,56 +3120,6 @@
               "velocity": 480,
               "rpmSingle": 675,
               "rpmAuto": 675
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 28,
-                  "range": 0
-                },
-                {
-                  "damage": 22,
-                  "range": 30
-                },
-                {
-                  "damage": 18,
-                  "range": 75
-                },
-                {
-                  "damage": 16,
-                  "range": 100
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 674,
-              "rpmAuto": 674
-            },
-            {
-              "barrelType": "6KU",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 25.76,
-                  "range": 0
-                },
-                {
-                  "damage": 20.24,
-                  "range": 30
-                },
-                {
-                  "damage": 16.56,
-                  "range": 75
-                },
-                {
-                  "damage": 14.72,
-                  "range": 100
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 674,
-              "rpmAuto": 674
             }
           ],
           "ammoStats": {
@@ -3302,16 +3134,6 @@
               "emptyReload": 3.63,
               "tacticalReload": 2.96,
               "headshotMultiplier": 1.55
-            },
-            "Default": {
-              "magSize": 31,
-              "emptyReload": 2.78,
-              "headshotMultiplier": 1.25
-            },
-            "Extended": {
-              "magSize": 41,
-              "emptyReload": 3.07,
-              "headshotMultiplier": 1.25
             }
           }
         },
@@ -3367,56 +3189,6 @@
               "velocity": 480,
               "rpmSingle": 505,
               "rpmAuto": 675
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 28,
-                  "range": 0
-                },
-                {
-                  "damage": 22,
-                  "range": 40
-                },
-                {
-                  "damage": 18,
-                  "range": 50
-                },
-                {
-                  "damage": 16,
-                  "range": 75
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 505,
-              "rpmAuto": 674
-            },
-            {
-              "barrelType": "6KU",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 25.76,
-                  "range": 0
-                },
-                {
-                  "damage": 20.24,
-                  "range": 40
-                },
-                {
-                  "damage": 16.56,
-                  "range": 50
-                },
-                {
-                  "damage": 14.72,
-                  "range": 75
-                }
-              ],
-              "velocity": 355,
-              "rpmSingle": 505,
-              "rpmAuto": 674
             }
           ],
           "ammoStats": {
@@ -3431,16 +3203,6 @@
               "emptyReload": 2.78,
               "tacticalReload": 2.56,
               "headshotMultiplier": 1.55
-            },
-            "Default": {
-              "magSize": 21,
-              "emptyReload": 2.07,
-              "headshotMultiplier": 1.25
-            },
-            "Extended": {
-              "magSize": 45,
-              "emptyReload": 2.29,
-              "headshotMultiplier": 1.25
             }
           }
         }
@@ -3856,15 +3618,15 @@
               "ammoType": "Armor Piercing",
               "dropoffs": [
                 {
-                  "damage": 20.24,
+                  "damage": 16.560000000000002,
                   "range": 0
                 },
                 {
-                  "damage": 16.56,
+                  "damage": 13.8,
                   "range": 30
                 },
                 {
-                  "damage": 13.8,
+                  "damage": 11.96,
                   "range": 75
                 }
               ],
@@ -8086,34 +7848,6 @@
               ],
               "velocity": 850,
               "rpmAuto": 575
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 28,
-                  "range": 0
-                },
-                {
-                  "damage": 24,
-                  "range": 40
-                },
-                {
-                  "damage": 22,
-                  "range": 75
-                },
-                {
-                  "damage": 20,
-                  "range": 100
-                },
-                {
-                  "damage": 18,
-                  "range": 150
-                }
-              ],
-              "velocity": 850,
-              "rpmAuto": 577
             }
           ],
           "ammoStats": {
@@ -8128,16 +7862,6 @@
               "emptyReload": 7.12,
               "tacticalReload": 6.12,
               "headshotMultiplier": 1.9
-            },
-            "Default": {
-              "magSize": 100,
-              "emptyReload": 5.62,
-              "headshotMultiplier": 2
-            },
-            "Extended": {
-              "magSize": 200,
-              "emptyReload": 5.62,
-              "headshotMultiplier": 2
             }
           }
         },
@@ -8201,64 +7925,6 @@
               "velocity": 750,
               "rpmSingle": 515,
               "rpmAuto": 770
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 24,
-                  "range": 0
-                },
-                {
-                  "damage": 22,
-                  "range": 20
-                },
-                {
-                  "damage": 21,
-                  "range": 40
-                },
-                {
-                  "damage": 19,
-                  "range": 50
-                },
-                {
-                  "damage": 18,
-                  "range": 75
-                }
-              ],
-              "velocity": 850,
-              "rpmSingle": 513,
-              "rpmAuto": 770
-            },
-            {
-              "barrelType": "PB",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 20.4,
-                  "range": 0
-                },
-                {
-                  "damage": 18.7,
-                  "range": 20
-                },
-                {
-                  "damage": 17.85,
-                  "range": 40
-                },
-                {
-                  "damage": 16.15,
-                  "range": 50
-                },
-                {
-                  "damage": 15.3,
-                  "range": 75
-                }
-              ],
-              "velocity": 680,
-              "rpmSingle": 513,
-              "rpmAuto": 770
             }
           ],
           "ammoStats": {
@@ -8267,11 +7933,6 @@
               "emptyReload": 2.58,
               "tacticalReload": 2.8,
               "headshotMultiplier": 1.9
-            },
-            "Default": {
-              "magSize": 101,
-              "emptyReload": 2.04,
-              "headshotMultiplier": 2
             }
           }
         },
@@ -8309,38 +7970,6 @@
               ],
               "velocity": 975,
               "rpmAuto": 675
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 28,
-                  "range": 0
-                },
-                {
-                  "damage": 24,
-                  "range": 10
-                },
-                {
-                  "damage": 22,
-                  "range": 30
-                },
-                {
-                  "damage": 20,
-                  "range": 75
-                },
-                {
-                  "damage": 19,
-                  "range": 100
-                },
-                {
-                  "damage": 18,
-                  "range": 150
-                }
-              ],
-              "velocity": 975,
-              "rpmAuto": 674
             }
           ],
           "ammoStats": {
@@ -8355,16 +7984,6 @@
               "emptyReload": 7.43,
               "tacticalReload": 6.56,
               "headshotMultiplier": 1.9
-            },
-            "Default": {
-              "magSize": 100,
-              "emptyReload": 5.82,
-              "headshotMultiplier": 2
-            },
-            "Extended": {
-              "magSize": 200,
-              "emptyReload": 5.82,
-              "headshotMultiplier": 2
             }
           }
         },
@@ -8402,38 +8021,6 @@
               ],
               "velocity": 975,
               "rpmAuto": 675
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 24,
-                  "range": 0
-                },
-                {
-                  "damage": 22,
-                  "range": 20
-                },
-                {
-                  "damage": 21,
-                  "range": 40
-                },
-                {
-                  "damage": 20,
-                  "range": 50
-                },
-                {
-                  "damage": 19,
-                  "range": 100
-                },
-                {
-                  "damage": 18,
-                  "range": 150
-                }
-              ],
-              "velocity": 975,
-              "rpmAuto": 674
             }
           ],
           "ammoStats": {
@@ -8448,16 +8035,6 @@
               "emptyReload": 6.74,
               "tacticalReload": 6.19,
               "headshotMultiplier": 1.9
-            },
-            "Default": {
-              "magSize": 100,
-              "emptyReload": 5.22,
-              "headshotMultiplier": 2
-            },
-            "Extended": {
-              "magSize": 200,
-              "emptyReload": 5.22,
-              "headshotMultiplier": 2
             }
           }
         },
@@ -8496,39 +8073,6 @@
               "velocity": 975,
               "rpmSingle": 515,
               "rpmAuto": 720
-            },
-            {
-              "barrelType": "Factory",
-              "ammoType": "Default",
-              "dropoffs": [
-                {
-                  "damage": 24,
-                  "range": 0
-                },
-                {
-                  "damage": 22,
-                  "range": 20
-                },
-                {
-                  "damage": 19,
-                  "range": 50
-                },
-                {
-                  "damage": 18,
-                  "range": 75
-                },
-                {
-                  "damage": 17,
-                  "range": 100
-                },
-                {
-                  "damage": 16,
-                  "range": 150
-                }
-              ],
-              "velocity": 975,
-              "rpmSingle": 513,
-              "rpmAuto": 718
             }
           ],
           "ammoStats": {
@@ -8543,16 +8087,6 @@
               "emptyReload": 3.74,
               "tacticalReload": 2.96,
               "headshotMultiplier": 1.9
-            },
-            "Default": {
-              "magSize": 46,
-              "emptyReload": 3.02,
-              "headshotMultiplier": 2
-            },
-            "Extended": {
-              "magSize": 61,
-              "emptyReload": 3.02,
-              "headshotMultiplier": 2
             }
           }
         }
@@ -9826,11 +9360,6 @@
               "emptyReload": 3.54,
               "tacticalReload": 3,
               "headshotMultiplier": 1.6
-            },
-            "Default": {
-              "magSize": 21,
-              "emptyReload": 2.65,
-              "headshotMultiplier": 1.6
             }
           }
         },
@@ -9999,7 +9528,7 @@
                 },
                 {
                   "damage": 60,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 845,
@@ -10015,7 +9544,7 @@
                 },
                 {
                   "damage": 60,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 675,
@@ -10031,7 +9560,7 @@
                 },
                 {
                   "damage": 60,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 965,
@@ -10047,7 +9576,7 @@
                 },
                 {
                   "damage": 55.2,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 845,
@@ -10063,7 +9592,7 @@
                 },
                 {
                   "damage": 57,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 615,
@@ -10079,7 +9608,7 @@
                 },
                 {
                   "damage": 54,
-                  "range": 75
+                  "range": 50
                 }
               ],
               "velocity": 675,
@@ -11285,7 +10814,7 @@
                 }
               ],
               "velocity": 620,
-              "rpmSingle": 80
+              "rpmSingle": 75
             },
             {
               "barrelType": "6KU",
@@ -11301,7 +10830,7 @@
                 }
               ],
               "velocity": 620,
-              "rpmSingle": 80
+              "rpmSingle": 75
             },
             {
               "barrelType": "Factory",
@@ -11317,7 +10846,7 @@
                 }
               ],
               "velocity": 620,
-              "rpmSingle": 80
+              "rpmSingle": 75
             },
             {
               "barrelType": "6KU",
@@ -11333,7 +10862,7 @@
                 }
               ],
               "velocity": 620,
-              "rpmSingle": 80
+              "rpmSingle": 75
             }
           ],
           "ammoStats": {
