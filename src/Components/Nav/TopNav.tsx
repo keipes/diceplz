@@ -350,7 +350,7 @@ function TopNav(props: NavProps) {
                 <a href="https://docs.google.com/spreadsheets/d/1jNUxS27k9Qsx6SlnqBRV7eM92kp6_KYWQs_2rTBbRdg">
                   Sorrow's Scribbles
                 </a>{" "}
-                as of patch 7.2.0
+                as of patch 7.3.0
               </p>
             </div>
           </div>
