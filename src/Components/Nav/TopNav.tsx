@@ -14,7 +14,6 @@ import { useContext, useEffect, useState } from "react";
 
 import {
   SettingsIcon,
-  InfoIcon,
   DeleteIcon,
   DiscordMarkWhite,
   DiscordMarkBlack,
