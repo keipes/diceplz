@@ -8,6 +8,9 @@ import settingsSvg from "../assets/icons/settings_FILL0_wght400_GRAD0_opsz24.svg
 import infoSvg from "../assets/icons/info_FILL0_wght400_GRAD0_opsz24.svg";
 import expandMoreSvg from "../assets/icons/expand_more_FILL0_wght400_GRAD0_opsz24.svg";
 import expandLessSvg from "../assets/icons/expand_less_FILL0_wght400_GRAD0_opsz24.svg";
+import discordMarkWhiteSvg from "../assets/icons/discord-mark-white.svg";
+import discordMarkBlackSvg from "../assets/icons/discord-mark-black.svg";
+import discordMarkBlueSvg from "../assets/icons/discord-mark-blue.svg";
 
 interface IconProps {
   alt?: string;
@@ -36,4 +39,13 @@ export const ExpandMoreIcon: React.FC<IconProps> = (props) => (
 );
 export const ExpandLessIcon: React.FC<IconProps> = (props) => (
   <img src={expandLessSvg} alt={props.alt || "Collapse"} />
+);
+export const DiscordMarkWhite: React.FC<IconProps> = (props) => (
+  <img src={discordMarkWhiteSvg} alt={props.alt || "Discord Mark"} />
+);
+export const DiscordMarkBlack: React.FC<IconProps> = (props) => (
+  <img src={discordMarkBlackSvg} alt={props.alt || "Discord Mark"} />
+);
+export const DiscordMarkBlue: React.FC<IconProps> = (props) => (
+  <img src={discordMarkBlueSvg} alt={props.alt || "Discord Mark"} />
 );

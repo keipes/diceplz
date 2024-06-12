@@ -65,6 +65,7 @@ interface Theme {
   tooltipBg: string;
   tooltipTitle: string;
   tooltipBody: string;
+  isDarkMode: boolean;
 }
 
 const LightTheme: Theme = {
@@ -72,6 +73,7 @@ const LightTheme: Theme = {
   tooltipBg: "white",
   tooltipTitle: "black",
   tooltipBody: "black",
+  isDarkMode: false,
 };
 
 const DarkTheme: Theme = {
@@ -79,6 +81,7 @@ const DarkTheme: Theme = {
   tooltipBg: "black",
   tooltipTitle: "white",
   tooltipBody: "white",
+  isDarkMode: true,
 };
 const ThemeContext = createContext(DarkTheme);
 

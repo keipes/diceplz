@@ -10,10 +10,18 @@ import {
   WeaponCategories,
 } from "../../Data/WeaponData";
 import "./TopNav.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import { SettingsIcon, InfoIcon, DeleteIcon } from "../Icons";
+import {
+  SettingsIcon,
+  InfoIcon,
+  DeleteIcon,
+  DiscordMarkWhite,
+  DiscordMarkBlack,
+  DiscordMarkBlue,
+} from "../Icons";
 import { WeaponConfig } from "../../Data/WeaponConfiguration";
+import { ThemeContext } from "../App";
 
 interface SetModifiersFn {
   (modifiers: Modifiers): void;
@@ -36,6 +44,8 @@ interface NavProps {
 function TopNav(props: NavProps) {
   const [saveFocused, setSaveFocused] = useState(false);
   const [saveInputValue, setSaveInputValue] = useState("");
+  const theme = useContext(ThemeContext);
+
   // const [configsList, setConfigsList] = useState(
   //   useMemo(() => props.configLoader.listConfigs(), [])
   // );
@@ -48,7 +58,7 @@ function TopNav(props: NavProps) {
     });
     for (const weapon of weapons) {
       weaponSelectItems.push(
-        <li
+        <div
           className="weapon-select-item"
           key={weapon.name}
           onClick={() => {
@@ -62,14 +72,14 @@ function TopNav(props: NavProps) {
           }}
         >
           {weapon.name}
-        </li>
+        </div>
       );
     }
     weaponSelectDropdowns.push(
-      <li className="top-nav-weapon-select" key={category}>
-        <div className="top-nav-label">{category.toUpperCase()}</div>
+      <li className="nav-item" key={category}>
+        <div className="nav-label">{category.toUpperCase()}</div>
         <div className="weapon-select-dropdown-container">
-          <ul className="weapon-select-dropdown">
+          <div className="weapon-select-dropdown">
             <div
               className="weapon-select-add-all"
               onClick={() => {
@@ -95,7 +105,7 @@ function TopNav(props: NavProps) {
             <div className="weapon-select-items-container">
               {weaponSelectItems}
             </div>
-          </ul>
+          </div>
         </div>
       </li>
     );
@@ -193,10 +203,10 @@ function TopNav(props: NavProps) {
     );
   }
   weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select " key="save load">
-      <div className="top-nav-label select-save-load">SAVE / LOAD</div>
+    <li className="nav-item " key="save load">
+      <div className="nav-label select-save-load">SAVE / LOAD</div>
       <div className="weapon-select-dropdown-container">
-        <ul className="weapon-select-dropdown">
+        <div className="weapon-select-dropdown">
           <div
             className="weapon-select-add-all"
             onClick={() => {
@@ -212,25 +222,25 @@ function TopNav(props: NavProps) {
           <div className="weapon-select-items-container-saveload">
             {loadable}
           </div>
-        </ul>
+        </div>
       </div>
     </li>
   );
   weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select" key="settings">
-      <div className="top-nav-label">
+    <li className="nav-item" key="settings">
+      <div className="nav-label">
         {" "}
-        <span className={"top-nav-icon svg-white svg-hover-blue"}>
+        <span className={"nav-icon svg-white svg-hover-blue"}>
           <SettingsIcon alt="settings" />
         </span>
         {/* <img
-          className={"top-nav-icon svg-white svg-hover-blue"}
+          className={"nav-icon svg-white svg-hover-blue"}
           src={settingsSvg}
           alt="settings"
         /> */}
       </div>
       <div className="weapon-select-dropdown-container">
-        <ul className="weapon-select-dropdown">
+        <div className="weapon-select-dropdown">
           <div
             className="weapon-select-add-all"
             onClick={() => {
@@ -240,7 +250,7 @@ function TopNav(props: NavProps) {
             Reset
           </div>
           <div className="weapon-select-items-container-settings">
-            <li className="weapon-select-item">
+            <div className="weapon-select-item">
               {" "}
               <div>
                 <label htmlFor="health-multiplier">
@@ -262,8 +272,8 @@ function TopNav(props: NavProps) {
                   }}
                 />
               </div>
-            </li>
-            <li className="weapon-select-item">
+            </div>
+            <div className="weapon-select-item">
               <div>
                 <label htmlFor="damage-multiplier">Damage Multiplier: </label>
                 <input
@@ -282,8 +292,8 @@ function TopNav(props: NavProps) {
                   }}
                 />
               </div>
-            </li>
-            <li className="weapon-select-item">
+            </div>
+            <div className="weapon-select-item">
               <div>
                 <label htmlFor="body-damage-multiplier">
                   Body Damage Multiplier:{" "}
@@ -304,8 +314,8 @@ function TopNav(props: NavProps) {
                   }}
                 />
               </div>
-            </li>
-            <li className="weapon-select-item">
+            </div>
+            <div className="weapon-select-item">
               <div>
                 <label htmlFor="alternate-weapon-colors">
                   Assign Graph Colors By Ammo Type:{" "}
@@ -321,28 +331,28 @@ function TopNav(props: NavProps) {
                   }}
                 />
               </div>
-            </li>
+            </div>
           </div>
-        </ul>
+        </div>
       </div>
     </li>
   );
 
   weaponSelectDropdowns.push(
-    <li className="top-nav-weapon-select" key="info">
-      <div className="top-nav-label">
+    <li className="nav-item" key="info">
+      <div className="nav-label">
         {" "}
-        <span className={"top-nav-icon svg-white svg-hover-blue"}>
+        <span className={"nav-icon svg-white svg-hover-blue"}>
           <InfoIcon alt="info" />
         </span>
         {/* <img
-          className={"top-nav-icon svg-white svg-hover-blue"}
+          className={"nav-icon svg-white svg-hover-blue"}
           src={infoSvg}
           alt="info"
         /> */}
       </div>
       <div className="weapon-select-dropdown-container">
-        <ul className="weapon-select-dropdown">
+        <div className="weapon-select-dropdown">
           <div className="weapon-select-items-container-settings">
             <div className="disclosure">
               <p>
@@ -354,19 +364,37 @@ function TopNav(props: NavProps) {
               </p>
             </div>
           </div>
-        </ul>
+        </div>
       </div>
     </li>
   );
 
+  weaponSelectDropdowns.push(
+    <li className="nav-item" key="asdasd">
+      <div className="nav-label">
+        <a href="https://discord.gg/2043">
+          <span className="nav-icon nav-item-hide-hover">
+            {theme.isDarkMode ? (
+              <DiscordMarkWhite alt="Discord" />
+            ) : (
+              <DiscordMarkBlack alt="Discord" />
+            )}
+          </span>
+          <span className="nav-icon nav-item-hide-no-hover">
+            <DiscordMarkBlue alt="Discord" />
+          </span>
+        </a>
+      </div>
+    </li>
+  );
   return (
     <>
-      <div className="top-nav">
-        <ul>
-          <li className="top-nav-title-container" key="123">
+      <div className="nav">
+        <ul className="nav-list">
+          <li className="nav-title" key="123">
             <a href="https://diceplz.com">
               <h1
-                className="top-nav-title"
+                className="nav-title"
                 onClick={() => window.location.reload()}
               >
                 DP
