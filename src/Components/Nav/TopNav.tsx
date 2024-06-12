@@ -19,6 +19,7 @@ import {
   DiscordMarkWhite,
   DiscordMarkBlack,
   DiscordMarkBlue,
+  GoogleSheetsLogo,
 } from "../Icons";
 import { WeaponConfig } from "../../Data/WeaponConfiguration";
 import { ThemeContext } from "../App";
@@ -77,7 +78,9 @@ function TopNav(props: NavProps) {
     }
     weaponSelectDropdowns.push(
       <li className="nav-item" key={category}>
-        <div className="nav-label">{category.toUpperCase()}</div>
+        <div className="nav-label nav-hover-highlight">
+          {category.toUpperCase()}
+        </div>
         <div className="weapon-select-dropdown-container">
           <div className="weapon-select-dropdown">
             <div
@@ -204,7 +207,9 @@ function TopNav(props: NavProps) {
   }
   weaponSelectDropdowns.push(
     <li className="nav-item " key="save load">
-      <div className="nav-label select-save-load">SAVE / LOAD</div>
+      <div className="nav-label select-save-load nav-hover-highlight">
+        SAVE / LOAD
+      </div>
       <div className="weapon-select-dropdown-container">
         <div className="weapon-select-dropdown">
           <div
@@ -338,37 +343,20 @@ function TopNav(props: NavProps) {
     </li>
   );
 
+  // google sheets link
   weaponSelectDropdowns.push(
-    <li className="nav-item" key="info">
+    <li className="nav-item" key="asdasd">
       <div className="nav-label">
-        {" "}
-        <span className={"nav-icon svg-white svg-hover-blue"}>
-          <InfoIcon alt="info" />
-        </span>
-        {/* <img
-          className={"nav-icon svg-white svg-hover-blue"}
-          src={infoSvg}
-          alt="info"
-        /> */}
-      </div>
-      <div className="weapon-select-dropdown-container">
-        <div className="weapon-select-dropdown">
-          <div className="weapon-select-items-container-settings">
-            <div className="disclosure">
-              <p>
-                Weapon stats are from{" "}
-                <a href="https://docs.google.com/spreadsheets/d/1jNUxS27k9Qsx6SlnqBRV7eM92kp6_KYWQs_2rTBbRdg">
-                  Sorrow's Scribbles
-                </a>{" "}
-                as of patch 7.3.0
-              </p>
-            </div>
-          </div>
-        </div>
+        <a href="https://docs.google.com/spreadsheets/d/1jNUxS27k9Qsx6SlnqBRV7eM92kp6_KYWQs_2rTBbRdg">
+          <span className="nav-icon">
+            <GoogleSheetsLogo />
+          </span>
+        </a>
       </div>
     </li>
   );
 
+  // discord link
   weaponSelectDropdowns.push(
     <li className="nav-item" key="asdasd">
       <div className="nav-label">
@@ -385,6 +373,12 @@ function TopNav(props: NavProps) {
           </span>
         </a>
       </div>
+    </li>
+  );
+  // patch label
+  weaponSelectDropdowns.push(
+    <li className="nav-item">
+      <div className="nav-label nav-label-patch">7.3.0</div>
     </li>
   );
   return (

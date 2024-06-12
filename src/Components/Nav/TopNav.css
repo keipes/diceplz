@@ -12,6 +12,16 @@
   filter: drop-shadow(0px 6px 3px rgba(0, 0, 0, 0.3));
 }
 
+.nav-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+}
+
 .nav-title {
   cursor: pointer;
   margin-left: 1rem;
@@ -29,27 +39,12 @@
   color: var(--font-highlight);
 }
 
-ul.nav-list,
-li.nav-item {
-  margin: 0;
-  padding: 0;
-}
-li.nav-item {
-  padding-bottom: 0.5rem;
-}
-
-.nav ul {
-  list-style: none;
-  width: 100%;
-
-  height: auto;
-  display: flex;
-  align-items: flex-end;
-}
-
-.nav li {
+.nav-item {
   position: relative;
   width: auto;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 0.5rem;
 }
 
 .nav-label {
@@ -64,14 +59,25 @@ li.nav-item {
   height: 1.5rem;
 }
 
+/* .nav-label-patch {
+  color: var(--battle-red);
+} */
+
+.nav-hover-highlight:hover {
+  color: var(--font-highlight);
+}
+
 .nav-label .material-symbols-outlined {
   line-height: 4rem;
   font-size: 1.8rem;
 }
 
-.nav li:hover .nav-label {
+/* .nav-label:hover {
   color: var(--font-highlight);
-}
+} */
+/* .nav li:hover .nav-label {
+  color: var(--font-highlight);
+} */
 
 .weapon-select-dropdown-container {
   opacity: 0;
