@@ -1,3 +1,4 @@
+import { GetWeaponByName } from "../../Data/WeaponData";
 import { TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
@@ -157,6 +158,26 @@ function AutoConfigure() {
             }}
           >
             {"Maximize Velocity"}
+          </span>
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.Maximizer((config, stat) => {
+                const weapon = GetWeaponByName(config.name);
+                if (weapon.ammoStats) {
+                  const data = weapon.ammoStats[stat.ammoType];
+                  return data && data.magSize ? data.magSize : 0;
+                }
+                return 0;
+                // return stat.velocity ? stat.velocity : 0;
+              });
+            }}
+          >
+            {"Maximize Magazine Capacity"}
           </span>
         </>
       </Configurer>

@@ -122,7 +122,9 @@
 .wcf-selector-ammo-subsonic {
   color: #7f7fff;
 }
-.wcf-selector-ammo-armorpiercing {
+.wcf-selector-ammo-armorpiercing,
+.wcf-selector-ammo-anti-material,
+.wcf-selector-ammo-anti-materialhighpower {
   color: #ffff7f;
 }
 

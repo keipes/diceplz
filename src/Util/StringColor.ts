@@ -26,21 +26,33 @@ const ConfigHSL = function (config: WeaponConfiguration) {
 };
 
 const ConfigAmmoColor = function (config: WeaponConfiguration) {
-  switch (config.ammoType) {
+  let aT = config.ammoType;
+  if (aT.endsWith(" Extended")) {
+    aT = aT.substring(0, aT.length - 9);
+  }
+  if (aT.endsWith(" Beltfed")) {
+    aT = aT.substring(0, aT.length - 8);
+  }
+  if (aT.endsWith(" Drum")) {
+    aT = aT.substring(0, aT.length - 5);
+  }
+  switch (aT) {
     case "Close Combat":
-      return "#7fffff"
+      return "#7fffff";
     case "Standard":
-      return "#7fff7f"
+      return "#7fff7f";
     case "High Power":
-      return "#ff7f7f"
+      return "#ff7f7f";
     case "Subsonic":
-      return "#7f7fff"
+      return "#7f7fff";
     case "Armor Piercing":
-      return "#ffff7f"
+    case "Anti-Material":
+    case "Anti-Material High Power":
+      return "#ffff7f";
     default:
       return "#fff";
   }
-}
+};
 
 export default StringHue;
 export { ConfigHSL, ConfigAmmoColor };

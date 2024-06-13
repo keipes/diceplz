@@ -50,7 +50,18 @@ function Weapon(props: WeaponProps) {
   const nameStyle = {
     color: ConfigHSL(props.config),
   };
-
+  let ammoTypeConverter = (ammoTypeString: string) => {
+    if (ammoTypeString.endsWith(" Extended")) {
+      ammoTypeString = ammoTypeString.substring(0, ammoTypeString.length - 9);
+    } else if (ammoTypeString.endsWith(" Beltfed")) {
+      ammoTypeString = ammoTypeString.substring(0, ammoTypeString.length - 8);
+    } else if (ammoTypeString.endsWith(" Drum")) {
+      ammoTypeString = ammoTypeString.substring(0, ammoTypeString.length - 5);
+    }
+    return (
+      "wcf-selector-ammo-" + ammoTypeString.replace(/\s/g, "").toLowerCase()
+    );
+  };
   for (const stat of weapon.stats) {
     if (stat.barrelType == props.config.barrelType) {
       if (!seenAmmo.has(stat.ammoType)) {
@@ -59,7 +70,9 @@ function Weapon(props: WeaponProps) {
           <option
             value={stat.ammoType}
             key={stat.ammoType}
-            className="wcf-selector-option"
+            className={
+              "wcf-selector-option " + ammoTypeConverter(stat.ammoType)
+            }
           >
             {stat.ammoType}
           </option>
@@ -162,8 +175,7 @@ function Weapon(props: WeaponProps) {
         <span></span>
         <select
           className={
-            "wcf-selector-select wcf-selector-ammo-" +
-            props.config.ammoType.replace(/\s/g, "").toLowerCase()
+            "wcf-selector-select " + ammoTypeConverter(config.ammoType)
           }
           value={props.config.ammoType}
           name="ammo"

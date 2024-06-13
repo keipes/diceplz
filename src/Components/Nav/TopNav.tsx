@@ -344,7 +344,7 @@ function TopNav(props: NavProps) {
 
   // google sheets link
   weaponSelectDropdowns.push(
-    <li className="nav-item" key="asdasd">
+    <li className="nav-item" key="sheets-logo">
       <div className="nav-label">
         <a href="https://docs.google.com/spreadsheets/d/1jNUxS27k9Qsx6SlnqBRV7eM92kp6_KYWQs_2rTBbRdg">
           <span className="nav-icon">
@@ -357,7 +357,7 @@ function TopNav(props: NavProps) {
 
   // discord link
   weaponSelectDropdowns.push(
-    <li className="nav-item" key="asdasd">
+    <li className="nav-item" key="discord-logo">
       <div className="nav-label">
         <a href="https://discord.gg/2043">
           <span className="nav-icon nav-item-hide-hover">
@@ -376,7 +376,7 @@ function TopNav(props: NavProps) {
   );
   // patch label
   weaponSelectDropdowns.push(
-    <li className="nav-item">
+    <li className="nav-item" key="patch-label">
       <div className="nav-label nav-label-patch">7.3.0</div>
     </li>
   );

@@ -3,7 +3,7 @@ function myFunction() {
   const sheets = ss.getSheets();
   const exporter = new Exporter();
   for (let i = 7; i < sheets.length; i++) {
-    //   for (let i = 71; i < sheets.length; i++) {
+    // for (let i = 41; i < 53; i += 11) {
     exporter.processSheet(sheets[i]);
   }
   displayText(JSON.stringify(exporter.data));
@@ -124,12 +124,15 @@ const AmmoTypeMap = {
   AP: "Armor Piercing",
   FL: "Flechette",
   "#01": "#01 Buckshot",
-  "#00": "#01 Buckshot", // spreadsheet displays this as #00, but ingame it is #01
+  "#1": "#1 Buckshot",
+  "#00": "#00 Buckshot", // spreadsheet displays this as #00, but ingame it is #01
   "#4": "#4 Buckshot",
   SL: "Slug",
   BR: "Bolt Rack",
   SB: "Standard Bolt",
   EB: "Explosive Bolt",
+  SSCC: "Subsonic Close Combat",
+  SSHP: "Subsonic High Power",
 };
 
 const ShotgunAmmoTypes = new Set([
@@ -184,7 +187,7 @@ class WeaponSheetExporter {
     // process ammo stats
     this.processAmmoStats(values, i);
     // if we have both ammo and barrel types, process the row
-    if (this.currentBarrelType != "" && this.currentAmmoType != "") {
+    if (this.currentBarrelType !== "" && this.currentAmmoType.length > 0) {
       this.processStats(values, i, mergedRows);
     }
   }
@@ -196,36 +199,38 @@ class WeaponSheetExporter {
       // special case for single row dropoff, 0 to infinity
       endRow = startRow;
     }
-    if (endRow && this.currentAmmoType != "") {
-      const stats = {
-        barrelType: this.currentBarrelType,
-        ammoType: this.currentAmmoType,
-      };
-      stats.dropoffs = this.processDropoff(values, startRow - 1, endRow + 1);
-      const velocity = matchInt(values[i][3]);
-      if (velocity) {
-        stats.velocity = velocity;
-      }
-      const rpmSingle = matchInt(values[i][10]);
-      if (rpmSingle) {
-        stats.rpmSingle = rpmSingle;
-      }
-      const rpmBurst = matchInt(values[i][11]);
-      if (rpmBurst) {
-        stats.rpmBurst = rpmBurst;
-      }
-      const rpmAuto = matchInt(values[i][12]);
-      if (rpmAuto) {
-        stats.rpmAuto = rpmAuto;
-      }
-      const configurationKey = stats.barrelType + stats.ammoType;
-      if (!this.seenConfigurations.has(configurationKey)) {
-        this.weaponData.stats.push(stats);
-        this.seenConfigurations.add(configurationKey);
-      } else {
-        console.warn(
-          "Skipping duplicate configuration for " + configurationKey
-        );
+    if (endRow) {
+      for (let ammoType of this.currentAmmoType) {
+        const stats = {
+          barrelType: this.currentBarrelType,
+          ammoType: ammoType,
+        };
+        stats.dropoffs = this.processDropoff(values, startRow - 1, endRow + 1);
+        const velocity = matchInt(values[i][3]);
+        if (velocity) {
+          stats.velocity = velocity;
+        }
+        const rpmSingle = matchInt(values[i][10]);
+        if (rpmSingle) {
+          stats.rpmSingle = rpmSingle;
+        }
+        const rpmBurst = matchInt(values[i][11]);
+        if (rpmBurst) {
+          stats.rpmBurst = rpmBurst;
+        }
+        const rpmAuto = matchInt(values[i][12]);
+        if (rpmAuto) {
+          stats.rpmAuto = rpmAuto;
+        }
+        const configurationKey = stats.barrelType + stats.ammoType;
+        if (!this.seenConfigurations.has(configurationKey)) {
+          this.weaponData.stats.push(stats);
+          this.seenConfigurations.add(configurationKey);
+        } else {
+          console.warn(
+            "Skipping duplicate configuration for " + configurationKey
+          );
+        }
       }
     }
   }
@@ -286,22 +291,48 @@ class WeaponSheetExporter {
     }
   }
 
-  getAmmoType(ammoType) {
-    for (const key in AmmoTypeMap) {
-      if (ammoType.search(key) > -1) {
-        const _ammoType = AmmoTypeMap[key];
-        // special case for AP ammo
-        if (_ammoType == AmmoTypeMap.AP) {
-          if (ammoType.search(/BF\/FA/) > -1) {
-            return "Armor Piercing (Burst/Auto)";
-          } else if (ammoType.search(/SF/) > -1) {
-            return "Armor Piercing (Single)";
-          }
+  getAmmoType(ammoTypeKey) {
+    let ammoTypes = [];
+    let ammoTypeKeys = ammoTypeKey.split("|").map((x) => x.trim());
+    for (const key of ammoTypeKeys) {
+      let ammo = AmmoTypeMap[key];
+      if (!ammo && key.endsWith("E")) {
+        ammo = AmmoTypeMap[key.substring(0, key.length - 1)];
+        if (ammo) {
+          ammo += " Extended";
         }
-        return AmmoTypeMap[key];
+      }
+      if (!ammo && key.endsWith("BF")) {
+        ammo = AmmoTypeMap[key.substring(0, key.length - 2)];
+        if (ammo) {
+          ammo += " Beltfed";
+        }
+      }
+      if (!ammo && key.endsWith("D")) {
+        ammo = AmmoTypeMap[key.substring(0, key.length - 1)];
+        if (ammo) {
+          ammo += " Drum";
+        }
+      }
+      if (!ammo && key.endsWith(" (BF/FA)")) {
+        ammo = AmmoTypeMap[key.substring(0, key.length - 8)];
+        if (ammo) {
+          ammo += " (Burst/Auto)";
+        }
+      }
+      if (!ammo && key.endsWith(" (SF)")) {
+        ammo = AmmoTypeMap[key.substring(0, key.length - 5)];
+        if (ammo) {
+          ammo += " (Single)";
+        }
+      }
+      if (ammo) {
+        ammoTypes.push(ammo);
+      } else if (key.indexOf("My two cents:") == -1) {
+        console.warn("Unrecognized ammo type: " + key);
       }
     }
-    return "";
+    return ammoTypes;
   }
 
   getBarrelType(barrelType) {
