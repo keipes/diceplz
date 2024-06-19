@@ -31,8 +31,10 @@ const BTK = (
   modifiers: Modifiers,
   damage: number
 ) => {
+  // Weapons doing 99.75 damage have resulted in a kill. Assumed max player health is 99.5, from 2043 discord.
+  const playerHealth = 100 * modifiers.healthMultiplier - 0.5;
   return Math.ceil(
-    (100 * modifiers.healthMultiplier) /
+    playerHealth /
       (damage *
         modifiers.damageMultiplier *
         modifiers.bodyDamageMultiplier *
