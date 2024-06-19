@@ -262,6 +262,7 @@ function App() {
             open={configuratorOpen}
             setOpen={setConfiguratorOpen}
             setBottomPadding={setBottomPadding}
+            modifiers={modifiers}
           />
           <div className={mainContentClass} style={mainContentStyle}>
             <TTKChart

@@ -22,12 +22,14 @@ interface Modifiers {
   healthMultiplier: number;
   damageMultiplier: number;
   bodyDamageMultiplier: number;
+  bodyArmor: boolean;
 }
 
 const DefaultModifiers: Readonly<Modifiers> = {
   healthMultiplier: 1,
   damageMultiplier: 1,
   bodyDamageMultiplier: 1,
+  bodyArmor: false,
 };
 
 interface SetModifiersFn {

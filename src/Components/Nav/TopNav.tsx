@@ -321,12 +321,29 @@ function TopNav(props: NavProps) {
             </div>
             <div className="weapon-select-item">
               <div>
+                <label htmlFor="body-armor">Players Wear Body Armor: </label>
+                <input
+                  className="modifier-input-checkbox"
+                  type="checkbox"
+                  id="body-armor"
+                  name="body-armor"
+                  value={props.modifiers.bodyDamageMultiplier}
+                  onChange={(e) => {
+                    const cloned = structuredClone(props.modifiers);
+                    cloned.bodyArmor = e.target.checked;
+                    props.setModifiers(cloned);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="weapon-select-item">
+              <div>
                 <label htmlFor="alternate-weapon-colors">
                   Assign Graph Colors By Ammo Type:{" "}
                 </label>
                 <input
                   type="checkbox"
-                  className="use-alternate-weapon-colors"
+                  className="modifier-input-checkbox"
                   id="alternate-weapon-colors"
                   name="alternate-weapon-colors"
                   checked={props.settings.useAmmoColorsForGraph}

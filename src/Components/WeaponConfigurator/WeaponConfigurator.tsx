@@ -5,6 +5,7 @@ import { SyntheticEvent, useState } from "react";
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
 import AutoConfigure from "./AutoConfigure";
 import { WeaponConfig } from "../../Data/WeaponConfiguration";
+import { Modifiers } from "../../Data/ConfigLoader";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
@@ -15,6 +16,7 @@ interface WeaponConfiguratorProps {
   open: boolean;
   setOpen: SetOpenFn;
   setBottomPadding: SetBottomPaddingFn;
+  modifiers: Modifiers;
 }
 
 interface SetOpenFn {
@@ -96,7 +98,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
 
   let content;
   if (configOpen) {
-    content = <AutoConfigure />;
+    content = <AutoConfigure modifiers={props.modifiers} />;
   } else {
     content = <div className="wcf">{weaponsDisplay}</div>;
   }

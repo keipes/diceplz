@@ -1,3 +1,4 @@
+import { Modifiers } from "../../Data/ConfigLoader";
 import { GetWeaponByName } from "../../Data/WeaponData";
 import { TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
@@ -10,7 +11,11 @@ import {
   MouseEvent,
 } from "react";
 
-function AutoConfigure() {
+interface AutoConfigureProps {
+  modifiers: Modifiers;
+}
+
+function AutoConfigure(props: AutoConfigureProps) {
   const clickClass = "wcf-config-action hover-blue";
   const [ttkInputRange, setTTKInputRange] = useState(30);
   const configurator = useContext(ConfiguratorContext);
@@ -26,11 +31,7 @@ function AutoConfigure() {
       }
       return -TTK(
         config,
-        {
-          healthMultiplier: 1,
-          damageMultiplier: 1,
-          bodyDamageMultiplier: 1,
-        },
+        props.modifiers,
         damage,
         stat.rpmAuto ? stat.rpmAuto : 0
       );
