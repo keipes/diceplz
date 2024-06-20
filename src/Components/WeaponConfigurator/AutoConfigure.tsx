@@ -1,6 +1,6 @@
 import { Modifiers } from "../../Data/ConfigLoader";
 import { GetWeaponByName } from "../../Data/WeaponData";
-import { TTK } from "../../Util/Conversions";
+import { KillsPerMag, TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
 import {
@@ -10,6 +10,7 @@ import {
   useState,
   MouseEvent,
 } from "react";
+import { WeaponConfiguration } from "./WeaponConfigurator";
 
 interface AutoConfigureProps {
   modifiers: Modifiers;
@@ -40,6 +41,22 @@ function AutoConfigure(props: AutoConfigureProps) {
   function getRangeScorer(range: number): MouseEventHandler {
     return (_: MouseEvent<HTMLElement>) => {
       minimizeTTK(range);
+    };
+  }
+  function maximizeKillsPerMag(range: number) {
+    configurator.Maximizer((config, stat) => {
+      let statConfig: WeaponConfiguration = {
+        name: config.name,
+        barrelType: stat.barrelType,
+        ammoType: stat.ammoType,
+        visible: config.visible,
+      };
+      return KillsPerMag(statConfig, props.modifiers, range);
+    });
+  }
+  function getKillsPerMagScorer(range: number): MouseEventHandler {
+    return (_: MouseEvent<HTMLElement>) => {
+      maximizeKillsPerMag(range);
     };
   }
   return (
@@ -80,6 +97,47 @@ function AutoConfigure(props: AutoConfigureProps) {
           </span>
           {" or "}
           <span className={clickClass} onClick={getRangeScorer(150)}>
+            <>(150m)</>
+          </span>
+          {" range."}
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          {"Maximize Kills Per Mag at "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(0)}>
+            <>(0m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(10)}>
+            <>(10m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(20)}>
+            <>(20m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(30)}>
+            <>(30m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(40)}>
+            <>(40m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(50)}>
+            <>(50m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(40)}>
+            <>(75m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(50)}>
+            <>(100m)</>
+          </span>
+          {" or "}
+          <span className={clickClass} onClick={getKillsPerMagScorer(150)}>
             <>(150m)</>
           </span>
           {" range."}

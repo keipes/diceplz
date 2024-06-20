@@ -19,7 +19,6 @@ import {
   BarController,
   // Legend,
 } from "chart.js";
-import { GetStatsForConfiguration } from "../Data/WeaponData.ts";
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
@@ -42,6 +41,7 @@ import {
   StatScorer,
   WeaponConfigurations,
 } from "../Data/WeaponConfiguration.ts";
+import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -251,7 +251,6 @@ function App() {
             <TTKChart
               weaponConfigurations={weaponConfigurations}
               settings={settings}
-              rpmSelector={"rpmAuto"}
               modifiers={modifiers}
               title={"TTK"}
             />
@@ -260,22 +259,6 @@ function App() {
               modifiers={modifiers}
               settings={settings}
             />
-            {/* <TTKChart
-            weaponConfigurations={weaponConfigurations}
-            requiredRanges={requiredRanges}
-            highestRangeSeen={highestRangeSeen}
-            rpmSelector={"rpmSingle"}
-            modifiers={modifiers}
-            title={"TTK Single"}
-          />
-          <TTKChart
-            weaponConfigurations={weaponConfigurations}
-            requiredRanges={requiredRanges}
-            highestRangeSeen={highestRangeSeen}
-            rpmSelector={"rpmBurst"}
-            modifiers={modifiers}
-            title={"TTK Burst"}
-          /> */}
             <DamageChart
               weaponConfigurations={weaponConfigurations}
               modifiers={modifiers}
@@ -297,6 +280,11 @@ function App() {
               weaponConfigurations={weaponConfigurations}
               settings={settings}
             />
+            <KillsPerMagChart
+              weaponConfigurations={weaponConfigurations}
+              settings={settings}
+              modifiers={modifiers}
+            ></KillsPerMagChart>
           </div>
         </ThemeContext.Provider>
       </ConfiguratorContext.Provider>

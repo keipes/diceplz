@@ -1,6 +1,6 @@
 import { Modifiers } from "../Data/ConfigLoader";
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
-import { GetWeaponByName } from "../Data/WeaponData";
+import { GetStatsForConfiguration, GetWeaponByName } from "../Data/WeaponData";
 
 const pelletMultiplier = (config: WeaponConfiguration) => {
   const weapon = GetWeaponByName(config.name);
@@ -43,4 +43,39 @@ const BTK = (
   );
 };
 
-export { TTK, BTK };
+const DamageAtRange = (config: WeaponConfiguration, range: number) => {
+  let damage = 0;
+  const stat = GetStatsForConfiguration(config);
+  for (const dropoff of stat.dropoffs) {
+    if (dropoff.range <= range) {
+      damage = dropoff.damage;
+    } else {
+      break;
+    }
+  }
+  return damage;
+};
+
+const MagazineCapacity = (config: WeaponConfiguration) => {
+  const weapon = GetWeaponByName(config.name);
+  if (weapon.ammoStats) {
+    const ammoStat = weapon.ammoStats[config.ammoType];
+    if (ammoStat) {
+      if (ammoStat.magSize) {
+        return ammoStat.magSize;
+      }
+    }
+  }
+  return 0;
+};
+
+const KillsPerMag = (
+  config: WeaponConfiguration,
+  modifiers: Modifiers,
+  range: number
+) => {
+  const btk = BTK(config, modifiers, DamageAtRange(config, range));
+  const magSize = MagazineCapacity(config);
+  return Math.floor(magSize / btk);
+};
+export { TTK, BTK, KillsPerMag };

@@ -18,7 +18,6 @@ import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
-  rpmSelector: string;
   title: string;
   modifiers: Modifiers;
   settings: Settings;
