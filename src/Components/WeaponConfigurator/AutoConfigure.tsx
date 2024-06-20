@@ -48,23 +48,39 @@ function AutoConfigure(props: AutoConfigureProps) {
         <>
           {"Minimize TTK at "}
           <span className={clickClass} onClick={getRangeScorer(0)}>
-            <>Point Blank (0m)</>
+            <>(0m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getRangeScorer(10)}>
+            <>(10m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getRangeScorer(20)}>
+            <>(20m)</>
           </span>
           {", "}
           <span className={clickClass} onClick={getRangeScorer(30)}>
-            <>Short (30m)</>
+            <>(30m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getRangeScorer(40)}>
+            <>(40m)</>
           </span>
           {", "}
           <span className={clickClass} onClick={getRangeScorer(50)}>
-            <>Medium (50m)</>
+            <>(50m)</>
+          </span>
+          {", "}
+          <span className={clickClass} onClick={getRangeScorer(40)}>
+            <>(75m)</>
           </span>
           {", "}
           <span className={clickClass} onClick={getRangeScorer(50)}>
-            <>Long (100m)</>
+            <>(100m)</>
           </span>
           {" or "}
           <span className={clickClass} onClick={getRangeScorer(150)}>
-            <>Extreme (150m)</>
+            <>(150m)</>
           </span>
           {" range."}
         </>
