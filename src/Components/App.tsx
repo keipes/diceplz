@@ -148,23 +148,6 @@ function App() {
     Selector: wpnCfg.Select.bind(wpnCfg),
   };
 
-  const requiredRanges = new Map<number, boolean>();
-  let highestRangeSeen = 0;
-  for (const [_, config] of weaponConfigurations) {
-    if (!config.visible) continue;
-    const stat = GetStatsForConfiguration(config);
-    for (const dropoff of stat.dropoffs) {
-      requiredRanges.set(dropoff.range, true);
-      if (dropoff.range > highestRangeSeen) {
-        highestRangeSeen = dropoff.range;
-      }
-    }
-  }
-  if (requiredRanges.size == 1) {
-    highestRangeSeen = 100;
-    requiredRanges.set(highestRangeSeen, true);
-  }
-
   // function GetAllOptimalAtEveryRange() {
   //   const scores: number[] = [];
   //   const ranges: WeaponConfiguration[] = [];
@@ -267,8 +250,6 @@ function App() {
           <div className={mainContentClass} style={mainContentStyle}>
             <TTKChart
               weaponConfigurations={weaponConfigurations}
-              requiredRanges={requiredRanges}
-              highestRangeSeen={highestRangeSeen}
               settings={settings}
               rpmSelector={"rpmAuto"}
               modifiers={modifiers}
@@ -276,8 +257,6 @@ function App() {
             />
             <BTKChart
               weaponConfigurations={weaponConfigurations}
-              requiredRanges={requiredRanges}
-              highestRangeSeen={highestRangeSeen}
               modifiers={modifiers}
               settings={settings}
             />
@@ -299,8 +278,6 @@ function App() {
           /> */}
             <DamageChart
               weaponConfigurations={weaponConfigurations}
-              requiredRanges={requiredRanges}
-              highestRangeSeen={highestRangeSeen}
               modifiers={modifiers}
               settings={settings}
             />

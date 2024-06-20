@@ -26,7 +26,7 @@ const RequiredRanges = function (
       }
     }
   }
-  for (let i = 0; i < highestRangeSeen; i++) {
+  for (let i = 0; i < 150; i++) {
     values.add(i);
   }
   values.add(highestRangeSeen);

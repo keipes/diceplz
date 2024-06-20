@@ -15,15 +15,12 @@ import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface BTKChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
-  highestRangeSeen: number;
-  requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
   settings: Settings;
 }
 
 function BTKChart(props: BTKChartProps) {
   const theme = useContext(ThemeContext);
-  const highestRangeSeen = props.highestRangeSeen;
   const datasets = [];
   const requiredRanges = RequiredRanges(
     props.weaponConfigurations,
@@ -31,6 +28,7 @@ function BTKChart(props: BTKChartProps) {
       return BTK(config, props.modifiers, damage);
     }
   );
+  const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;

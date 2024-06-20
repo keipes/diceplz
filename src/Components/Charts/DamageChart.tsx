@@ -14,18 +14,16 @@ import RequiredRanges from "../../Util/RequiredRanges.ts";
 
 interface DamageChartProps {
   weaponConfigurations: Map<string, WeaponConfiguration>;
-  highestRangeSeen: number;
-  requiredRanges: Map<number, boolean>;
   modifiers: Modifiers;
   settings: Settings;
 }
 
 function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
-  const highestRangeSeen = props.highestRangeSeen;
   const requiredRanges = RequiredRanges(props.weaponConfigurations, (_, _a) => {
     return 1;
   });
+  const highestRangeSeen = Math.max(...requiredRanges);
   const datasets = [];
   const configColors = new Map();
   for (const [_id, config] of props.weaponConfigurations) {

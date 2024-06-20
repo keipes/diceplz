@@ -18,8 +18,6 @@ import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface TTKChartProps {
   weaponConfigurations: Map<String, WeaponConfiguration>;
-  highestRangeSeen: number;
-  requiredRanges: Map<number, boolean>;
   rpmSelector: string;
   title: string;
   modifiers: Modifiers;
@@ -45,7 +43,6 @@ function TTKChart(props: TTKChartProps) {
     throw new Error("Undefined weapon selector.");
   };
 
-  const highestRangeSeen = props.highestRangeSeen;
   const datasets = [];
   let seenAuto = false;
   let seenBurst = false;
@@ -104,6 +101,7 @@ function TTKChart(props: TTKChartProps) {
       return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
     }
   );
+  const highestRangeSeen = Math.max(...requiredRanges);
   for (const [_id, config] of props.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
