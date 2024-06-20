@@ -154,7 +154,10 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
   };
   return (
     <div className="chart-outer-container">
-      <ChartHeader title={"Kills Per Magazine"} description="" />
+      <ChartHeader
+        title={"Kills Per Magazine"}
+        description="floor(magazine capacity / bullets to kill)"
+      />
       <div className="chart-container">
         <Line data={chartData} options={options} />
       </div>
