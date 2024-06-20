@@ -140,12 +140,44 @@ function GetInitialStatsForWeapon(weapon: Weapon) {
   return weapon.stats[0];
 }
 
+interface WeaponProcessor {
+  (weapon: Weapon): void;
+}
+function AllWeaponsProcessor(processor: WeaponProcessor) {
+  for (const category of WeaponCategories) {
+    for (const weapon of GetCategoryWeapons(category)) {
+      processor(weapon);
+    }
+  }
+}
+
+function AllWeaponDropoffRangeFrequencies() {
+  const ranges = new Map();
+  AllWeaponsProcessor((weapon) => {
+    for (const stat of weapon.stats) {
+      for (const dropoff of stat.dropoffs) {
+        if (ranges.has(dropoff.range)) {
+          ranges.set(dropoff.range, ranges.get(dropoff.range) + 1);
+        } else {
+          ranges.set(dropoff.range, 1);
+        }
+      }
+    }
+  });
+  let keys = [...ranges.keys()];
+  keys.sort((a, b) => a - b);
+  for (const key of keys) {
+    console.log(key + " " + ranges.get(key));
+  }
+}
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
   GetWeaponByName,
   GetStatsForConfiguration,
   GetInitialStatsForWeapon,
+  AllWeaponDropoffRangeFrequencies,
   // WeaponStats,
 };
 
