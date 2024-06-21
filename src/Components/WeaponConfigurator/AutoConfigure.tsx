@@ -187,6 +187,20 @@ function AutoConfigure(props: AutoConfigureProps) {
       </Configurer>
       <Configurer>
         <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.Selector((_) => {
+                return true;
+              });
+            }}
+          >
+            {"Add all configurations for currently selected weapons."}
+          </span>
+        </>
+      </Configurer>
+      <Configurer>
+        <>
           {"Maxmize RPM "}
           <span
             className={clickClass}
