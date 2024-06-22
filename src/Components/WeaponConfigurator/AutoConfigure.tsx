@@ -170,7 +170,9 @@ function AutoConfigure(props: AutoConfigureProps) {
               configurator.Selector((stat) => {
                 if (stat.ammoType == "Subsonic") {
                   if (
-                    { "6KU": true, "Type 4": true, PB: true }[stat.barrelType]
+                    { "6KU": true, "Type 4": true, PB: true, GAR45: true }[
+                      stat.barrelType
+                    ]
                   ) {
                     return true;
                   }
