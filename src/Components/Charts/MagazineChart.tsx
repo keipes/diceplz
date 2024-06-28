@@ -6,17 +6,15 @@ import {
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
 // import "./MagazineChart.css";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface MagazineChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   settings: Settings;
 }
 
@@ -27,7 +25,8 @@ function MagazineChart(props: MagazineChartProps) {
   const data = [];
   const backgroundColors = [];
   const weaponData: SortableWeaponData[] = [];
-  for (const [_, config] of props.weaponConfigurations) {
+  const configurations = useContext(ConfiguratorContext);
+  for (const [_, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     weaponData.push({ config: config, stats: stats });

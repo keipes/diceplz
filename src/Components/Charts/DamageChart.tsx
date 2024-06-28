@@ -2,31 +2,33 @@ import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { useContext } from "react";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 
 interface DamageChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   modifiers: Modifiers;
   settings: Settings;
 }
 
 function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
-  const requiredRanges = RequiredRanges(props.weaponConfigurations, (_, _a) => {
-    return 1;
-  });
+  const configurations = useContext(ConfiguratorContext);
+  const requiredRanges = RequiredRanges(
+    configurations.weaponConfigurations,
+    (_, _a) => {
+      return 1;
+    }
+  );
   const highestRangeSeen = Math.max(...requiredRanges);
   const datasets = [];
   const configColors = new Map();
-  for (const [_id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];

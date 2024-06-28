@@ -20,8 +20,7 @@ import {
   DiscordMarkBlue,
   GoogleSheetsLogo,
 } from "../Icons";
-import { WeaponConfig } from "../../Data/WeaponConfiguration";
-import { ThemeContext } from "../App";
+import { ConfiguratorContext, ThemeContext } from "../App";
 
 interface SetModifiersFn {
   (modifiers: Modifiers): void;
@@ -32,7 +31,6 @@ interface BooleanVoidFn {
 }
 
 interface NavProps {
-  weaponConfig: WeaponConfig;
   configLoader: ConfigLoader;
   // settingsLoader: SettingsLoader;
   setUseAmmoColorsForGraph: BooleanVoidFn;
@@ -45,7 +43,7 @@ function TopNav(props: NavProps) {
   const [saveFocused, setSaveFocused] = useState(false);
   const [saveInputValue, setSaveInputValue] = useState("");
   const theme = useContext(ThemeContext);
-
+  const configurator = useContext(ConfiguratorContext);
   // const [configsList, setConfigsList] = useState(
   //   useMemo(() => props.configLoader.listConfigs(), [])
   // );
@@ -63,7 +61,7 @@ function TopNav(props: NavProps) {
           key={weapon.name}
           onClick={() => {
             const stats = GetInitialStatsForWeapon(weapon);
-            props.weaponConfig.AddWeapon({
+            configurator.AddWeapon({
               name: weapon.name,
               visible: true,
               barrelType: stats.barrelType,
@@ -99,7 +97,7 @@ function TopNav(props: NavProps) {
                     });
                   }
                 }
-                props.weaponConfig.BulkAddWeapon(toAdd);
+                configurator.BulkAddWeapon(toAdd);
               }}
             >
               Add All
@@ -131,7 +129,7 @@ function TopNav(props: NavProps) {
               ammoType: stats.ammoType,
             });
 
-            props.weaponConfig.BulkAddWeapon(toAdd);
+            configurator.BulkAddWeapon(toAdd);
           }
         }
       }, []);

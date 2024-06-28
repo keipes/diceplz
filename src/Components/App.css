@@ -18,7 +18,8 @@
 .chart-container {
   position: relative;
   /* height: 30vh; */
-  height: 600px;
+  /* height: 4800px; */
+  height: 1200px;
   width: 80vw;
   max-width: 1280px;
 }

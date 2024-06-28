@@ -5,7 +5,6 @@ import {
   GetStatsForConfiguration,
   WeaponStats,
 } from "../../Data/WeaponData.ts";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useContext, useState } from "react";
@@ -13,11 +12,10 @@ import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { TTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface TTKChartProps {
-  weaponConfigurations: Map<String, WeaponConfiguration>;
   title: string;
   modifiers: Modifiers;
   settings: Settings;
@@ -47,7 +45,8 @@ function TTKChart(props: TTKChartProps) {
   let seenBurst = false;
   let seenSingle = false;
   let selectedFireMode = _selectedFireMode;
-  for (const [_id, config] of props.weaponConfigurations) {
+  const configurations = useContext(ConfiguratorContext);
+  for (const [_id, config] of configurations.weaponConfigurations) {
     const stats = GetStatsForConfiguration(config);
     seenAuto = seenAuto || typeof stats.rpmAuto === "number";
     seenBurst = seenBurst || typeof stats.rpmBurst === "number";
@@ -94,14 +93,14 @@ function TTKChart(props: TTKChartProps) {
       break;
   }
   const requiredRanges = RequiredRanges(
-    props.weaponConfigurations,
+    configurations.weaponConfigurations,
     (config, damage) => {
       const stat = GetStatsForConfiguration(config);
       return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
-  for (const [_id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     seenAuto = seenAuto || typeof stats.rpmAuto === "number";
@@ -109,7 +108,7 @@ function TTKChart(props: TTKChartProps) {
     seenSingle = seenSingle || typeof stats.rpmSingle === "number";
   }
   const configColors = new Map();
-  for (const [_id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];

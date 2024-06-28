@@ -29,12 +29,16 @@ interface StatScorer {
   (config: WeaponConfiguration, stats: WeaponStats): number;
 }
 
+interface ConfigFilter {
+  (config: WeaponConfiguration): boolean;
+}
+
 interface MaximizingFn {
   (scorer: StatScorer): void;
 }
 
 interface Selector {
-  (stats: WeaponStats): boolean;
+  (name: string, stats: WeaponStats): boolean;
 }
 
 interface SelectingFn {
@@ -43,6 +47,7 @@ interface SelectingFn {
 
 interface WeaponConfig {
   weaponConfigurations: Map<string, WeaponConfiguration>;
+
   AddWeapon: AddWeaponFn;
   BulkAddWeapon: BulkAddWeaponFn;
   RemoveWeapon: RemoveWeaponFn;
@@ -51,6 +56,8 @@ interface WeaponConfig {
   Reset: ResetFn;
   Maximize: MaximizingFn;
   Select: SelectingFn;
+  Filter: (filterFn: ConfigFilter) => void;
+  ForEach: (fn: (config: WeaponConfiguration) => void) => void;
 }
 
 interface SetConfigurationsFn {
@@ -160,14 +167,16 @@ class WeaponConfigurations implements WeaponConfig {
   // From existing weapons, select all configs which match the selector. May have more configs in configurator window afterwards.
   Select(selector: Selector) {
     const configurations = new Map();
+    // const configurationMap = new Map();
     const seenWeapons = new Set<string>();
     for (let [_, config] of this.weaponConfigurations) {
       seenWeapons.add(config.name);
+      // configurationMap.set(config.name, config);
     }
     for (let name of seenWeapons) {
       const weapon = GetWeaponByName(name);
       for (const stat of weapon.stats) {
-        if (selector(stat)) {
+        if (selector(name, stat)) {
           AddConfigToMap(
             {
               name,
@@ -178,6 +187,35 @@ class WeaponConfigurations implements WeaponConfig {
             configurations
           );
         }
+      }
+    }
+    this.setWeaponConfigurations(configurations);
+  }
+
+  ForEach(fn: (config: WeaponConfiguration) => void) {
+    this.weaponConfigurations.forEach((value, _) => {
+      fn(value);
+    });
+  }
+
+  Filter(filterFn: ConfigFilter) {
+    const configurations = new Map();
+    const seenConfigs = new Set<string>();
+    for (let [id, config] of this.weaponConfigurations) {
+      // const weapon = GetWeaponByName(config.name);
+      let cfgKey = `${config.name}-${config.barrelType}-${config.ammoType}`;
+      if (filterFn(config) && !seenConfigs.has(cfgKey)) {
+        // AddConfigToMap(
+        //   {
+        //     name: config.name,
+        //     barrelType: config.barrelType,
+        //     ammoType: config.ammoType,
+        //     visible: true,
+        //   },
+        //   configurations
+        // );
+        configurations.set(id, config);
+        seenConfigs.add(cfgKey);
       }
     }
     this.setWeaponConfigurations(configurations);

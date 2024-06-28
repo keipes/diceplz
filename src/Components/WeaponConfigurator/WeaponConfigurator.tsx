@@ -1,18 +1,17 @@
 import "./WeaponConfigurator.css";
 import Weapon from "./Weapon";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
 import AutoConfigure from "./AutoConfigure";
-import { WeaponConfig } from "../../Data/WeaponConfiguration";
 import { Modifiers } from "../../Data/ConfigLoader";
+import { ConfiguratorContext } from "../App";
 
 interface SetBottomPaddingFn {
   (padding: number): void;
 }
 
 interface WeaponConfiguratorProps {
-  weaponConfig: WeaponConfig;
   open: boolean;
   setOpen: SetOpenFn;
   setBottomPadding: SetBottomPaddingFn;
@@ -56,15 +55,10 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
   const [dragging, setDragging] = useState(false);
   const [height, setHeight] = useState(window.innerHeight / 3);
   const [configOpen, setConfigOpen] = useState(false);
-
-  for (const [id, config] of props.weaponConfig.weaponConfigurations) {
+  const configurator = useContext(ConfiguratorContext);
+  for (const [id, config] of configurator.weaponConfigurations) {
     weaponsDisplay.push(
-      <Weapon
-        id={id}
-        config={config}
-        key={id}
-        weaponConfig={props.weaponConfig}
-      />
+      <Weapon id={id} config={config} key={id} weaponConfig={configurator} />
     );
   }
   function toggle() {
@@ -137,7 +131,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
           <span
             onMouseDown={dontDragKids}
             className="configurator-clear-all hover-red"
-            onClick={props.weaponConfig.Reset.bind(props.weaponConfig)}
+            onClick={configurator.Reset.bind(configurator)}
           >
             Clear All
           </span>

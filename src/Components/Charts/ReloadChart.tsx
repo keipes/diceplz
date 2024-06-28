@@ -7,16 +7,14 @@ import {
 } from "../../Data/WeaponData.ts";
 import { useContext, useState } from "react";
 // import "./ReloadChart.css";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface ReloadChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   settings: Settings;
 }
 
@@ -33,7 +31,8 @@ function ReloadChart(props: ReloadChartProps) {
   const weaponData: SortableWeaponData[] = [];
   let seenEmpty = false;
   let seenTactical = false;
-  for (const [_, config] of props.weaponConfigurations) {
+  const configurations = useContext(ConfiguratorContext);
+  for (const [_, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     weaponData.push({ config: config, stats: stats });

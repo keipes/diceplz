@@ -34,13 +34,7 @@ import {
 } from "../Data/SettingsLoader.ts";
 
 import "../Util/CustomPositioner.ts";
-import {
-  MaximizingFn,
-  SelectingFn,
-  Selector,
-  StatScorer,
-  WeaponConfigurations,
-} from "../Data/WeaponConfiguration.ts";
+import { WeaponConfigurations } from "../Data/WeaponConfiguration.ts";
 import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 
 ChartJS.register(
@@ -85,25 +79,15 @@ const DarkTheme: Theme = {
 };
 const ThemeContext = createContext(DarkTheme);
 
-interface Configuration {
-  Maximizer: MaximizingFn;
-  Selector: SelectingFn;
-}
-
-const DefaultConfiguratorContext: Configuration = {
-  Maximizer: (_: StatScorer) => {
-    throw new Error("not implemented");
-  },
-  Selector: (_: Selector) => {
-    throw new Error("not implemented");
-  },
-};
-const ConfiguratorContext = createContext(DefaultConfiguratorContext);
+const ConfiguratorContext = createContext(
+  new WeaponConfigurations(new Map(), () => {})
+);
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
+
   const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
@@ -142,11 +126,6 @@ function App() {
     setModifiers
   );
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
-
-  let configurerr: Configuration = {
-    Maximizer: wpnCfg.Maximize.bind(wpnCfg),
-    Selector: wpnCfg.Select.bind(wpnCfg),
-  };
 
   // function GetAllOptimalAtEveryRange() {
   //   const scores: number[] = [];
@@ -228,10 +207,9 @@ function App() {
   }
   return (
     <>
-      <ConfiguratorContext.Provider value={configurerr}>
+      <ConfiguratorContext.Provider value={wpnCfg}>
         <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
           <TopNav
-            weaponConfig={wpnCfg}
             configLoader={configLoader}
             settings={settings}
             setUseAmmoColorsForGraph={(value: boolean) => {
@@ -241,47 +219,20 @@ function App() {
             setModifiers={setModifiers}
           />
           <WeaponConfigurator
-            weaponConfig={wpnCfg}
             open={configuratorOpen}
             setOpen={setConfiguratorOpen}
             setBottomPadding={setBottomPadding}
             modifiers={modifiers}
           />
           <div className={mainContentClass} style={mainContentStyle}>
-            <TTKChart
-              weaponConfigurations={weaponConfigurations}
-              settings={settings}
-              modifiers={modifiers}
-              title={"TTK"}
-            />
-            <BTKChart
-              weaponConfigurations={weaponConfigurations}
-              modifiers={modifiers}
-              settings={settings}
-            />
-            <DamageChart
-              weaponConfigurations={weaponConfigurations}
-              modifiers={modifiers}
-              settings={settings}
-            />
-            <RPMChart
-              weaponConfigurations={weaponConfigurations}
-              settings={settings}
-            />
-            <VelocityChart
-              weaponConfigurations={weaponConfigurations}
-              settings={settings}
-            />
-            <ReloadChart
-              weaponConfigurations={weaponConfigurations}
-              settings={settings}
-            />
-            <MagazineChart
-              weaponConfigurations={weaponConfigurations}
-              settings={settings}
-            />
+            <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
+            <BTKChart modifiers={modifiers} settings={settings} />
+            <DamageChart modifiers={modifiers} settings={settings} />
+            <RPMChart settings={settings} />
+            <VelocityChart settings={settings} />
+            <ReloadChart settings={settings} />
+            <MagazineChart settings={settings} />
             <KillsPerMagChart
-              weaponConfigurations={weaponConfigurations}
               settings={settings}
               modifiers={modifiers}
             ></KillsPerMagChart>

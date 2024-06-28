@@ -2,17 +2,15 @@ import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface VelocityChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   settings: Settings;
 }
 
@@ -23,7 +21,8 @@ function VelocityChart(props: VelocityChartProps) {
   const data = [];
   const backgroundColors = [];
   const weaponData: SortableWeaponData[] = [];
-  for (const [_, config] of props.weaponConfigurations) {
+  const configurations = useContext(ConfiguratorContext);
+  for (const [_, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     weaponData.push({ config: config, stats: stats });

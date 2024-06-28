@@ -2,7 +2,6 @@ import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { BTK } from "../../Util/Conversions.ts";
@@ -10,12 +9,11 @@ import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { useContext } from "react";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import { GetCapacity } from "./SharedTypes.ts";
 
 interface KillsPerMagChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   modifiers: Modifiers;
   settings: Settings;
 }
@@ -23,15 +21,16 @@ interface KillsPerMagChartProps {
 function KillsPerMagChart(props: KillsPerMagChartProps) {
   const theme = useContext(ThemeContext);
   const datasets = [];
+  const configurations = useContext(ConfiguratorContext);
   const requiredRanges = RequiredRanges(
-    props.weaponConfigurations,
+    configurations.weaponConfigurations,
     (config, damage) => {
       return BTK(config, props.modifiers, damage);
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
-  for (const [_id, config] of props.weaponConfigurations) {
+  for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];

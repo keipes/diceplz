@@ -3,16 +3,14 @@ import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { useContext, useState } from "react";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator.tsx";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { ThemeContext } from "../App.tsx";
+import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 
 interface RPMChartProps {
-  weaponConfigurations: Map<string, WeaponConfiguration>;
   settings: Settings;
 }
 
@@ -33,7 +31,8 @@ function RPMChart(props: RPMChartProps) {
   let seenAuto = false;
   let seenBurst = false;
   let seenSingle = false;
-  for (const [_, config] of props.weaponConfigurations) {
+  const configurations = useContext(ConfiguratorContext);
+  for (const [_, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     seenAuto = seenAuto || typeof stats.rpmAuto === "number";
@@ -70,7 +69,7 @@ function RPMChart(props: RPMChartProps) {
     if (props.settings.useAmmoColorsForGraph) {
       color = ConfigAmmoColor(config);
     } else {
-      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)"
+      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)";
     }
     if (showAuto) {
       if (stats.rpmAuto) {
@@ -84,28 +83,20 @@ function RPMChart(props: RPMChartProps) {
     if (showBurst) {
       if (stats.rpmBurst) {
         burstData.push(stats.rpmBurst);
-        burstBackgroundColors.push(
-          color
-        );
+        burstBackgroundColors.push(color);
       } else {
         burstData.push(null);
-        burstBackgroundColors.push(
-          color
-        );
+        burstBackgroundColors.push(color);
       }
     }
 
     if (showSingle) {
       if (stats.rpmSingle) {
         singleData.push(stats.rpmSingle);
-        singleBackgroundColors.push(
-          color
-        );
+        singleBackgroundColors.push(color);
       } else {
         singleData.push(null);
-        singleBackgroundColors.push(
-          color
-        );
+        singleBackgroundColors.push(color);
       }
     }
   }
@@ -167,7 +158,7 @@ function RPMChart(props: RPMChartProps) {
         },
       },
     },
-    scales: GenerateScales("", "rounds", theme.highlightColor)
+    scales: GenerateScales("", "rounds", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">

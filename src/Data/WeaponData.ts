@@ -171,12 +171,29 @@ function AllWeaponDropoffRangeFrequencies() {
   }
 }
 
+// function AllBestConfigurations() {
+//   AllWeaponsProcessor((weapon) => {
+
+//   });
+//   AllWeaponsProcessor((weapon) => {
+//     let best = weapon.stats[0];
+//     for (const stat of weapon.stats) {
+//       if (stat.rpmAuto && stat.rpmAuto > best.rpmAuto!) {
+//         best = stat;
+//       }
+//     }
+//     console.log(weapon.name + " " + best.rpmAuto);
+//   });
+
+// }
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
   GetWeaponByName,
   GetStatsForConfiguration,
   GetInitialStatsForWeapon,
+  AllWeaponsProcessor,
   AllWeaponDropoffRangeFrequencies,
   // WeaponStats,
 };
