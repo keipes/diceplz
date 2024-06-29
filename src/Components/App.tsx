@@ -36,6 +36,7 @@ import {
 import "../Util/CustomPositioner.ts";
 import { WeaponConfigurations } from "../Data/WeaponConfiguration.ts";
 import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
+import KillTempoChart from "./Charts/KillTempoChart.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -82,6 +83,8 @@ const ThemeContext = createContext(DarkTheme);
 const ConfiguratorContext = createContext(
   new WeaponConfigurations(new Map(), () => {})
 );
+
+const SettingsContext = createContext(InitialSettings);
 
 function App() {
   const [modifiers, setModifiers] = useState(DefaultModifiers);
@@ -209,34 +212,41 @@ function App() {
     <>
       <ConfiguratorContext.Provider value={wpnCfg}>
         <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
-          <TopNav
-            configLoader={configLoader}
-            settings={settings}
-            setUseAmmoColorsForGraph={(value: boolean) => {
-              setSettings(SetUseAmmoColorsForGraph(value));
-            }}
-            modifiers={modifiers}
-            setModifiers={setModifiers}
-          />
-          <WeaponConfigurator
-            open={configuratorOpen}
-            setOpen={setConfiguratorOpen}
-            setBottomPadding={setBottomPadding}
-            modifiers={modifiers}
-          />
-          <div className={mainContentClass} style={mainContentStyle}>
-            <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
-            <BTKChart modifiers={modifiers} settings={settings} />
-            <DamageChart modifiers={modifiers} settings={settings} />
-            <RPMChart settings={settings} />
-            <VelocityChart settings={settings} />
-            <ReloadChart settings={settings} />
-            <MagazineChart settings={settings} />
-            <KillsPerMagChart
+          <SettingsContext.Provider value={settings}>
+            <TopNav
+              configLoader={configLoader}
               settings={settings}
+              setUseAmmoColorsForGraph={(value: boolean) => {
+                setSettings(SetUseAmmoColorsForGraph(value));
+              }}
               modifiers={modifiers}
-            ></KillsPerMagChart>
-          </div>
+              setModifiers={setModifiers}
+            />
+            <WeaponConfigurator
+              open={configuratorOpen}
+              setOpen={setConfiguratorOpen}
+              setBottomPadding={setBottomPadding}
+              modifiers={modifiers}
+            />
+            <div className={mainContentClass} style={mainContentStyle}>
+              <TTKChart
+                settings={settings}
+                modifiers={modifiers}
+                title={"TTK"}
+              />
+              <KillTempoChart modifiers={modifiers} settings={settings} />
+              <BTKChart modifiers={modifiers} settings={settings} />
+              <DamageChart modifiers={modifiers} settings={settings} />
+              <RPMChart settings={settings} />
+              <VelocityChart settings={settings} />
+              <ReloadChart settings={settings} />
+              <MagazineChart settings={settings} />
+              <KillsPerMagChart
+                settings={settings}
+                modifiers={modifiers}
+              ></KillsPerMagChart>
+            </div>
+          </SettingsContext.Provider>
         </ThemeContext.Provider>
       </ConfiguratorContext.Provider>
     </>
@@ -245,5 +255,5 @@ function App() {
 
 export default App;
 
-export { ThemeContext, ConfiguratorContext };
+export { ThemeContext, ConfiguratorContext, SettingsContext };
 export type { WeaponSelections };

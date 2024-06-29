@@ -12,6 +12,7 @@ import { useContext } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import { GetCapacity } from "./SharedTypes.ts";
+import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 
 interface KillsPerMagChartProps {
   modifiers: Modifiers;
@@ -19,6 +20,7 @@ interface KillsPerMagChartProps {
 }
 
 function KillsPerMagChart(props: KillsPerMagChartProps) {
+  const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const theme = useContext(ThemeContext);
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
@@ -80,7 +82,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
     }
     datasets.push({
-      label: label,
+      label: config,
       data: data,
       fill: false,
       borderColor: configColors.get(label),
@@ -116,38 +118,51 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
     },
     plugins: {
       tooltip: {
-        backgroundColor: theme.tooltipBg,
-        bodyColor: theme.tooltipBody,
-        titleColor: theme.tooltipTitle,
-        position: "myCustomPositioner",
+        enabled: false,
+        external: tooltipHandler,
+        position: "eventXPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
-          labelColor: (ctx) => {
-            return {
-              borderColor: theme.highlightColor,
-              backgroundColor: configColors.get(ctx.dataset.label),
-            };
-          },
-          title: function (ctx) {
-            const index = ctx[0].dataIndex;
-            return index == highestRangeSeen
-              ? String(ctx[0].dataIndex) + "+ meters"
-              : String(ctx[0].dataIndex) + " meters";
-          },
           label: function (ctx) {
-            let label = ctx.dataset.label || "";
-            if (label) {
-              label += ": ";
-            }
-            if (ctx.parsed.y !== null) {
-              label += ctx.parsed.y;
-            }
-            return label;
+            return [ctx.dataset.label, ctx.parsed.y];
           },
         },
       },
+      // tooltip: {
+      //   backgroundColor: theme.tooltipBg,
+      //   bodyColor: theme.tooltipBody,
+      //   titleColor: theme.tooltipTitle,
+      //   position: "myCustomPositioner",
+      //   itemSort: function (a, b) {
+      //     return (b.raw as number) - (a.raw as number);
+      //   },
+      //   callbacks: {
+      //     labelColor: (ctx) => {
+      //       return {
+      //         borderColor: theme.highlightColor,
+      //         backgroundColor: configColors.get(ctx.dataset.label),
+      //       };
+      //     },
+      //     title: function (ctx) {
+      //       const index = ctx[0].dataIndex;
+      //       return index == highestRangeSeen
+      //         ? String(ctx[0].dataIndex) + "+ meters"
+      //         : String(ctx[0].dataIndex) + " meters";
+      //     },
+      //     label: function (ctx) {
+      //       let label = ctx.dataset.label || "";
+      //       if (label) {
+      //         label += ": ";
+      //       }
+      //       if (ctx.parsed.y !== null) {
+      //         label += ctx.parsed.y;
+      //       }
+      //       return label;
+      //     },
+      //   },
+      // },
     },
     scales: GenerateScales("meters", "kills", theme.highlightColor),
   };
@@ -159,6 +174,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       />
       <div className="chart-container">
         <Line data={chartData} options={options} />
+        <CustomTooltip setTooltipHandler={setTooltipHandler} />
       </div>
     </div>
   );

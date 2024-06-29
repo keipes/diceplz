@@ -2561,6 +2561,7 @@
             "Standard": {
               "magSize": 51,
               "emptyReload": 3,
+              "tacticalReload": 2.69,
               "headshotMultiplier": 1.55
             }
           }

@@ -1,28 +1,27 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
-import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
+import {
+  GetStatsForConfiguration,
+  GetWeaponByName,
+} from "../../Data/WeaponData.ts";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
-import { BTK } from "../../Util/Conversions.ts";
+import { BTK, TTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
-import {
-  CustomTooltip,
-  TooltipHandler,
-  useTooltipHandler,
-} from "./CustomTooltip.tsx";
+import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 
-interface BTKChartProps {
+interface KillTempoChartProps {
   modifiers: Modifiers;
   settings: Settings;
 }
 
-function BTKChart(props: BTKChartProps) {
+function KillTempoChart(props: KillTempoChartProps) {
   const theme = useContext(ThemeContext);
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
@@ -32,44 +31,72 @@ function BTKChart(props: BTKChartProps) {
       return BTK(config, props.modifiers, damage);
     }
   );
+  let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
+    const weapon = GetWeaponByName(config.name);
+    if (!weapon.ammoStats) continue;
+    const ammoStat = weapon.ammoStats[config.ammoType];
+    if (!ammoStat) continue;
+    if (!ammoStat.magSize) continue;
+    if (!ammoStat.tacticalReload) continue;
     const stats = GetStatsForConfiguration(config);
+    // if (!stats.rpmAuto) continue;
+    // const rpm = stats.rpmAuto;
+    if (!stats.rpmSingle) continue;
+    const rpm = stats.rpmSingle;
     const data = [];
-    let lastDamage = 0;
+    let lastValue = 0;
     let lastRange = 0;
     let range = 0;
-    let damage = 0;
+    let value = 0;
+
     for (let dropoff of stats.dropoffs) {
-      damage = BTK(config, props.modifiers, dropoff.damage);
+      // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
+      value = ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
+      const ttk = TTK(config, props.modifiers, dropoff.damage, rpm);
+      const killsPerMag =
+        ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
+      const timeToEmptyMagInSec = (ammoStat?.magSize / rpm) * 60;
+      // const reloadTime = weapon.reloadTime;
+      const killsPerSecond = killsPerMag / timeToEmptyMagInSec;
+      const killTempo =
+        killsPerMag / (timeToEmptyMagInSec + ammoStat.tacticalReload);
+      value = killTempo;
+      value = killsPerSecond / ammoStat.tacticalReload;
+      value =
+        ((killsPerSecond * (timeToEmptyMagInSec / ammoStat.tacticalReload)) /
+          ttk) *
+        1000;
+      value = Math.round(value * 100) / 100;
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
-          data.push(lastDamage);
+          data.push(lastValue);
         } else {
           data.push(null);
         }
       }
-      lastDamage = damage;
+      lastValue = value;
       lastRange = range;
       if (requiredRanges.has(range)) {
-        data.push(lastDamage);
+        data.push(lastValue);
       } else {
         data.push(null);
       }
     }
-    if (damage > 0) {
+    if (value > 0) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
         if (requiredRanges.has(i)) {
-          data.push(damage);
+          data.push(value);
         } else {
           data.push(null);
         }
       }
       if (range != highestRangeSeen) {
-        data.push(damage);
+        data.push(value);
       }
     }
     const label = ConfigDisplayName(config);
@@ -100,7 +127,6 @@ function BTKChart(props: BTKChartProps) {
     labels: labels,
     datasets: datasets,
   };
-  const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
@@ -117,64 +143,48 @@ function BTKChart(props: BTKChartProps) {
     plugins: {
       tooltip: {
         enabled: false,
+        // external: externalTooltipHandler,
         external: tooltipHandler,
+        // backgroundColor: theme.tooltipBg,
+        // bodyColor: theme.tooltipBody,
+        // titleColor: theme.tooltipTitle,
         position: "eventXPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
+          //   labelColor: (ctx) => {
+          //     return {
+          //       borderColor: theme.highlightColor,
+          //       backgroundColor: configColors.get(ctx.dataset.label),
+          //     };
+          //   },
+          //   title: function (ctx) {
+          //     const index = ctx[0].dataIndex;
+          //     return index == highestRangeSeen
+          //       ? String(ctx[0].dataIndex) + "+ meters"
+          //       : String(ctx[0].dataIndex) + " meters";
+          //   },
           label: function (ctx) {
             return [ctx.dataset.label, ctx.parsed.y];
+            // let label = ctx.dataset.label || "";
+            // const value = ctx.parsed.y;
+            // if (label) {
+            //   label += "$$$$";
+            // }
+            // if (ctx.parsed.y !== null) {
+            //   label += ctx.parsed.y;
+            // }
+            // return [label, "foobar"];
           },
         },
       },
     },
-    //   tooltip: {
-    //     backgroundColor: theme.tooltipBg,
-    //     bodyColor: theme.tooltipBody,
-    //     titleColor: theme.tooltipTitle,
-    //     position: "myCustomPositioner",
-    //     itemSort: function (a, b) {
-    //       return (b.raw as number) - (a.raw as number);
-    //     },
-    //     callbacks: {
-    //       labelColor: (ctx) => {
-    //         return {
-    //           borderColor: theme.highlightColor,
-    //           backgroundColor: configColors.get(ctx.dataset.label),
-    //         };
-    //       },
-    //       title: function (ctx) {
-    //         const index = ctx[0].dataIndex;
-    //         return index == highestRangeSeen
-    //           ? String(ctx[0].dataIndex) + "+ meters"
-    //           : String(ctx[0].dataIndex) + " meters";
-    //       },
-    //       label: function (ctx) {
-    //         let label = ctx.dataset.label || "";
-    //         if (label) {
-    //           label += ": ";
-    //         }
-    //         if (ctx.parsed.y !== null) {
-    //           label += ctx.parsed.y;
-    //         }
-    //         return label;
-    //       },
-    //     },
-    //   },
-    // },
     scales: GenerateScales("meters", "bullets", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">
-      <ChartHeader
-        title={"BTK"}
-        description="BTK (Bullets to Kill) is calculated by dividing the target's health
-          points by the weapon's damage per bullet. The result, rounded up to
-          the nearest whole number, represents the minimum bullets needed to
-          eliminate the target. For instance, if a weapon deals 25 damage per
-          bullet and the target has 100 health points, the BTK would be 4."
-      />
+      <ChartHeader title={"Killiness"} description="" />
       <div className="chart-container">
         <Line data={chartData} options={options} />
         <CustomTooltip setTooltipHandler={setTooltipHandler} />
@@ -183,4 +193,4 @@ function BTKChart(props: BTKChartProps) {
   );
 }
 
-export default BTKChart;
+export default KillTempoChart;

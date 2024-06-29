@@ -22,7 +22,12 @@ const StringHue = function (str: string | undefined) {
 };
 
 const ConfigHSL = function (config: WeaponConfiguration) {
-  return "hsl(" + StringHue(ConfigDisplayName(config)) + ", 50%, 50%)";
+  return ConfigHSLFromName(ConfigDisplayName(config));
+  // return "hsl(" + StringHue(ConfigDisplayName(config)) + ", 50%, 50%)";
+};
+
+const ConfigHSLFromName = function (name: string) {
+  return "hsl(" + StringHue(name) + ", 50%, 50%)";
 };
 
 const ConfigAmmoColor = function (config: WeaponConfiguration) {
@@ -55,4 +60,4 @@ const ConfigAmmoColor = function (config: WeaponConfiguration) {
 };
 
 export default StringHue;
-export { ConfigHSL, ConfigAmmoColor };
+export { ConfigHSL, ConfigHSLFromName, ConfigAmmoColor };
