@@ -17,8 +17,9 @@ const cyrb53 = function (str: string, seed = 0) {
 };
 
 const StringHue = function (str: string | undefined) {
-  if (str === undefined) return 255;
-  return (cyrb53(str) / Math.pow(2, 53)) * 255;
+  if (str === undefined) return 360;
+  const hue = (cyrb53(str) / Math.pow(2, 53)) * 360;
+  return hue;
 };
 
 const ConfigHSL = function (config: WeaponConfiguration) {
