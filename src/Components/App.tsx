@@ -165,17 +165,18 @@ function App() {
                 modifiers={modifiers}
                 title={"TTK"}
               />
-              <KillTempoChart modifiers={modifiers} settings={settings} />
               <BTKChart modifiers={modifiers} settings={settings} />
               <DamageChart modifiers={modifiers} settings={settings} />
-              <RPMChart settings={settings} />
-              <VelocityChart settings={settings} />
-              <ReloadChart settings={settings} />
-              <MagazineChart settings={settings} />
               <KillsPerMagChart
                 settings={settings}
                 modifiers={modifiers}
               ></KillsPerMagChart>
+              <KillTempoChart modifiers={modifiers} settings={settings} />
+              <RPMChart settings={settings} />
+              <VelocityChart settings={settings} />
+              <ReloadChart settings={settings} />
+              <MagazineChart settings={settings} />
+
               <div className={"blurb"}>
                 <p>
                   Thanks for checking out my 2042 weapon stats page. All weapon

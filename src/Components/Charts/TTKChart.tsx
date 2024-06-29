@@ -201,7 +201,7 @@ function TTKChart(props: TTKChartProps) {
         external: tooltipHandler,
         position: "eventXPositioner",
         itemSort: function (a, b) {
-          return (b.raw as number) - (a.raw as number);
+          return (a.raw as number) - (b.raw as number);
         },
         callbacks: {
           label: function (ctx) {
@@ -258,7 +258,7 @@ function TTKChart(props: TTKChartProps) {
         <Line data={chartData} options={options} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
-          invertScaleColors={true}
+          invertScaleColors={false}
         />
       </div>
     </div>
