@@ -171,8 +171,7 @@ function CustomTooltip(props: TooltipProps) {
           {parseFloat(value).toFixed(precision)}
         </span>
         <span className="tooltipLineName">
-          {ConfigDisplayName(config as unknown as WeaponConfiguration)}{" "}
-          invertScaleColors={false}
+          {ConfigDisplayName(config as unknown as WeaponConfiguration)}
         </span>
       </span>
     );
