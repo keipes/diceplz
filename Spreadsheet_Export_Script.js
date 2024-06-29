@@ -273,6 +273,9 @@ class WeaponSheetExporter {
           if (isNaN(reload)) reload = undefined;
         }
         m = reloadValue.match(/[\d^ ,]+\W+\(tactical\)/);
+        if (!m || m.length == 0) {
+          m = reloadValue.match(/[\d^ ,]+\W+\(rest\)/); // special case for P90 error in google sheet
+        }
         if (m && m.length > 0) {
           const valStr = m[0].replace(",", ".");
           reloadTactical = parseFloat(valStr);
