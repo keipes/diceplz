@@ -37,6 +37,7 @@ function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
   ];
 }
 
+let STICK_LEFT = false; // shared by all charts so tooltips don't flop sides
 const COLUMN_WIDTH_PX = 300;
 const COLUMN_ROWS = 20;
 function MaxColumns() {
@@ -58,7 +59,6 @@ function CustomTooltip(props: TooltipProps) {
   const [titleLines, setTitleLines] = useState<string[]>([]);
   const [precision, setPrecision] = useState(0);
   const settingsContext = useContext(SettingsContext);
-  const [stickLeft, setStickLeft] = useState(false);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(Infinity);
   const [ascending, setAscending] = useState(true);
@@ -70,7 +70,10 @@ function CustomTooltip(props: TooltipProps) {
       setTooltipStyle({ ...styleClone, ...{ opacity: 0 } });
     } else {
       if (tooltip.body) {
-        const _titleLines = tooltip.title || [];
+        let _titleLines = tooltip.title || [];
+        if (parseFloat(_titleLines[0]) === chart.scales.x.max) {
+          _titleLines[0] += "+";
+        }
         let _precision = 0;
         let _maxValue = 0;
         let _minValue = Infinity;
@@ -92,8 +95,13 @@ function CustomTooltip(props: TooltipProps) {
           }
           return [config, value];
         });
-        setMaxValue(_maxValue);
-        setMinValue(_minValue);
+        console.log(
+          chart.scales.x.max,
+          chart.scales.x.min,
+          chart.scales.x.ascending
+        );
+        setMaxValue(chart.scales.y.max);
+        setMinValue(chart.scales.y.min);
         setAscending(_ascending);
         setPrecision(_precision);
         setBodyLines(_bodyLines);
@@ -103,17 +111,14 @@ function CustomTooltip(props: TooltipProps) {
         const width = COLUMN_WIDTH_PX * numColumns;
         let left = positionX + tooltip.caretX;
         let top = positionY + tooltip.caretY;
-
-        // const tooltip = this;
         const padding = tooltip.chart.width / 80;
         let offset = padding;
         if (tooltip.caretX + COLUMN_WIDTH_PX + padding > tooltip.chart.width) {
-          setStickLeft(true);
-          // } else if (tooltip.caretX - COLUMN_WIDTH_PX - padding < 0) {
-        } else {
-          setStickLeft(false);
+          STICK_LEFT = true;
+        } else if (tooltip.caretX - COLUMN_WIDTH_PX - padding < 0) {
+          STICK_LEFT = false;
         }
-        if (stickLeft) {
+        if (STICK_LEFT) {
           offset = -(COLUMN_WIDTH_PX + padding);
         }
         left = left + offset;
@@ -155,7 +160,6 @@ function CustomTooltip(props: TooltipProps) {
       score = 1 - score;
     }
     const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
-    console.log(valueColor);
     tooltipColumns[column].push(
       <span
         className="tooltipLine"
