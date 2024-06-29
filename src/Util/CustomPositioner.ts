@@ -62,7 +62,6 @@ Tooltip.positioners.eventXPositioner = function (
   // }
   return {
     x: eventPosition.x,
-    x: eventPosition.x,
     // y: tooltip.chart.chartArea.top
     y: eventPosition.y,
     // xAlign: "center",

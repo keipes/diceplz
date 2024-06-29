@@ -245,6 +245,14 @@ function App() {
                 settings={settings}
                 modifiers={modifiers}
               ></KillsPerMagChart>
+              <div className={"blurb"}>
+                <p>
+                  Thanks for checking out my 2042 weapon stats page. All weapon
+                  stats have been painstakingly collected by Sorrow and others
+                  on the Battlefield 2043 Discord server. Links to the source
+                  Google Sheet, and Discord Server are in the header bar.
+                </p>
+              </div>
             </div>
           </SettingsContext.Provider>
         </ThemeContext.Provider>

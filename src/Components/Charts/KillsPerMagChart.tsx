@@ -82,7 +82,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
     }
     datasets.push({
-      label: config,
+      label: config as unknown as string,
       data: data,
       fill: false,
       borderColor: configColors.get(label),
@@ -126,7 +126,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
         },
         callbacks: {
           label: function (ctx) {
-            return [ctx.dataset.label, ctx.parsed.y];
+            return [ctx.dataset.label, ctx.parsed.y] as unknown as string;
           },
         },
       },
@@ -174,7 +174,10 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       />
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          invertScaleColors={false}
+        />
       </div>
     </div>
   );

@@ -5,6 +5,21 @@
   text-align: center;
 }
 
+.blurb {
+  margin: 0 auto;
+  max-width: 800px;
+  /* padding: 1rem; */
+  color: var(--font-color);
+}
+
+.blurb p {
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
 .chart-outer-container {
   /* background-color: rgba(0, 0, 0, 0.7); */
   /* background-color: #01010180; */
@@ -35,8 +50,8 @@
 
 .main-content {
   margin-top: 4.5rem;
-  margin-left: 2em;
-  margin-right: 1em;
+  /* margin-left: 2em;
+  margin-right: 1em; */
   /* padding-bottom: 30vh; */
   /* transition: all 0.2s ease; */
 }

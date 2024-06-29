@@ -11,10 +11,16 @@ import { BTK, TTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
+import {
+  RPMSelectorFn,
+  SELECTOR_AUTO,
+  SELECTOR_BURST,
+  SELECTOR_SINGLE,
+} from "./TTKChart.tsx";
 
 interface KillTempoChartProps {
   modifiers: Modifiers;
@@ -31,6 +37,9 @@ function KillTempoChart(props: KillTempoChartProps) {
       return BTK(config, props.modifiers, damage);
     }
   );
+  const [rpmSelector, setRpmSelector] = useState<RPMSelectorFn>(
+    () => SELECTOR_AUTO
+  );
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
@@ -45,8 +54,13 @@ function KillTempoChart(props: KillTempoChartProps) {
     const stats = GetStatsForConfiguration(config);
     // if (!stats.rpmAuto) continue;
     // const rpm = stats.rpmAuto;
-    if (!stats.rpmSingle) continue;
-    const rpm = stats.rpmSingle;
+    // if (rpm < 800) continue;
+    if (rpmSelector === SELECTOR_AUTO && !stats.rpmAuto) continue;
+    if (rpmSelector === SELECTOR_BURST && !stats.rpmBurst) continue;
+    if (rpmSelector === SELECTOR_SINGLE && !stats.rpmSingle) continue;
+    // if (!stats.rpmSingle) continue;
+    // const rpm = stats.rpmSingle;
+    const rpm = rpmSelector(stats) as number;
     const data = [];
     let lastValue = 0;
     let lastRange = 0;
@@ -57,9 +71,12 @@ function KillTempoChart(props: KillTempoChartProps) {
       // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
       value = ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
       const ttk = TTK(config, props.modifiers, dropoff.damage, rpm);
+      const accuracy = 0.3;
       const killsPerMag =
-        ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
-      const timeToEmptyMagInSec = (ammoStat?.magSize / rpm) * 60;
+        (ammoStat?.magSize * accuracy) /
+        BTK(config, props.modifiers, dropoff.damage);
+      const timeToEmptyMagInSec =
+        (Math.max(ammoStat?.magSize - 1, 1) / rpm) * 60;
       // const reloadTime = weapon.reloadTime;
       const killsPerSecond = killsPerMag / timeToEmptyMagInSec;
       const killTempo =
@@ -70,7 +87,19 @@ function KillTempoChart(props: KillTempoChartProps) {
         ((killsPerSecond * (timeToEmptyMagInSec / ammoStat.tacticalReload)) /
           ttk) *
         1000;
-      value = Math.round(value * 100) / 100;
+      value =
+        (killsPerMag / 50) *
+        // (timeToEmptyMagInSec / ammoStat.tacticalReload) *
+        (200 / ttk) *
+        (2 / ammoStat.tacticalReload) *
+        (timeToEmptyMagInSec / 20) *
+        1000;
+      value =
+        (killsPerMag / timeToEmptyMagInSec) *
+        (timeToEmptyMagInSec / ammoStat.tacticalReload) *
+        10;
+      // value = timeToEmptyMagInSec;
+      // value = killsPerSecond * (timeToEmptyMagInSec / ammoStat.tacticalReload);
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
@@ -106,7 +135,7 @@ function KillTempoChart(props: KillTempoChartProps) {
       configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
     }
     datasets.push({
-      label: config,
+      label: config as unknown as string,
       data: data,
       fill: false,
       borderColor: configColors.get(label),
@@ -143,51 +172,62 @@ function KillTempoChart(props: KillTempoChartProps) {
     plugins: {
       tooltip: {
         enabled: false,
-        // external: externalTooltipHandler,
         external: tooltipHandler,
-        // backgroundColor: theme.tooltipBg,
-        // bodyColor: theme.tooltipBody,
-        // titleColor: theme.tooltipTitle,
         position: "eventXPositioner",
         itemSort: function (a, b) {
           return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
-          //   labelColor: (ctx) => {
-          //     return {
-          //       borderColor: theme.highlightColor,
-          //       backgroundColor: configColors.get(ctx.dataset.label),
-          //     };
-          //   },
-          //   title: function (ctx) {
-          //     const index = ctx[0].dataIndex;
-          //     return index == highestRangeSeen
-          //       ? String(ctx[0].dataIndex) + "+ meters"
-          //       : String(ctx[0].dataIndex) + " meters";
-          //   },
           label: function (ctx) {
-            return [ctx.dataset.label, ctx.parsed.y];
-            // let label = ctx.dataset.label || "";
-            // const value = ctx.parsed.y;
-            // if (label) {
-            //   label += "$$$$";
-            // }
-            // if (ctx.parsed.y !== null) {
-            //   label += ctx.parsed.y;
-            // }
-            // return [label, "foobar"];
+            return [ctx.dataset.label, ctx.parsed.y] as unknown as string;
           },
         },
       },
     },
-    scales: GenerateScales("meters", "bullets", theme.highlightColor),
+    scales: GenerateScales("meters", "violence", theme.highlightColor),
   };
   return (
     <div className="chart-outer-container">
-      <ChartHeader title={"Killiness"} description="" />
+      <ChartHeader
+        title={"Killiness"}
+        description="Sustained kill potential. The exact calculation is subject to change, but it's based on the weapon's RPM, magazine size, reload time, and bullets to kill. Higher is better."
+      />
+      <button
+        className={
+          rpmSelector === SELECTOR_AUTO
+            ? "abs-selector btn-enabled"
+            : "abs-selector"
+        }
+        onClick={() => setRpmSelector(() => SELECTOR_AUTO)}
+      >
+        Auto
+      </button>
+      <button
+        className={
+          rpmSelector === SELECTOR_SINGLE
+            ? "abs-selector btn-enabled"
+            : "abs-selector"
+        }
+        onClick={() => setRpmSelector(() => SELECTOR_SINGLE)}
+      >
+        Single
+      </button>
+      <button
+        className={
+          rpmSelector === SELECTOR_BURST
+            ? "abs-selector btn-enabled"
+            : "abs-selector"
+        }
+        onClick={() => setRpmSelector(() => SELECTOR_BURST)}
+      >
+        Burst
+      </button>
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          invertScaleColors={false}
+        />
       </div>
     </div>
   );

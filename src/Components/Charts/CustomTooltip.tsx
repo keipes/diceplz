@@ -4,6 +4,7 @@ import { ReactElement, useContext, useState } from "react";
 import { ConfigAmmoColor, ConfigHSL } from "../../Util/StringColor";
 import { ConfigDisplayName } from "../../Util/LabelMaker";
 import { SettingsContext } from "../App";
+import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
 
 interface TooltipContext {
   chart: Chart;
@@ -14,13 +15,20 @@ interface TooltipHandler {
   (context: TooltipContext): void;
 }
 
-interface TooltipProps {
-  setTooltipHandler: (handler: TooltipHandler) => void;
+interface TooltipHandlerSetter {
+  (handler: TooltipHandler): void;
 }
 
-function useTooltipHandler() {
+interface TooltipProps {
+  setTooltipHandler: TooltipHandlerSetter;
+  invertScaleColors: boolean;
+}
+
+function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
   let tooltipHandler: TooltipHandler = (_) => {};
-  let registerTooltipHandler = (handler: TooltipHandler) => {
+  let registerTooltipHandler: TooltipHandlerSetter = (
+    handler: TooltipHandler
+  ) => {
     tooltipHandler = handler;
   };
   return [
@@ -42,47 +50,90 @@ function NumRows(numLines: number) {
   return Math.ceil(numLines / NumColumns(numLines));
 }
 
+// const CustomTooltip: FC<TooltipProps> = ({  invertScaleColors: true}) => {
 function CustomTooltip(props: TooltipProps) {
   const [tooltipStyle, setTooltipStyle] = useState({
     opacity: 0,
   });
-  const [bodyLines, setBodyLines] = useState<string[]>([]);
+  const [bodyLines, setBodyLines] = useState<string[][]>([]);
   const [titleLines, setTitleLines] = useState<string[]>([]);
   const [precision, setPrecision] = useState(0);
   const settingsContext = useContext(SettingsContext);
+  const [stickLeft, setStickLeft] = useState(false);
+  const [maxValue, setMaxValue] = useState(0);
+  const [minValue, setMinValue] = useState(Infinity);
+  const [ascending, setAscending] = useState(true);
+  //   let maxValue = 0;
+  //   let minValue = Infinity;
   props.setTooltipHandler((context: TooltipContext) => {
     const { chart, tooltip } = context;
     const styleClone = structuredClone(tooltipStyle);
+
     if (tooltip.opacity === 0) {
       setTooltipStyle({ ...styleClone, ...{ opacity: 0 } });
     } else {
       if (tooltip.body) {
         const _titleLines = tooltip.title || [];
         let _precision = 0;
+        let _maxValue = 0;
+        let _minValue = Infinity;
+        let _ascending = true;
         const _bodyLines = tooltip.body.map((b) => {
           const [config, value] = b.lines;
-          if (value - Math.floor(value) !== 0) {
+          let _value = parseFloat(value);
+          if (_value - Math.floor(_value) !== 0) {
             _precision = 2;
+          }
+          if (_value > _maxValue) {
+            _maxValue = _value;
+          }
+          if (_value < _minValue) {
+            _minValue = _value;
+          }
+          if (_value < _maxValue && _ascending) {
+            _ascending = false;
           }
           return [config, value];
         });
+        setMaxValue(_maxValue);
+        setMinValue(_minValue);
+        setAscending(_ascending);
         setPrecision(_precision);
         setBodyLines(_bodyLines);
         setTitleLines(_titleLines);
         const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
         const numColumns = NumColumns(_bodyLines.length);
         const width = COLUMN_WIDTH_PX * numColumns;
-        let left = positionX + tooltip.caretX + 4;
+        let left = positionX + tooltip.caretX;
+        let top = positionY + tooltip.caretY;
+
+        // const tooltip = this;
+        const padding = tooltip.chart.width / 80;
+        let offset = padding;
+        if (tooltip.caretX + COLUMN_WIDTH_PX + padding > tooltip.chart.width) {
+          setStickLeft(true);
+          // } else if (tooltip.caretX - COLUMN_WIDTH_PX - padding < 0) {
+        } else {
+          setStickLeft(false);
+        }
+        if (stickLeft) {
+          offset = -(COLUMN_WIDTH_PX + padding);
+        }
+        left = left + offset;
+
+        // top = 0;
         if (numColumns > 1) {
           left = positionX + chart.width / 2 - width / 2;
+          //   top = top + 20;
+        } else {
+          top = top - 100;
         }
         setTooltipStyle({
           ...styleClone,
           ...{
             opacity: 1,
             left: left + "px",
-            top: positionY + tooltip.caretY + 4 + "px",
-            font: tooltip.options.bodyFont.string,
+            top: top + "px",
             width: width + "px",
           },
         });
@@ -97,21 +148,38 @@ function CustomTooltip(props: TooltipProps) {
       column++;
       tooltipColumns[column] = [];
     }
-    const [config, value] = bodyLines[i];
-    let bgColor = ConfigHSL(config);
+    let [config, value] = bodyLines[i];
+    let bgColor = ConfigHSL(config as unknown as WeaponConfiguration);
     if (settingsContext.useAmmoColorsForGraph) {
-      bgColor = ConfigAmmoColor(config);
+      bgColor = ConfigAmmoColor(config as unknown as WeaponConfiguration);
     }
+    let score = (parseFloat(value) - minValue) / (maxValue - minValue);
+    if (
+      (ascending && !props.invertScaleColors) ||
+      (!ascending && props.invertScaleColors)
+    ) {
+      score = 1 - score;
+    }
+    const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
+    console.log(valueColor);
     tooltipColumns[column].push(
       <span
         className="tooltipLine"
         key={"key-" + i}
         style={{ backgroundColor: bgColor }}
       >
-        <span className="tooltipLineValue">
+        <span
+          className="tooltipLineValue"
+          style={{
+            color: valueColor,
+          }}
+        >
           {parseFloat(value).toFixed(precision)}
         </span>
-        <span className="tooltipLineName">{ConfigDisplayName(config)}</span>
+        <span className="tooltipLineName">
+          {ConfigDisplayName(config as unknown as WeaponConfiguration)}{" "}
+          invertScaleColors={false}
+        </span>
       </span>
     );
   }

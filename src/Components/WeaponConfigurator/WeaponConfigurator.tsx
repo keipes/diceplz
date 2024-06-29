@@ -83,7 +83,7 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
     if (dragging) {
       const newHeight = window.innerHeight - e.clientY + offset;
       setHeight(newHeight);
-      props.setBottomPadding(newHeight);
+      props.setBottomPadding(newHeight * 3);
     }
   };
   mouseUpHandler = (_) => {
