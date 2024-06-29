@@ -95,11 +95,6 @@ function CustomTooltip(props: TooltipProps) {
           }
           return [config, value];
         });
-        console.log(
-          chart.scales.x.max,
-          chart.scales.x.min,
-          chart.scales.x.ascending
-        );
         setMaxValue(chart.scales.y.max);
         setMinValue(chart.scales.y.min);
         setAscending(_ascending);
