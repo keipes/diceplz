@@ -32,8 +32,6 @@ function MagazineChart(props: MagazineChartProps) {
     weaponData.push({ config: config, stats: stats });
   }
   weaponData.sort((a, b) => {
-    // const aValues: number[] = [];
-    // const bValues: number[] = [];
     const aWeapon = GetWeaponByName(a.config.name);
     let aCapacity = 0;
     if (aWeapon.ammoStats) {
@@ -55,8 +53,6 @@ function MagazineChart(props: MagazineChartProps) {
       }
     }
     return bCapacity - aCapacity;
-    // return Math.max(...aValues) - Math.max(...bValues);
-    // return (b.stats.velocity || 0) - (a.stats.velocity || 0);
   });
   for (const wd of weaponData) {
     const weapon = GetWeaponByName(wd.config.name);

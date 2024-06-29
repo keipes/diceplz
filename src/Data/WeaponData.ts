@@ -184,7 +184,6 @@ function AllWeaponDropoffRangeFrequencies() {
 //     }
 //     console.log(weapon.name + " " + best.rpmAuto);
 //   });
-
 // }
 
 export {

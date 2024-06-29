@@ -6,7 +6,6 @@ import {
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
 import { useContext, useState } from "react";
-// import "./ReloadChart.css";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";

@@ -24,7 +24,6 @@ const StringHue = function (str: string | undefined) {
 
 const ConfigHSL = function (config: WeaponConfiguration) {
   return ConfigHSLFromName(ConfigDisplayName(config));
-  // return "hsl(" + StringHue(ConfigDisplayName(config)) + ", 50%, 50%)";
 };
 
 const ConfigHSLFromName = function (name: string) {

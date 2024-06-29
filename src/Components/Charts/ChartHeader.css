@@ -12,7 +12,6 @@
 
 .chart-description {
   position: fixed;
-  /* width: 0%; */
   top: 0;
   margin-right: 2rem;
   background-color: var(--chart-desc-bg);

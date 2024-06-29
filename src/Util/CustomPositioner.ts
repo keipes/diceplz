@@ -37,8 +37,6 @@ Tooltip.positioners.myCustomPositioner = function (
   }
   return {
     x: eventPosition.x + offset,
-    // x: eventPosition.x,
-    // y: tooltip.chart.chartArea.top
     y: eventPosition.y,
     xAlign: "center",
     yAlign: "center",
@@ -49,22 +47,8 @@ Tooltip.positioners.eventXPositioner = function (
   _: readonly ActiveElement[],
   eventPosition: Point
 ) {
-  // const tooltip = this;
-  // const padding = tooltip.chart.width / 80;
-  // let offset = tooltip.width / 2 + padding;
-  // if (eventPosition.x + tooltip.width + padding > tooltip.chart.width) {
-  //   RIGHT_TOOLTIP = true;
-  // } else if (eventPosition.x - tooltip.width - padding < 0) {
-  //   RIGHT_TOOLTIP = false;
-  // }
-  // if (RIGHT_TOOLTIP) {
-  //   offset = -offset;
-  // }
   return {
     x: eventPosition.x,
-    // y: tooltip.chart.chartArea.top
     y: eventPosition.y,
-    // xAlign: "center",
-    // yAlign: "center",
   };
 };

@@ -3,9 +3,7 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  /* height: 30vh; */
   width: 100%;
-  /* transition: all 0.2s ease; */
   background-color: var(--wcf-container);
 }
 
@@ -14,9 +12,7 @@
   bottom: -0.1rem;
   left: 0;
   z-index: 100;
-  /* height: 2.2rem; */
   width: 100%;
-  /* transition: all 0.2s ease; */
 }
 .wcf-container-closed .wcf-header-bar {
   cursor: default;
@@ -41,19 +37,12 @@
   font-weight: bold;
 }
 
-/* .configurator-optimize:hover {
-  color: var(--battle-blue);
-} */
 .configurator-clear-all {
   text-align: center;
   user-select: none;
   cursor: pointer;
   font-weight: bold;
 }
-/* .configurator-clear-all:hover {
-  text-align: center;
-  color: var(--battle-red);
-} */
 
 .ttk-range-input {
   width: 4rem;
@@ -99,14 +88,9 @@
 
 .wcf-selector-select {
   border-radius: 0;
-  /* border-color: rgb(216, 216, 216);
-  color: white;
-  background-color: #000; */
-
   border-color: rgb(216, 216, 216);
   color: var(--font-color);
   background-color: var(--wcf-container);
-
   font-weight: 600;
 }
 
@@ -158,14 +142,11 @@
   grid-template-columns: 1fr 30px 30px 30px;
   height: 2.2rem;
   margin-bottom: 0.6rem;
-  /* vertical-align: center; */
 }
 .wcf-header-item {
   display: grid;
   overflow: hidden;
   height: 2.2rem;
-  /* position: absolute; */
-  /* bottom: 0; */
 }
 
 .wcf-header-button {

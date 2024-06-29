@@ -1,14 +1,11 @@
 #root {
-  /* max-width: 1280px; */
   margin: 0 auto;
-  /* padding: 2rem; */
   text-align: center;
 }
 
 .blurb {
   margin: 0 auto;
   max-width: 800px;
-  /* padding: 1rem; */
   color: var(--font-color);
 }
 
@@ -21,20 +18,13 @@
 }
 
 .chart-outer-container {
-  /* background-color: rgba(0, 0, 0, 0.7); */
-  /* background-color: #01010180; */
   background-color: var(--chart-background);
-  /* background-color: var(--battle-grey); */
   padding: 2rem;
   margin-bottom: 0.5rem;
-  /* position: relative; */
 }
 
 .chart-container {
   position: relative;
-  /* height: 30vh; */
-  /* height: 4800px; */
-  /* height: 1200px; */
   height: 600px;
   width: 80vw;
   max-width: 1280px;
@@ -44,23 +34,12 @@
   margin: 0;
 }
 
-/* .top-nav-weapon-select-dropdown {
-  position:relative;
-} */
-
 .main-content {
   margin-top: 4.5rem;
-  /* margin-left: 2em;
-  margin-right: 1em; */
-  /* padding-bottom: 30vh; */
-  /* transition: all 0.2s ease; */
 }
 
 .configurator-closed {
-  /* background-color: white;
-  border: 1px solid red; */
   padding-bottom: 2.5vh;
-  /* transition: all 0.2s ease; */
 }
 
 .hover-blue:hover {

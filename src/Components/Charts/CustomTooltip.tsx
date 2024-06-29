@@ -50,7 +50,6 @@ function NumRows(numLines: number) {
   return Math.ceil(numLines / NumColumns(numLines));
 }
 
-// const CustomTooltip: FC<TooltipProps> = ({  invertScaleColors: true}) => {
 function CustomTooltip(props: TooltipProps) {
   const [tooltipStyle, setTooltipStyle] = useState({
     opacity: 0,
@@ -63,8 +62,6 @@ function CustomTooltip(props: TooltipProps) {
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(Infinity);
   const [ascending, setAscending] = useState(true);
-  //   let maxValue = 0;
-  //   let minValue = Infinity;
   props.setTooltipHandler((context: TooltipContext) => {
     const { chart, tooltip } = context;
     const styleClone = structuredClone(tooltipStyle);
@@ -120,11 +117,8 @@ function CustomTooltip(props: TooltipProps) {
           offset = -(COLUMN_WIDTH_PX + padding);
         }
         left = left + offset;
-
-        // top = 0;
         if (numColumns > 1) {
           left = positionX + chart.width / 2 - width / 2;
-          //   top = top + 20;
         } else {
           top = top - 100;
         }

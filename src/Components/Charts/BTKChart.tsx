@@ -125,40 +125,6 @@ function BTKChart(props: BTKChartProps) {
         },
       },
     },
-    //   tooltip: {
-    //     backgroundColor: theme.tooltipBg,
-    //     bodyColor: theme.tooltipBody,
-    //     titleColor: theme.tooltipTitle,
-    //     position: "myCustomPositioner",
-    //     itemSort: function (a, b) {
-    //       return (b.raw as number) - (a.raw as number);
-    //     },
-    //     callbacks: {
-    //       labelColor: (ctx) => {
-    //         return {
-    //           borderColor: theme.highlightColor,
-    //           backgroundColor: configColors.get(ctx.dataset.label),
-    //         };
-    //       },
-    //       title: function (ctx) {
-    //         const index = ctx[0].dataIndex;
-    //         return index == highestRangeSeen
-    //           ? String(ctx[0].dataIndex) + "+ meters"
-    //           : String(ctx[0].dataIndex) + " meters";
-    //       },
-    //       label: function (ctx) {
-    //         let label = ctx.dataset.label || "";
-    //         if (label) {
-    //           label += ": ";
-    //         }
-    //         if (ctx.parsed.y !== null) {
-    //           label += ctx.parsed.y;
-    //         }
-    //         return label;
-    //       },
-    //     },
-    //   },
-    // },
     scales: GenerateScales("meters", "bullets", theme.highlightColor),
   };
   return (

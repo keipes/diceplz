@@ -167,11 +167,9 @@ class WeaponConfigurations implements WeaponConfig {
   // From existing weapons, select all configs which match the selector. May have more configs in configurator window afterwards.
   Select(selector: Selector) {
     const configurations = new Map();
-    // const configurationMap = new Map();
     const seenWeapons = new Set<string>();
     for (let [_, config] of this.weaponConfigurations) {
       seenWeapons.add(config.name);
-      // configurationMap.set(config.name, config);
     }
     for (let name of seenWeapons) {
       const weapon = GetWeaponByName(name);
@@ -202,18 +200,8 @@ class WeaponConfigurations implements WeaponConfig {
     const configurations = new Map();
     const seenConfigs = new Set<string>();
     for (let [id, config] of this.weaponConfigurations) {
-      // const weapon = GetWeaponByName(config.name);
       let cfgKey = `${config.name}-${config.barrelType}-${config.ammoType}`;
       if (filterFn(config) && !seenConfigs.has(cfgKey)) {
-        // AddConfigToMap(
-        //   {
-        //     name: config.name,
-        //     barrelType: config.barrelType,
-        //     ammoType: config.ammoType,
-        //     visible: true,
-        //   },
-        //   configurations
-        // );
         configurations.set(id, config);
         seenConfigs.add(cfgKey);
       }

@@ -32,7 +32,6 @@ interface BooleanVoidFn {
 
 interface NavProps {
   configLoader: ConfigLoader;
-  // settingsLoader: SettingsLoader;
   setUseAmmoColorsForGraph: BooleanVoidFn;
   settings: Settings;
   modifiers: Modifiers;
@@ -44,9 +43,6 @@ function TopNav(props: NavProps) {
   const [saveInputValue, setSaveInputValue] = useState("");
   const theme = useContext(ThemeContext);
   const configurator = useContext(ConfiguratorContext);
-  // const [configsList, setConfigsList] = useState(
-  //   useMemo(() => props.configLoader.listConfigs(), [])
-  // );
   const weaponSelectDropdowns = [];
   for (const category of WeaponCategories) {
     const weaponSelectItems = [];
@@ -114,7 +110,6 @@ function TopNav(props: NavProps) {
       category == "Assault Rifles" &&
       window.location.hostname === "localhost"
     ) {
-      // once = false;
       useEffect(() => {
         const toAdd = [];
         for (const weapon of weapons) {
@@ -156,14 +151,6 @@ function TopNav(props: NavProps) {
           {name}
         </div>
         <div>
-          {/* <img
-            className={"config-delete svg-white svg-hover-red"}
-            src={deleteSvg}
-            onClick={() => {
-              configLoader.deleteConfig(name);
-            }}
-            alt="delete"
-          /> */}
           <span
             className={"config-delete svg-white svg-hover-red"}
             onClick={() => {
@@ -235,11 +222,6 @@ function TopNav(props: NavProps) {
         <span className={"nav-icon svg-white svg-hover-blue"}>
           <SettingsIcon alt="settings" />
         </span>
-        {/* <img
-          className={"nav-icon svg-white svg-hover-blue"}
-          src={settingsSvg}
-          alt="settings"
-        /> */}
       </div>
       <div className="weapon-select-dropdown-container">
         <div className="weapon-select-dropdown">
