@@ -21,7 +21,8 @@ interface TooltipHandlerSetter {
 
 interface TooltipProps {
   setTooltipHandler: TooltipHandlerSetter;
-  invertScaleColors: boolean;
+  invertScaleColors?: boolean;
+  useTierList?: boolean;
 }
 
 function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
@@ -60,7 +61,9 @@ function CustomTooltip(props: TooltipProps) {
   const [precision, setPrecision] = useState(0);
   const settingsContext = useContext(SettingsContext);
   const [maxValue, setMaxValue] = useState(0);
-  const [minValue, setMinValue] = useState(Infinity);
+  const [_minValue, setMinValue] = useState(Infinity);
+  const [minValue, setChartMin] = useState(0);
+  const [_chartMax, setChartMax] = useState(0);
   const [ascending, setAscending] = useState(true);
   props.setTooltipHandler((context: TooltipContext) => {
     const { chart, tooltip } = context;
@@ -95,8 +98,10 @@ function CustomTooltip(props: TooltipProps) {
           }
           return [config, value];
         });
-        setMaxValue(chart.scales.y.max);
-        setMinValue(chart.scales.y.min);
+        setMaxValue(_maxValue);
+        setMinValue(_minValue);
+        setChartMax(chart.scales.y.max);
+        setChartMin(chart.scales.y.min);
         setAscending(_ascending);
         setPrecision(_precision);
         setBodyLines(_bodyLines);
@@ -119,6 +124,7 @@ function CustomTooltip(props: TooltipProps) {
         left = left + offset;
         if (numColumns > 1) {
           left = positionX + chart.width / 2 - width / 2;
+          top = top + 60;
         } else {
           top = top - 100;
         }
@@ -155,6 +161,24 @@ function CustomTooltip(props: TooltipProps) {
       score = 1 - score;
     }
     const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
+    if (props.useTierList) {
+      score = 1 - score;
+      if (score < 0.2) {
+        value = "F";
+      } else if (score < 0.4) {
+        value = "D";
+      } else if (score < 0.6) {
+        value = "C";
+      } else if (score < 0.8) {
+        value = "B";
+      } else if (score < 0.95) {
+        value = "A";
+      } else {
+        value = "S";
+      }
+    } else {
+      value = parseFloat(value).toFixed(precision);
+    }
     tooltipColumns[column].push(
       <span
         className="tooltipLine"
@@ -167,7 +191,7 @@ function CustomTooltip(props: TooltipProps) {
             color: valueColor,
           }}
         >
-          {parseFloat(value).toFixed(precision)}
+          {value}
         </span>
         <span className="tooltipLineName">
           {ConfigDisplayName(config as unknown as WeaponConfiguration)}

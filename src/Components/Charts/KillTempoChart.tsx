@@ -7,7 +7,7 @@ import {
 } from "../../Data/WeaponData.ts";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
-import { BTK, TTK } from "../../Util/Conversions.ts";
+import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
@@ -52,14 +52,9 @@ function KillTempoChart(props: KillTempoChartProps) {
     if (!ammoStat.magSize) continue;
     if (!ammoStat.tacticalReload) continue;
     const stats = GetStatsForConfiguration(config);
-    // if (!stats.rpmAuto) continue;
-    // const rpm = stats.rpmAuto;
-    // if (rpm < 800) continue;
     if (rpmSelector === SELECTOR_AUTO && !stats.rpmAuto) continue;
     if (rpmSelector === SELECTOR_BURST && !stats.rpmBurst) continue;
     if (rpmSelector === SELECTOR_SINGLE && !stats.rpmSingle) continue;
-    // if (!stats.rpmSingle) continue;
-    // const rpm = stats.rpmSingle;
     const rpm = rpmSelector(stats) as number;
     const data = [];
     let lastValue = 0;
@@ -70,36 +65,16 @@ function KillTempoChart(props: KillTempoChartProps) {
     for (let dropoff of stats.dropoffs) {
       // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
       value = ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
-      const ttk = TTK(config, props.modifiers, dropoff.damage, rpm);
-      const accuracy = 0.3;
+      const accuracy = 1;
       const killsPerMag =
         (ammoStat?.magSize * accuracy) /
         BTK(config, props.modifiers, dropoff.damage);
       const timeToEmptyMagInSec =
         (Math.max(ammoStat?.magSize - 1, 1) / rpm) * 60;
-      // const reloadTime = weapon.reloadTime;
-      const killsPerSecond = killsPerMag / timeToEmptyMagInSec;
-      const killTempo =
-        killsPerMag / (timeToEmptyMagInSec + ammoStat.tacticalReload);
-      value = killTempo;
-      value = killsPerSecond / ammoStat.tacticalReload;
-      value =
-        ((killsPerSecond * (timeToEmptyMagInSec / ammoStat.tacticalReload)) /
-          ttk) *
-        1000;
-      value =
-        (killsPerMag / 50) *
-        // (timeToEmptyMagInSec / ammoStat.tacticalReload) *
-        (200 / ttk) *
-        (2 / ammoStat.tacticalReload) *
-        (timeToEmptyMagInSec / 20) *
-        1000;
       value =
         (killsPerMag / timeToEmptyMagInSec) *
         (timeToEmptyMagInSec / ammoStat.tacticalReload) *
         10;
-      // value = timeToEmptyMagInSec;
-      // value = killsPerSecond * (timeToEmptyMagInSec / ammoStat.tacticalReload);
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
@@ -156,6 +131,12 @@ function KillTempoChart(props: KillTempoChartProps) {
     labels: labels,
     datasets: datasets,
   };
+  const scales: any = GenerateScales(
+    "meters",
+    "violence",
+    theme.highlightColor
+  );
+  scales.y.ticks.display = false;
   const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
@@ -184,7 +165,7 @@ function KillTempoChart(props: KillTempoChartProps) {
         },
       },
     },
-    scales: GenerateScales("meters", "violence", theme.highlightColor),
+    scales,
   };
   return (
     <div className="chart-outer-container">
@@ -226,7 +207,8 @@ function KillTempoChart(props: KillTempoChartProps) {
         <Line data={chartData} options={options} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
-          invertScaleColors={false}
+          useTierList={true}
+          invertScaleColors={true}
         />
       </div>
     </div>

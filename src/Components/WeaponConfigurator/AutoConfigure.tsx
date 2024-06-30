@@ -341,6 +341,23 @@ function AutoConfigure(props: AutoConfigureProps) {
           <span
             className={clickClass}
             onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.Select((_, stat) => {
+                if (stat.velocity && stat.velocity > 1000) {
+                  return true;
+                }
+                return false;
+              });
+            }}
+          >
+            {"Add all velocity > 1000ms configurations."}
+          </span>
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
               bestTTKFinder((stat) => (stat.rpmAuto ? stat.rpmAuto : 0));
             }}
           >
