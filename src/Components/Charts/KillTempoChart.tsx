@@ -50,7 +50,10 @@ function KillTempoChart(props: KillTempoChartProps) {
     const ammoStat = weapon.ammoStats[config.ammoType];
     if (!ammoStat) continue;
     if (!ammoStat.magSize) continue;
-    if (!ammoStat.tacticalReload) continue;
+    if (!ammoStat.tacticalReload) {
+      console.warn("No tactical reload time for " + ConfigDisplayName(config));
+      ammoStat.tacticalReload = 6;
+    }
     const stats = GetStatsForConfiguration(config);
     if (rpmSelector === SELECTOR_AUTO && !stats.rpmAuto) continue;
     if (rpmSelector === SELECTOR_BURST && !stats.rpmBurst) continue;
@@ -64,17 +67,29 @@ function KillTempoChart(props: KillTempoChartProps) {
 
     for (let dropoff of stats.dropoffs) {
       // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
-      value = ammoStat?.magSize / BTK(config, props.modifiers, dropoff.damage);
-      const accuracy = 1;
+      let accuracy = 1;
+      accuracy = 0.2;
       const killsPerMag =
-        (ammoStat?.magSize * accuracy) /
+        Math.floor(ammoStat?.magSize * accuracy) /
         BTK(config, props.modifiers, dropoff.damage);
-      const timeToEmptyMagInSec =
-        (Math.max(ammoStat?.magSize - 1, 1) / rpm) * 60;
-      value =
-        (killsPerMag / timeToEmptyMagInSec) *
-        (timeToEmptyMagInSec / ammoStat.tacticalReload) *
-        10;
+      const timeToEmptyMagInSec = (Math.max(ammoStat?.magSize, 1) / rpm) * 60;
+      value = killsPerMag / (timeToEmptyMagInSec + ammoStat.tacticalReload);
+      // if (dropoff.range === 0) {
+      //   console.log(
+      //     ConfigDisplayName(config) +
+      //       " k" +
+      //       killsPerMag +
+      //       " m" +
+      //       timeToEmptyMagInSec.toFixed(2) +
+      //       " /" +
+      //       (killsPerMag / timeToEmptyMagInSec).toFixed(2) +
+      //       " r" +
+      //       ammoStat.tacticalReload +
+      //       " v" +
+      //       value.toFixed(2)
+      //   );
+      // }
+
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
@@ -91,17 +106,15 @@ function KillTempoChart(props: KillTempoChartProps) {
         data.push(null);
       }
     }
-    if (value > 0) {
-      for (let i = range + 1; i < highestRangeSeen; i++) {
-        if (requiredRanges.has(i)) {
-          data.push(value);
-        } else {
-          data.push(null);
-        }
-      }
-      if (range != highestRangeSeen) {
+    for (let i = range + 1; i < highestRangeSeen; i++) {
+      if (requiredRanges.has(i)) {
         data.push(value);
+      } else {
+        data.push(null);
       }
+    }
+    if (range != highestRangeSeen) {
+      data.push(value);
     }
     const label = ConfigDisplayName(config);
     if (props.settings.useAmmoColorsForGraph) {

@@ -23,6 +23,7 @@ interface TooltipProps {
   setTooltipHandler: TooltipHandlerSetter;
   invertScaleColors?: boolean;
   useTierList?: boolean;
+  useChartBoundsForScoring?: boolean;
 }
 
 function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
@@ -61,9 +62,9 @@ function CustomTooltip(props: TooltipProps) {
   const [precision, setPrecision] = useState(0);
   const settingsContext = useContext(SettingsContext);
   const [maxValue, setMaxValue] = useState(0);
-  const [_minValue, setMinValue] = useState(Infinity);
-  const [minValue, setChartMin] = useState(0);
-  const [_chartMax, setChartMax] = useState(0);
+  const [minValue, setMinValue] = useState(Infinity);
+  const [chartMin, setChartMin] = useState(0);
+  const [chartMax, setChartMax] = useState(0);
   const [ascending, setAscending] = useState(true);
   props.setTooltipHandler((context: TooltipContext) => {
     const { chart, tooltip } = context;
@@ -153,32 +154,40 @@ function CustomTooltip(props: TooltipProps) {
     if (settingsContext.useAmmoColorsForGraph) {
       bgColor = ConfigAmmoColor(config as unknown as WeaponConfiguration);
     }
-    let score = (parseFloat(value) - minValue) / (maxValue - minValue);
+    let min, max;
+    if (props.useChartBoundsForScoring) {
+      [min, max] = [chartMin, chartMax];
+    } else {
+      [min, max] = [minValue, maxValue];
+    }
+    let score: number = (parseFloat(value) - min) / (max - min);
     if (
       (ascending && !props.invertScaleColors) ||
       (!ascending && props.invertScaleColors)
     ) {
       score = 1 - score;
     }
-    const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
+    const grades = [
+      ["F", 0.2, 1],
+      ["D", 0.4, 0.75],
+      ["C", 0.6, 0.5],
+      ["B", 0.8, 0.3],
+      ["A", 0.99, 0.1],
+      ["S", 1, 0],
+    ];
     if (props.useTierList) {
       score = 1 - score;
-      if (score < 0.2) {
-        value = "F";
-      } else if (score < 0.4) {
-        value = "D";
-      } else if (score < 0.6) {
-        value = "C";
-      } else if (score < 0.8) {
-        value = "B";
-      } else if (score < 0.95) {
-        value = "A";
-      } else {
-        value = "S";
+      for (const [grade, threshold, tierListColorScore] of grades) {
+        if (score <= (threshold as number)) {
+          value = grade as string;
+          score = tierListColorScore as number;
+          break;
+        }
       }
     } else {
       value = parseFloat(value).toFixed(precision);
     }
+    const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
     tooltipColumns[column].push(
       <span
         className="tooltipLine"
