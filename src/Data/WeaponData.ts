@@ -1,4 +1,5 @@
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { ConfigDisplayName } from "../Util/LabelMaker";
 import _weaponData from "../assets/weapons.json";
 const weaponData: WeaponDataJSON = _weaponData;
 
@@ -73,8 +74,16 @@ for (const category of WeaponCategories) {
 function GetWeaponByName(name: string): Weapon {
   return weaponsByName.get(name)!;
 }
+const dummyStat: WeaponStats = {
+  barrelType: "Factory",
+  ammoType: "Standard",
+  dropoffs: [{ damage: 0, range: 0 }],
+  rpmBurst: 0,
+  rpmSingle: 0,
+  rpmAuto: 0,
+};
 
-function GetStatsForConfiguration(config: WeaponConfiguration) {
+function GetStatsForConfiguration(config: WeaponConfiguration): WeaponStats {
   const weapon = GetWeaponByName(config.name);
   let returnVal;
   for (const stat of weapon.stats) {
@@ -90,7 +99,10 @@ function GetStatsForConfiguration(config: WeaponConfiguration) {
     }
   }
   if (returnVal) return returnVal;
-  throw new Error("no stats for config");
+  console.error(
+    "No stats for config! Using dummy! " + ConfigDisplayName(config)
+  );
+  return dummyStat;
 }
 
 function GetInitialStatsForWeapon(weapon: Weapon) {
