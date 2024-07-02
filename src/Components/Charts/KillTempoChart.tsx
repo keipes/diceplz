@@ -69,27 +69,45 @@ function KillTempoChart(props: KillTempoChartProps) {
       // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
       let accuracy = 1;
       accuracy = 0.2;
-      const killsPerMag =
-        Math.floor(ammoStat?.magSize * accuracy) /
-        BTK(config, props.modifiers, dropoff.damage);
+      const headShotRatio = 0.2;
+      let sumProbabilities = 0;
+      let sumBTK = 0;
+      let btk = Infinity;
+      const bestBTK = BTK(config, props.modifiers, dropoff.damage, Infinity);
+      let numHeadshots = 0;
+      while (btk > bestBTK) {
+        let currentBTK = BTK(
+          config,
+          props.modifiers,
+          dropoff.damage,
+          numHeadshots
+        );
+        let probability = Math.pow(headShotRatio, numHeadshots);
+        if (numHeadshots === 0) {
+          probability = 1 - headShotRatio;
+        }
+        sumProbabilities += probability;
+        sumBTK += currentBTK * probability;
+        btk = currentBTK;
+        numHeadshots++;
+      }
+      let averageBTK = sumBTK / sumProbabilities;
       const timeToEmptyMagInSec = (Math.max(ammoStat?.magSize, 1) / rpm) * 60;
+      const killsPerMag = (ammoStat?.magSize * accuracy) / averageBTK;
       value = killsPerMag / (timeToEmptyMagInSec + ammoStat.tacticalReload);
-      // if (dropoff.range === 0) {
-      //   console.log(
-      //     ConfigDisplayName(config) +
-      //       " k" +
-      //       killsPerMag +
-      //       " m" +
-      //       timeToEmptyMagInSec.toFixed(2) +
-      //       " /" +
-      //       (killsPerMag / timeToEmptyMagInSec).toFixed(2) +
-      //       " r" +
-      //       ammoStat.tacticalReload +
-      //       " v" +
-      //       value.toFixed(2)
-      //   );
-      // }
-
+      // console.log(
+      //   ConfigDisplayName(config) +
+      //     " val:" +
+      //     value +
+      //     " sumBTK:" +
+      //     sumBTK +
+      //     " sumProb:" +
+      //     sumProbabilities +
+      //     " avgBTK:" +
+      //     averageBTK +
+      //     " baseBTK:" +
+      //     BTK(config, props.modifiers, dropoff.damage, 0)
+      // );
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {

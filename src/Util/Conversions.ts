@@ -29,18 +29,42 @@ const TTK = (
 const BTK = (
   config: WeaponConfiguration,
   modifiers: Modifiers,
-  damage: number
+  damage: number,
+  numHeadshots?: number
 ) => {
+  const weapon = GetWeaponByName(config.name);
+  let hsm = 1;
+  if (weapon.ammoStats) {
+    hsm = weapon.ammoStats[config.ammoType]?.headshotMultiplier || 1;
+  }
+  let btk = 0;
   // Weapons doing 99.75 damage have resulted in a kill. Assumed max player health is 99.5, from 2043 discord.
-  const playerHealth =
+  let playerHealth =
     100 * modifiers.healthMultiplier - 0.5 + (modifiers.bodyArmor ? 20 : 0);
-  return Math.ceil(
-    playerHealth /
-      (damage *
-        modifiers.damageMultiplier *
-        modifiers.bodyDamageMultiplier *
-        pelletMultiplier(config))
-  );
+  if (numHeadshots) {
+    for (let i = 0; i < numHeadshots; i++) {
+      btk += 1;
+      playerHealth -=
+        damage * hsm * modifiers.damageMultiplier * pelletMultiplier(config);
+      if (playerHealth <= 0) {
+        break;
+      }
+    }
+  }
+  if (playerHealth <= 0) {
+    return btk;
+  } else {
+    let r =
+      btk +
+      Math.ceil(
+        playerHealth /
+          (damage *
+            modifiers.damageMultiplier *
+            modifiers.bodyDamageMultiplier *
+            pelletMultiplier(config))
+      );
+    return r;
+  }
 };
 
 const DamageAtRange = (config: WeaponConfiguration, range: number) => {
