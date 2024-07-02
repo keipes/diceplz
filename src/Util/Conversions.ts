@@ -18,12 +18,80 @@ const TTK = (
   config: WeaponConfiguration,
   modifiers: Modifiers,
   damage: number,
-  rpm: number
+  rpm: number,
+  numHeadshots?: number
 ) => {
+  // ttkOffset is for calculating ttk and ignoring the first shot's fire time
+  // considering 80% of shots are missed it doesn't make sense to exclude all that time
+  const ttkOffset = 0;
   const ttk = Math.round(
-    (1000 / (rpm / 60)) * (BTK(config, modifiers, damage) - 1)
+    (1000 / (rpm / 60)) *
+      (BTK(config, modifiers, damage, numHeadshots) - ttkOffset)
   );
   return ttk;
+};
+
+const AverageTTK = (
+  config: WeaponConfiguration,
+  modifiers: Modifiers,
+  damage: number,
+  rpm: number,
+  headshotRatio: number
+) => {
+  let ttk = Infinity;
+  let minTTK = TTK(config, modifiers, damage, rpm, Infinity);
+  let sumTTK = 0;
+  let sumProbabilities = 0;
+  for (let headshots = 0; ttk > minTTK; headshots++) {
+    if (headshots > 10) {
+      console.warn("uh oh " + config.name + " " + ttk + " " + minTTK);
+      break;
+    }
+    ttk = TTK(config, modifiers, damage, rpm, headshots);
+    if (headshots === 0) {
+      sumProbabilities += 1 - headshotRatio;
+      sumTTK += ttk * (1 - headshotRatio);
+    } else {
+      const probability = Math.pow(headshotRatio, headshots); // * (1 - headshotRatio);
+      sumProbabilities += probability;
+      sumTTK += ttk * probability;
+    }
+    // console.log(
+    //   config.name +
+    //     " " +
+    //     Math.pow(headshotRatio, headshots) +
+    //     " " +
+    //     headshotRatio +
+    //     " " +
+    //     headshots
+    // );
+  }
+  // console.log(config.name + " " + sumTTK + " " + sumProbabilities);
+  return sumTTK / sumProbabilities;
+};
+
+const AverageBTK = (
+  config: WeaponConfiguration,
+  modifiers: Modifiers,
+  damage: number,
+  headshotRatio: number
+) => {
+  let btk = Infinity;
+  let minBTK = BTK(config, modifiers, damage, Infinity);
+  let sumBTK = 0;
+  let sumProbabilities = 0;
+  for (let headshots = 0; btk > minBTK; headshots++) {
+    btk = BTK(config, modifiers, damage, headshots);
+    if (headshots === 0) {
+      sumProbabilities += 1 - headshotRatio;
+      sumBTK += btk * (1 - headshotRatio);
+    } else {
+      const probability = Math.pow(headshotRatio, headshots); // * (1 - headshotRatio);
+      sumProbabilities += probability;
+      sumBTK += btk * probability;
+    }
+  }
+  return sumBTK / sumProbabilities;
 };
 
 const BTK = (
@@ -102,4 +170,4 @@ const KillsPerMag = (
   const magSize = MagazineCapacity(config);
   return Math.floor(magSize / btk);
 };
-export { TTK, BTK, KillsPerMag };
+export { TTK, AverageTTK, BTK, AverageBTK, KillsPerMag };

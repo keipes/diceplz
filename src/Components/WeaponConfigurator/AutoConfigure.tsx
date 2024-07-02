@@ -1,6 +1,6 @@
 import { Modifiers } from "../../Data/ConfigLoader";
 import { GetWeaponByName } from "../../Data/WeaponData";
-import { BTK, KillsPerMag, TTK } from "../../Util/Conversions";
+import { KillsPerMag, TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
 import {
@@ -135,60 +135,60 @@ function AutoConfigure(props: AutoConfigureProps) {
       return false;
     });
   }
-  function btkSelector(requiredBTK: number, endRange: number) {
-    configurator.Select((name, stat) => {
-      let lowestEndTTK = Infinity;
-      for (const dropoff of stat.dropoffs) {
-        if (dropoff.range > endRange) {
-          break;
-        }
-        const btk = BTK(
-          {
-            name: name,
-            barrelType: stat.barrelType,
-            ammoType: stat.ammoType,
-            visible: true,
-          },
-          props.modifiers,
-          dropoff.damage
-        );
-        lowestEndTTK = btk;
-      }
-      if (lowestEndTTK <= requiredBTK) {
-        return true;
-      }
-      return false;
-    });
-  }
+  // function btkSelector(requiredBTK: number, endRange: number) {
+  //   configurator.Select((name, stat) => {
+  //     let lowestEndTTK = Infinity;
+  //     for (const dropoff of stat.dropoffs) {
+  //       if (dropoff.range > endRange) {
+  //         break;
+  //       }
+  //       const btk = BTK(
+  //         {
+  //           name: name,
+  //           barrelType: stat.barrelType,
+  //           ammoType: stat.ammoType,
+  //           visible: true,
+  //         },
+  //         props.modifiers,
+  //         dropoff.damage
+  //       );
+  //       lowestEndTTK = btk;
+  //     }
+  //     if (lowestEndTTK <= requiredBTK) {
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  // }
 
-  function ttkSelector(requiredTTK: number, endRange: number) {
-    configurator.Select((name, stat) => {
-      let highestEndTTK = -Infinity;
-      for (const dropoff of stat.dropoffs) {
-        if (dropoff.range > endRange) {
-          break;
-        }
-        const ttk = TTK(
-          {
-            name: name,
-            barrelType: stat.barrelType,
-            ammoType: stat.ammoType,
-            visible: true,
-          },
-          props.modifiers,
-          dropoff.damage,
-          stat.rpmAuto ? stat.rpmAuto : 0
-        );
-        if (ttk > highestEndTTK) {
-          highestEndTTK = ttk;
-        }
-      }
-      if (highestEndTTK <= requiredTTK) {
-        return true;
-      }
-      return false;
-    });
-  }
+  // function ttkSelector(requiredTTK: number, endRange: number) {
+  //   configurator.Select((name, stat) => {
+  //     let highestEndTTK = -Infinity;
+  //     for (const dropoff of stat.dropoffs) {
+  //       if (dropoff.range > endRange) {
+  //         break;
+  //       }
+  //       const ttk = TTK(
+  //         {
+  //           name: name,
+  //           barrelType: stat.barrelType,
+  //           ammoType: stat.ammoType,
+  //           visible: true,
+  //         },
+  //         props.modifiers,
+  //         dropoff.damage,
+  //         stat.rpmAuto ? stat.rpmAuto : 0
+  //       );
+  //       if (ttk > highestEndTTK) {
+  //         highestEndTTK = ttk;
+  //       }
+  //     }
+  //     if (highestEndTTK <= requiredTTK) {
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  // }
 
   return (
     <>
@@ -386,171 +386,10 @@ function AutoConfigure(props: AutoConfigureProps) {
           <span
             className={clickClass}
             onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(4, 10);
-            }}
-          >
-            {"Select all 4BTK@10m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(4, 20);
-            }}
-          >
-            {"Select all 4BTK@20m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(4, 30);
-            }}
-          >
-            {"Select all 4BTK@30m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(5, 74);
-            }}
-          >
-            {"Select all 5BTK@74m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(5, 151);
-            }}
-          >
-            {"Select all 5BTK@151m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(5, 30);
-            }}
-          >
-            {"Select all 5BTK@30m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              btkSelector(6, 151);
-            }}
-          >
-            {"Select all 6BTK@151m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              ttkSelector(400, 151);
-            }}
-          >
-            {"Select all 400ms@151m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              ttkSelector(350, 99);
-            }}
-          >
-            {"Select all 350ms@99m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              ttkSelector(335, 74);
-            }}
-          >
-            {"Select all 335ms@74m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              ttkSelector(335, 49);
-            }}
-          >
-            {"Select all 320ms@49m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              ttkSelector(300, 39);
-            }}
-          >
-            {"Select all 300ms@39m configurations for current weapons."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
               configurator.Filter((config) => /ubsonic/.test(config.ammoType));
             }}
           >
             {"Select subsonic ammo from current configurations."}
-          </span>
-        </>
-      </Configurer>
-      <Configurer>
-        <>
-          <span
-            className={clickClass}
-            onClick={(_: MouseEvent<HTMLElement>) => {
-              configurator.Select((_, stat) => {
-                if (stat.dropoffs.length > 1 && stat.dropoffs[1].range > 99) {
-                  return true;
-                }
-                return false;
-              });
-            }}
-          >
-            {"Select meter dropoff configurations for current weapons."}
           </span>
         </>
       </Configurer>

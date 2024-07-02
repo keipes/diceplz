@@ -9,7 +9,7 @@ import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useContext, useState } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
-import { TTK } from "../../Util/Conversions.ts";
+import { AverageTTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
@@ -97,7 +97,14 @@ function TTKChart(props: TTKChartProps) {
     configurations.weaponConfigurations,
     (config, damage) => {
       const stat = GetStatsForConfiguration(config);
-      return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
+      // return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
+      return AverageTTK(
+        config,
+        props.modifiers,
+        damage,
+        rpmSelector(stat) || 0,
+        0.1
+      );
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
@@ -113,35 +120,40 @@ function TTKChart(props: TTKChartProps) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];
-    let lastDamage = 0;
     let lastRange = 0;
     let range = 0;
-    let damage = 0;
+    let lastTTK = Infinity;
     for (let dropoff of stats.dropoffs) {
+      const ttk = AverageTTK(
+        config,
+        props.modifiers,
+        dropoff.damage,
+        rpmSelector(stats) || 0,
+        0.2
+      );
       range = dropoff.range;
-      damage = dropoff.damage;
       for (let i = lastRange + 1; i < range; i++) {
         const rpm = rpmSelector(stats);
         if (requiredRanges.has(i) && rpm) {
-          data.push(TTK(config, props.modifiers, lastDamage, rpm));
+          data.push(lastTTK);
         } else {
           data.push(null);
         }
       }
-      lastDamage = damage;
+      lastTTK = ttk;
       lastRange = range;
       const rpm = rpmSelector(stats);
       if (requiredRanges.has(dropoff.range) && rpm) {
-        data.push(TTK(config, props.modifiers, damage, rpm));
+        data.push(ttk);
       } else {
         data.push(null);
       }
     }
-    if (damage > 0) {
+    if (lastTTK < Infinity) {
       for (let i = range + 1; i < highestRangeSeen; i++) {
         const rpm = rpmSelector(stats);
         if (requiredRanges.has(i) && rpm) {
-          data.push(TTK(config, props.modifiers, damage, rpm));
+          data.push(lastTTK);
         } else {
           data.push(null);
         }
@@ -149,7 +161,7 @@ function TTKChart(props: TTKChartProps) {
       if (range != highestRangeSeen) {
         const rpm = rpmSelector(stats);
         if (rpm) {
-          data.push(TTK(config, props.modifiers, damage, rpm));
+          data.push(lastTTK);
         } else {
           data.push(null);
         }
@@ -256,10 +268,7 @@ function TTKChart(props: TTKChartProps) {
       </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip
-          setTooltipHandler={setTooltipHandler}
-          invertScaleColors={false}
-        />
+        <CustomTooltip setTooltipHandler={setTooltipHandler} />
       </div>
     </div>
   );
