@@ -68,8 +68,8 @@ function CustomTooltip(props: TooltipProps) {
   const settingsContext = useContext(SettingsContext);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(Infinity);
-  const [chartMin, setChartMin] = useState(0);
-  const [chartMax, setChartMax] = useState(0);
+  const [_chartMin, setChartMin] = useState(0);
+  const [_chartMax, setChartMax] = useState(0);
   const [ascending, setAscending] = useState(true);
   props.setTooltipHandler((context: TooltipContext) => {
     const { chart, tooltip } = context;
@@ -176,7 +176,6 @@ function CustomTooltip(props: TooltipProps) {
     } else {
       console.warn("No min max in props", props);
     }
-    let scoreRange = max - min;
     let score: number = (parseFloat(value) - min) / (max - min);
     if (
       (ascending && !props.invertScaleColors) ||

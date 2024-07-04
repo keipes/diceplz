@@ -23,7 +23,6 @@ import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
   DEFAULT_SESSION_CONFIG_NAME,
-  DefaultModifiers,
   LoadInitialSessionData,
   LocalStoreConfigLoader,
   SessionStoreConfigLoader,

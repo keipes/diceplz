@@ -142,9 +142,6 @@ function getMinMaxScores(
         };
       }
       const value = valueFn(datum);
-      if (value < 0.2 && datum.range === 0 && rpmSelector === SELECTOR_AUTO) {
-        console.warn("bad score for " + ConfigDisplayName(datum.config));
-      }
       if (value < minMaxScores[datum.range].minScore) {
         minMaxScores[datum.range].minScore = value;
       }
@@ -212,9 +209,6 @@ function getValueFn(
       (weights.kps / sumWeights) * kpsScore;
     if (Number.isNaN(score) || score < 0 || score > 1) {
       console.warn("bad score");
-    }
-    if (datum.range === 0 && score < 0.3) {
-      console.warn("bad score for " + ConfigDisplayName(datum.config));
     }
     return score;
   };
@@ -405,7 +399,6 @@ function KillTempoChart(props: KillTempoChartProps) {
   const globalMinMax: MinMaxValue = getGlobalMinMax(minMaxRanges);
   const valueFn = getValueFn(minMaxRanges, globalMinMax, false);
   minMaxValues = getMinMaxScores(myData, valueFn, rpmSelector);
-  const globalMinMaxScores = getGlobalMinMaxScores(minMaxValues);
   for (const dataset of myData) {
     let data = [];
     for (const datum of dataset) {

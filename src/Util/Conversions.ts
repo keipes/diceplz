@@ -73,17 +73,7 @@ const AverageTTK = (
       sumProbabilities += probability;
       sumTTK += ttk * probability;
     }
-    // console.log(
-    //   config.name +
-    //     " " +
-    //     Math.pow(headshotRatio, headshots) +
-    //     " " +
-    //     headshotRatio +
-    //     " " +
-    //     headshots
-    // );
   }
-  // console.log(config.name + " " + sumTTK + " " + sumProbabilities);
   return sumTTK / sumProbabilities;
 };
 

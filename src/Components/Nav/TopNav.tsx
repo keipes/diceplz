@@ -10,7 +10,7 @@ import {
   WeaponCategories,
 } from "../../Data/WeaponData";
 import "./TopNav.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import {
   SettingsIcon,

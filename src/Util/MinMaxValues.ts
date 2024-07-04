@@ -81,16 +81,10 @@ if (sessionData) {
       });
       // console.log("Adding weapon to global stats: " + weapon.name);
     } else {
-      console.log("Excluding weapon from global stats: " + weapon.name);
+      console.debug("Excluding weapon from global stats: " + weapon.name);
     }
   });
-  configurator.Select((_name, _stat) => {
-    if (excludeWeapons.has(_name)) {
-      console.error("Excluding weapon from global stats: " + _name);
-      return false;
-    }
-    return true;
-  });
+  configurator.Select((_name, _stat) => true);
   const selectors = [SELECTOR_AUTO, SELECTOR_BURST, SELECTOR_SINGLE];
   for (const selector of selectors) {
     const killTempos = getKillTempoForConfigurations(
@@ -136,8 +130,6 @@ if (sessionData) {
       MinMaxScoresSingle,
     ])
   );
-  console.log(MinMaxScoresAuto);
-  console.log("Saved min-max data to session storage.");
 }
 
 function GetMinMaxValues(selector: RPMSelectorFn): MinMaxValue[] {

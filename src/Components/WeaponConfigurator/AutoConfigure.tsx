@@ -23,8 +23,7 @@ import {
   getMinMaxScores,
   getValueFn,
 } from "../Charts/KillTempoChart";
-import { SELECTOR_AUTO, SELECTOR_SINGLE } from "../Charts/TTKChart";
-import { ConfigDisplayName } from "../../Util/LabelMaker";
+import { SELECTOR_AUTO } from "../Charts/TTKChart";
 
 interface AutoConfigureProps {
   modifiers: Modifiers;
@@ -263,16 +262,6 @@ function AutoConfigure(props: AutoConfigureProps) {
         const scoreRange = minMax.maxScore - minMax.minScore;
         const minRequiredScore = minMax.minScore + scoreRange * threshold;
         if (value >= minRequiredScore) {
-          console.log(
-            "Selected " +
-              ConfigDisplayName(config) +
-              " at " +
-              i +
-              "m. " +
-              value +
-              " > " +
-              minRequiredScore
-          );
           return true;
         }
       }
