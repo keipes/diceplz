@@ -83,26 +83,32 @@ const dummyStat: WeaponStats = {
   rpmAuto: 0,
 };
 
+const statCache: any = {};
 function GetStatsForConfiguration(config: WeaponConfiguration): WeaponStats {
-  const weapon = GetWeaponByName(config.name);
-  let returnVal;
-  for (const stat of weapon.stats) {
-    if (
-      stat.barrelType == config.barrelType &&
-      stat.ammoType == config.ammoType
-    ) {
-      if (returnVal) {
-        console.warn("duplicate stat info " + weapon.name);
+  const cacheKey = ConfigDisplayName(config);
+  if (statCache[cacheKey]) {
+    return statCache[cacheKey];
+  } else {
+    const weapon = GetWeaponByName(config.name);
+    for (const stat of weapon.stats) {
+      if (
+        stat.barrelType == config.barrelType &&
+        stat.ammoType == config.ammoType
+      ) {
+        if (statCache[cacheKey]) {
+          console.warn("duplicate stat info " + weapon.name);
+        }
+        statCache[cacheKey] = stat;
       }
-      returnVal = stat;
-      //   return stat;
     }
+    if (!statCache[cacheKey]) {
+      console.error(
+        "No stats for config! Using dummy! " + ConfigDisplayName(config)
+      );
+      statCache[cacheKey] = dummyStat;
+    }
+    return statCache[cacheKey];
   }
-  if (returnVal) return returnVal;
-  console.error(
-    "No stats for config! Using dummy! " + ConfigDisplayName(config)
-  );
-  return dummyStat;
 }
 
 function GetInitialStatsForWeapon(weapon: Weapon) {

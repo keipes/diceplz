@@ -5,6 +5,7 @@ import { ConfigAmmoColor, ConfigHSL } from "../../Util/StringColor";
 import { ConfigDisplayName } from "../../Util/LabelMaker";
 import { SettingsContext } from "../App";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
+import { MinMaxScore } from "../../Util/MinMaxValues";
 
 interface TooltipContext {
   chart: Chart;
@@ -27,6 +28,7 @@ interface TooltipProps {
   decimalPlaces?: number;
   min?: number;
   max?: number;
+  scores?: MinMaxScore[];
 }
 
 function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
@@ -158,9 +160,23 @@ function CustomTooltip(props: TooltipProps) {
       bgColor = ConfigAmmoColor(config as unknown as WeaponConfiguration);
     }
     let [min, max] = [minValue, maxValue];
-    if (props.min !== undefined && props.max !== undefined) {
-      [min, max] = [props.min, props.max];
+    const range = parseFloat(titleLines[0]);
+    if (Number.isNaN(range)) {
+      console.warn("No range in title lines", titleLines);
     }
+    if (props.scores && props.scores.length > range) {
+      [min, max] = [props.scores[range].minScore, props.scores[range].maxScore];
+      // if (range === 0) {
+      //   console.log("min", min, "max", max, "value", value, "config", config);
+      // }
+      // console.log("min", min, "max", max, "value", value, "config", config);
+    } else if (props.min !== undefined && props.max !== undefined) {
+      [min, max] = [props.min, props.max];
+      console.warn("used min max from props");
+    } else {
+      console.warn("No min max in props", props);
+    }
+    let scoreRange = max - min;
     let score: number = (parseFloat(value) - min) / (max - min);
     if (
       (ascending && !props.invertScaleColors) ||
@@ -168,17 +184,33 @@ function CustomTooltip(props: TooltipProps) {
     ) {
       score = 1 - score;
     }
-
     const grades = [
       ["F", 0.2, 1],
       ["D", 0.4, 0.8],
       ["C", 0.6, 0.6],
       ["B", 0.8, 0.4],
-      ["A", 0.95, 0.2],
+      ["A", 0.9, 0.2],
       ["S", Infinity, 0],
     ];
     if (props.useTierList) {
       score = 1 - score;
+      // score = parseFloat(value);
+      // if (score < 1) {
+      //   console.log(
+      //     "score",
+      //     score,
+      //     "value",
+      //     value,
+      //     "config",
+      //     config,
+      //     "min",
+      //     min,
+      //     "max",
+      //     max,
+      //     "range",
+      //     range
+      //   );
+      // }
       for (const [grade, threshold, tierListColorScore] of grades) {
         if (score <= (threshold as number) * 1) {
           value = grade as string;

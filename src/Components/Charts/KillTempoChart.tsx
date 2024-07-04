@@ -22,10 +22,10 @@ import {
   SELECTOR_SINGLE,
 } from "./TTKChart.tsx";
 import {
+  GetMinMaxScores,
+  GetMinMaxValues,
   MinMaxScore,
-  MinMaxScores,
   MinMaxValue,
-  MinMaxValues,
 } from "../../Util/MinMaxValues.ts";
 import { WeaponConfigurations } from "../../Data/WeaponConfiguration.ts";
 
@@ -60,6 +60,10 @@ function getKillTempoForConfigurations(
       maxRange
     );
     if (killTempoData.length !== maxRange + 1) {
+      const stats = GetStatsForConfiguration(config);
+      if (rpmSelector === SELECTOR_AUTO && !stats.rpmAuto) continue;
+      if (rpmSelector === SELECTOR_BURST && !stats.rpmBurst) continue;
+      if (rpmSelector === SELECTOR_SINGLE && !stats.rpmSingle) continue;
       console.error(
         "Kill tempo data length mismatch for " +
           ConfigDisplayName(config) +
@@ -77,11 +81,12 @@ function getKillTempoForConfigurations(
 
 function getMinMaxRanges(
   data: KillTempoDatum[][],
-  relative?: boolean
+  rpmSelector: RPMSelectorFn,
+  excludeGlobalMinMaxData?: boolean
 ): MinMaxValue[] {
   let minMaxRanges: MinMaxValue[] = [];
-  if (!relative) {
-    minMaxRanges = structuredClone(MinMaxValues);
+  if (!excludeGlobalMinMaxData) {
+    minMaxRanges = GetMinMaxValues(rpmSelector);
   }
   for (const dataset of data) {
     for (const datum of dataset) {
@@ -121,12 +126,13 @@ function getMinMaxRanges(
 function getMinMaxScores(
   data: KillTempoDatum[][],
   valueFn: (datum: KillTempoDatum) => number,
-  relative?: boolean
+  rpmSelector: RPMSelectorFn,
+  excludeGlobalMinMaxData?: boolean
 ): MinMaxScore[] {
   let minMaxScores: MinMaxScore[] = [];
-  // if (!relative) {
-  //   minMaxScores = structuredClone(MinMaxScores);
-  // }
+  if (!excludeGlobalMinMaxData) {
+    minMaxScores = GetMinMaxScores(rpmSelector);
+  }
   for (const dataset of data) {
     for (const datum of dataset) {
       if (!minMaxScores[datum.range]) {
@@ -136,6 +142,9 @@ function getMinMaxScores(
         };
       }
       const value = valueFn(datum);
+      if (value < 0.2 && datum.range === 0 && rpmSelector === SELECTOR_AUTO) {
+        console.warn("bad score for " + ConfigDisplayName(datum.config));
+      }
       if (value < minMaxScores[datum.range].minScore) {
         minMaxScores[datum.range].minScore = value;
       }
@@ -190,8 +199,8 @@ function getValueFn(
         : (kps - minMax.minKPS) / (minMax.maxKPS - minMax.minKPS);
     const weights: any = {
       ttk: 2, //2,
-      btk: 2, //2,
-      kps: 1,
+      btk: 1, //2,
+      kps: 0.5,
     };
     let sumWeights = 0;
     for (const key in weights) {
@@ -201,13 +210,11 @@ function getValueFn(
       (weights.ttk / sumWeights) * ttkScore +
       (weights.btk / sumWeights) * btkScore +
       (weights.kps / sumWeights) * kpsScore;
-    // let score =
-    //   (weights.ttk * ttkScore +
-    //     weights.btk * btkScore +
-    //     weights.kps * kpsScore) /
-    //   sumWeights;
     if (Number.isNaN(score) || score < 0 || score > 1) {
       console.warn("bad score");
+    }
+    if (datum.range === 0 && score < 0.3) {
+      console.warn("bad score for " + ConfigDisplayName(datum.config));
     }
     return score;
   };
@@ -221,7 +228,8 @@ function getRelativeScore(
 ): number {
   const value = valueFn(datum);
   const scores = minMax[datum.range];
-  return (value - scores.minScore) / (scores.maxScore - scores.minScore);
+  const score = (value - scores.minScore) / (scores.maxScore - scores.minScore);
+  return score;
 }
 
 function getKillTempo(
@@ -230,6 +238,8 @@ function getKillTempo(
   rpmSelector: RPMSelectorFn,
   maxRange: number
 ): KillTempoDatum[] {
+  const ACCURACY = 0.2;
+  const HEADSHOT_RATIO = 0.2;
   const data: KillTempoDatum[] = [];
   if (!config.visible) return data;
   const weapon = GetWeaponByName(config.name);
@@ -258,20 +268,20 @@ function getKillTempo(
   };
   for (let dropoff of stats.dropoffs) {
     // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
-    let accuracy = 1;
-    accuracy = 0.3;
-    let headShotRatio = 0.5;
-    headShotRatio = 0.2;
+    // let accuracy = 1;
+    // accuracy = 0.3;
+    // let headShotRatio = 0.5;
+    // headShotRatio = 0.2;
     let averageBTK = AverageBTK(
       config,
       modifiers,
       dropoff.damage,
-      headShotRatio
+      HEADSHOT_RATIO
     );
 
     const timeToEmptyMagInSec = (ammoStat?.magSize / rpm) * 60;
-    const killsPerMag = (ammoStat?.magSize * accuracy) / averageBTK;
-    const ttk = AverageTTK(config, modifiers, dropoff.damage, rpm, accuracy);
+    const killsPerMag = (ammoStat?.magSize * ACCURACY) / averageBTK;
+    const ttk = AverageTTK(config, modifiers, dropoff.damage, rpm, ACCURACY);
     const killsPerSecond =
       killsPerMag / timeToEmptyMagInSec + ammoStat.tacticalReload;
     const datum = {
@@ -291,7 +301,7 @@ function getKillTempo(
         i <= Math.min(dropoff.range - 1, maxRange);
         i++
       ) {
-        let _datum = structuredClone(lastDatum);
+        let _datum = Object.assign({}, lastDatum);
         _datum.range = i;
         data.push(_datum);
       }
@@ -303,7 +313,7 @@ function getKillTempo(
     } else {
       // this is the last dropoff and we haven't reached maxRange yet, so fill up to max range with current datum
       for (let i = lastDatum.range + 1; i <= maxRange; i++) {
-        const _datum = structuredClone(datum);
+        const _datum = Object.assign({}, datum); //structuredClone(datum);
         _datum.range = i;
         data.push(_datum);
       }
@@ -369,22 +379,19 @@ function KillTempoChart(props: KillTempoChartProps) {
   const theme = useContext(ThemeContext);
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
-  let minMaxRanges = structuredClone(MinMaxValues);
-  let minMaxValues = structuredClone(MinMaxScores);
+  const [rpmSelector, setRpmSelector] = useState<RPMSelectorFn>(
+    () => SELECTOR_AUTO
+  );
+  let minMaxRanges = GetMinMaxValues(rpmSelector);
+  let minMaxValues = GetMinMaxScores(rpmSelector);
   const relative = false;
-  if (relative) {
-    minMaxRanges = [];
-    minMaxValues = [];
-  }
   const requiredRanges = RequiredRanges(
     configurations.weaponConfigurations,
     (config, damage) => {
       return BTK(config, props.modifiers, damage);
     }
   );
-  const [rpmSelector, setRpmSelector] = useState<RPMSelectorFn>(
-    () => SELECTOR_AUTO
-  );
+
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
@@ -394,19 +401,20 @@ function KillTempoChart(props: KillTempoChartProps) {
     rpmSelector,
     highestRangeSeen
   );
-  minMaxRanges = getMinMaxRanges(myData);
+  minMaxRanges = getMinMaxRanges(myData, rpmSelector);
   const globalMinMax: MinMaxValue = getGlobalMinMax(minMaxRanges);
   const valueFn = getValueFn(minMaxRanges, globalMinMax, false);
-  minMaxValues = getMinMaxScores(myData, valueFn);
+  minMaxValues = getMinMaxScores(myData, valueFn, rpmSelector);
   const globalMinMaxScores = getGlobalMinMaxScores(minMaxValues);
   for (const dataset of myData) {
     let data = [];
     for (const datum of dataset) {
       const value = valueFn(datum);
-      data.push(value);
       if (relative) {
         const relativeValue = getRelativeScore(datum, minMaxValues, valueFn);
         data.push(relativeValue);
+      } else {
+        data.push(value);
       }
     }
     const config = dataset[0].config;
@@ -444,8 +452,8 @@ function KillTempoChart(props: KillTempoChartProps) {
     theme.highlightColor
   );
   scales.y.ticks.display = true;
-  scales.y.max = globalMinMaxScores.maxScore;
-  scales.y.min = globalMinMaxScores.minScore;
+  // scales.y.max = globalMinMaxScores.maxScore;
+  // scales.y.min = globalMinMaxScores.minScore;
   const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
@@ -519,9 +527,10 @@ function KillTempoChart(props: KillTempoChartProps) {
           useTierList={true}
           invertScaleColors={true}
           // useChartBoundsForScoring={true}
-          max={0.7}
-          min={0.1}
+          max={1}
+          min={0}
           decimalPlaces={0}
+          scores={minMaxValues}
         />
       </div>
     </div>

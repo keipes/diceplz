@@ -1,17 +1,34 @@
 import { Modifiers } from "../Data/ConfigLoader";
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
 import { GetStatsForConfiguration, GetWeaponByName } from "../Data/WeaponData";
+import { ConfigDisplayName } from "./LabelMaker";
 
+const pelletMultiplierCache = new Map<string, number>();
 const pelletMultiplier = (config: WeaponConfiguration) => {
-  const weapon = GetWeaponByName(config.name);
-  let pelletMultiplier = 1;
-  if (weapon.ammoStats) {
-    const ammoStats = weapon.ammoStats[config.ammoType];
-    if (ammoStats && ammoStats.pelletCount !== undefined) {
-      pelletMultiplier = ammoStats.pelletCount;
+  const cacheKey = ConfigDisplayName(config);
+  if (pelletMultiplierCache.has(cacheKey)) {
+    return pelletMultiplierCache.get(cacheKey)!;
+  } else {
+    const weapon = GetWeaponByName(config.name);
+    let pelletMultiplier = 1;
+    if (weapon.ammoStats) {
+      const ammoStats = weapon.ammoStats[config.ammoType];
+      if (ammoStats && ammoStats.pelletCount !== undefined) {
+        pelletMultiplier = ammoStats.pelletCount;
+      }
     }
+    pelletMultiplierCache.set(cacheKey, pelletMultiplier);
+    return pelletMultiplier;
   }
-  return pelletMultiplier;
+  // const weapon = GetWeaponByName(config.name);
+  // let pelletMultiplier = 1;
+  // if (weapon.ammoStats) {
+  //   const ammoStats = weapon.ammoStats[config.ammoType];
+  //   if (ammoStats && ammoStats.pelletCount !== undefined) {
+  //     pelletMultiplier = ammoStats.pelletCount;
+  //   }
+  // }
+  // return pelletMultiplier;
 };
 
 const TTK = (

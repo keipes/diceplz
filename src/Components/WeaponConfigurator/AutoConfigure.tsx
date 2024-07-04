@@ -222,18 +222,22 @@ function AutoConfigure(props: AutoConfigureProps) {
     );
     const relativeToOnlyCurrentWeapons = true;
     const rangeRelative = true;
-    const values = getMinMaxRanges(killTempos, relativeToOnlyCurrentWeapons);
+    const values = getMinMaxRanges(
+      killTempos,
+      selector,
+      relativeToOnlyCurrentWeapons
+    );
     const globalMinMax = getGlobalMinMax(values);
     const valueFn = getValueFn(values, globalMinMax, rangeRelative);
     const scores = getMinMaxScores(
       killTempos,
       valueFn,
+      selector,
       relativeToOnlyCurrentWeapons
     );
     const globalMinMaxScores = getGlobalMinMaxScores(scores);
-    const threshold = 0.8;
+    const threshold = 0.5;
     configurator.Filter((config) => {
-      let v = values;
       const killTempo = getKillTempo(
         config,
         props.modifiers,
