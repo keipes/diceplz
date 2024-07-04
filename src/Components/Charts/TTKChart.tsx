@@ -268,7 +268,12 @@ function TTKChart(props: TTKChartProps) {
       </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          invertScaleColors={false}
+          // min={222}
+          // max={551}
+        />
       </div>
     </div>
   );

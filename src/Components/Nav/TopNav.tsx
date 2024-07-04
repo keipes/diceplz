@@ -105,30 +105,30 @@ function TopNav(props: NavProps) {
         </div>
       </li>
     );
-    // load a default category of weapons if we're in development
-    if (
-      category == "Assault Rifles" &&
-      window.location.hostname === "localhost"
-    ) {
-      useEffect(() => {
-        const toAdd = [];
-        for (const weapon of weapons) {
-          if (weapon.stats.length == 0) {
-            console.warn("no stats for " + weapon.name);
-          } else {
-            const stats = GetInitialStatsForWeapon(weapon);
-            toAdd.push({
-              name: weapon.name,
-              visible: true,
-              barrelType: stats.barrelType,
-              ammoType: stats.ammoType,
-            });
+    // // load a default category of weapons if we're in development
+    // if (
+    //   category == "Assault Rifles" &&
+    //   window.location.hostname === "localhost"
+    // ) {
+    //   useEffect(() => {
+    //     const toAdd = [];
+    //     for (const weapon of weapons) {
+    //       if (weapon.stats.length == 0) {
+    //         console.warn("no stats for " + weapon.name);
+    //       } else {
+    //         const stats = GetInitialStatsForWeapon(weapon);
+    //         toAdd.push({
+    //           name: weapon.name,
+    //           visible: true,
+    //           barrelType: stats.barrelType,
+    //           ammoType: stats.ammoType,
+    //         });
 
-            configurator.BulkAddWeapon(toAdd);
-          }
-        }
-      }, []);
-    }
+    //         configurator.BulkAddWeapon(toAdd);
+    //       }
+    //     }
+    //   }, []);
+    // }
   }
 
   let saveDialogue = (
@@ -307,7 +307,7 @@ function TopNav(props: NavProps) {
                   type="checkbox"
                   id="body-armor"
                   name="body-armor"
-                  value={props.modifiers.bodyDamageMultiplier}
+                  checked={props.modifiers.bodyArmor}
                   onChange={(e) => {
                     const cloned = structuredClone(props.modifiers);
                     cloned.bodyArmor = e.target.checked;

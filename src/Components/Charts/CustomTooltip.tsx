@@ -24,6 +24,9 @@ interface TooltipProps {
   invertScaleColors?: boolean;
   useTierList?: boolean;
   useChartBoundsForScoring?: boolean;
+  decimalPlaces?: number;
+  min?: number;
+  max?: number;
 }
 
 function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
@@ -59,7 +62,7 @@ function CustomTooltip(props: TooltipProps) {
   });
   const [bodyLines, setBodyLines] = useState<string[][]>([]);
   const [titleLines, setTitleLines] = useState<string[]>([]);
-  const [precision, setPrecision] = useState(0);
+  const [precision, setPrecision] = useState(2);
   const settingsContext = useContext(SettingsContext);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(Infinity);
@@ -78,7 +81,7 @@ function CustomTooltip(props: TooltipProps) {
         if (parseFloat(_titleLines[0]) === chart.scales.x.max) {
           _titleLines[0] += "+";
         }
-        let _precision = 0;
+        let _precision = 2;
         let _maxValue = 0;
         let _minValue = Infinity;
         let _ascending = true;
@@ -104,7 +107,7 @@ function CustomTooltip(props: TooltipProps) {
         setChartMax(chart.scales.y.max);
         setChartMin(chart.scales.y.min);
         setAscending(_ascending);
-        setPrecision(_precision);
+        setPrecision(props.decimalPlaces || _precision);
         setBodyLines(_bodyLines);
         setTitleLines(_titleLines);
         const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
@@ -154,11 +157,9 @@ function CustomTooltip(props: TooltipProps) {
     if (settingsContext.useAmmoColorsForGraph) {
       bgColor = ConfigAmmoColor(config as unknown as WeaponConfiguration);
     }
-    let min, max;
-    if (props.useChartBoundsForScoring) {
-      [min, max] = [chartMin, chartMax];
-    } else {
-      [min, max] = [minValue, maxValue];
+    let [min, max] = [minValue, maxValue];
+    if (props.min !== undefined && props.max !== undefined) {
+      [min, max] = [props.min, props.max];
     }
     let score: number = (parseFloat(value) - min) / (max - min);
     if (
@@ -167,25 +168,28 @@ function CustomTooltip(props: TooltipProps) {
     ) {
       score = 1 - score;
     }
+
     const grades = [
       ["F", 0.2, 1],
-      ["D", 0.4, 0.75],
-      ["C", 0.6, 0.5],
-      ["B", 0.8, 0.3],
-      ["A", 0.99, 0.1],
-      ["S", 1, 0],
+      ["D", 0.4, 0.8],
+      ["C", 0.6, 0.6],
+      ["B", 0.8, 0.4],
+      ["A", 0.95, 0.2],
+      ["S", Infinity, 0],
     ];
     if (props.useTierList) {
       score = 1 - score;
       for (const [grade, threshold, tierListColorScore] of grades) {
-        if (score <= (threshold as number)) {
+        if (score <= (threshold as number) * 1) {
           value = grade as string;
           score = tierListColorScore as number;
           break;
         }
       }
     } else {
-      value = parseFloat(value).toFixed(precision);
+      value = parseFloat(value).toFixed(
+        props.decimalPlaces === undefined ? precision : props.decimalPlaces
+      );
     }
     const valueColor = "hsl(" + score * 120 + ", 50%, 50%)";
     tooltipColumns[column].push(

@@ -37,27 +37,30 @@ interface SetModifiersFn {
 }
 
 const LOCAL_STORAGE_CONFIG_PREFIX = "SavedConfigs/";
-class LocalStoreConfigLoader implements ConfigLoader {
+class WebStoreConfigLoader implements ConfigLoader {
   private configurations: Map<string, WeaponConfiguration>;
   private setConfigurations: SetConfigurationsFn;
 
   private modifiers: Modifiers;
   private setModifiers: SetModifiersFn;
+  private storage: Storage;
 
   constructor(
     configurations: Map<string, WeaponConfiguration>,
     setConfigurations: SetConfigurationsFn,
     modifiers: Modifiers,
-    setModifiers: SetModifiersFn
+    setModifiers: SetModifiersFn,
+    storage: Storage
   ) {
     this.configurations = configurations;
     this.setConfigurations = setConfigurations;
     this.modifiers = modifiers;
     this.setModifiers = setModifiers;
+    this.storage = storage;
   }
 
   saveConfig(name: string) {
-    localStorage.setItem(
+    this.storage.setItem(
       LOCAL_STORAGE_CONFIG_PREFIX + name,
       JSON.stringify({
         modifiers: this.modifiers,
@@ -66,12 +69,12 @@ class LocalStoreConfigLoader implements ConfigLoader {
     );
   }
   deleteConfig(name: string) {
-    localStorage.removeItem(LOCAL_STORAGE_CONFIG_PREFIX + name);
+    this.storage.removeItem(LOCAL_STORAGE_CONFIG_PREFIX + name);
   }
 
   listConfigs(): string[] {
     const configNames: string[] = [];
-    Object.keys(localStorage).forEach(function (key) {
+    Object.keys(this.storage).forEach(function (key) {
       if (key.startsWith(LOCAL_STORAGE_CONFIG_PREFIX)) {
         const k2 = key.substring(LOCAL_STORAGE_CONFIG_PREFIX.length);
         configNames.push(k2);
@@ -81,7 +84,7 @@ class LocalStoreConfigLoader implements ConfigLoader {
   }
 
   loadConfig(name: string) {
-    const cached = localStorage.getItem(LOCAL_STORAGE_CONFIG_PREFIX + name);
+    const cached = this.storage.getItem(LOCAL_STORAGE_CONFIG_PREFIX + name);
     if (cached) {
       const loaded = JSON.parse(cached);
       this.setConfigurations(new Map(loaded.configurations));
@@ -90,6 +93,68 @@ class LocalStoreConfigLoader implements ConfigLoader {
   }
 }
 
-export { LocalStoreConfigLoader, DefaultModifiers };
+class LocalStoreConfigLoader extends WebStoreConfigLoader {
+  constructor(
+    configurations: Map<string, WeaponConfiguration>,
+    setConfigurations: SetConfigurationsFn,
+    modifiers: Modifiers,
+    setModifiers: SetModifiersFn
+  ) {
+    super(
+      configurations,
+      setConfigurations,
+      modifiers,
+      setModifiers,
+      localStorage
+    );
+  }
+}
+
+class SessionStoreConfigLoader extends WebStoreConfigLoader {
+  constructor(
+    configurations: Map<string, WeaponConfiguration>,
+    setConfigurations: SetConfigurationsFn,
+    modifiers: Modifiers,
+    setModifiers: SetModifiersFn
+  ) {
+    super(
+      configurations,
+      setConfigurations,
+      modifiers,
+      setModifiers,
+      sessionStorage
+    );
+  }
+}
+
+const DEFAULT_SESSION_CONFIG_NAME = "default-session-config";
+
+function LoadInitialSessionData(): [
+  Map<string, WeaponConfiguration>,
+  Modifiers
+] {
+  let configurations = new Map();
+  let modifiers = DefaultModifiers;
+  const configLoader = new SessionStoreConfigLoader(
+    configurations,
+    (configs) => {
+      configurations = configs;
+    },
+    modifiers,
+    (mods) => {
+      modifiers = mods;
+    }
+  );
+  configLoader.loadConfig(DEFAULT_SESSION_CONFIG_NAME);
+  return [configurations, modifiers];
+}
+
+export {
+  LocalStoreConfigLoader,
+  SessionStoreConfigLoader,
+  DefaultModifiers,
+  DEFAULT_SESSION_CONFIG_NAME,
+  LoadInitialSessionData,
+};
 
 export type { ConfigLoader, Modifiers };

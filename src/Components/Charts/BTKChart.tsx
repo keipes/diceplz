@@ -139,7 +139,10 @@ function BTKChart(props: BTKChartProps) {
       />
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          invertScaleColors={false}
+        />
       </div>
     </div>
   );

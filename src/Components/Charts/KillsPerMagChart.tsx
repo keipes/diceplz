@@ -141,10 +141,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       />
       <div className="chart-container">
         <Line data={chartData} options={options} />
-        <CustomTooltip
-          setTooltipHandler={setTooltipHandler}
-          invertScaleColors={false}
-        />
+        <CustomTooltip setTooltipHandler={setTooltipHandler} />
       </div>
     </div>
   );

@@ -22,8 +22,11 @@ import {
 import VelocityChart from "./Charts/VelocityChart.tsx";
 import TopNav from "./Nav/TopNav.tsx";
 import {
+  DEFAULT_SESSION_CONFIG_NAME,
   DefaultModifiers,
+  LoadInitialSessionData,
   LocalStoreConfigLoader,
+  SessionStoreConfigLoader,
 } from "../Data/ConfigLoader.ts";
 import BTKChart from "./Charts/BTKChart.tsx";
 import ReloadChart from "./Charts/ReloadChart.tsx";
@@ -85,13 +88,13 @@ const ConfiguratorContext = createContext(
 );
 
 const SettingsContext = createContext(InitialSettings);
+const [configs, mods] = LoadInitialSessionData();
 
 function App() {
-  const [modifiers, setModifiers] = useState(DefaultModifiers);
+  const [modifiers, setModifiers] = useState(mods);
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
-
-  const [weaponConfigurations, _setWeaponConfigurations] = useState(new Map());
+  const [weaponConfigurations, _setWeaponConfigurations] = useState(configs);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
   ) => {
@@ -121,6 +124,16 @@ function App() {
         setDarkMode(event.matches);
       });
   }, []);
+  useEffect(
+    () =>
+      new SessionStoreConfigLoader(
+        weaponConfigurations,
+        setWeaponConfigurations,
+        modifiers,
+        setModifiers
+      ).saveConfig(DEFAULT_SESSION_CONFIG_NAME),
+    [weaponConfigurations, modifiers]
+  );
 
   const configLoader = new LocalStoreConfigLoader(
     weaponConfigurations,
@@ -128,6 +141,7 @@ function App() {
     modifiers,
     setModifiers
   );
+
   const [configuratorOpen, setConfiguratorOpen] = useState(true);
   let mainContentClass = "main-content";
   if (!configuratorOpen) {

@@ -1,5 +1,8 @@
 import { Modifiers } from "../../Data/ConfigLoader";
-import { GetWeaponByName } from "../../Data/WeaponData";
+import {
+  GetStatsForConfiguration,
+  GetWeaponByName,
+} from "../../Data/WeaponData";
 import { KillsPerMag, TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
@@ -11,6 +14,17 @@ import {
   MouseEvent,
 } from "react";
 import { WeaponConfiguration } from "./WeaponConfigurator";
+import {
+  getGlobalMinMax,
+  getGlobalMinMaxScores,
+  getKillTempo,
+  getKillTempoForConfigurations,
+  getMinMaxRanges,
+  getMinMaxScores,
+  getValueFn,
+} from "../Charts/KillTempoChart";
+import { SELECTOR_AUTO, SELECTOR_SINGLE } from "../Charts/TTKChart";
+import { ConfigDisplayName } from "../../Util/LabelMaker";
 
 interface AutoConfigureProps {
   modifiers: Modifiers;
@@ -190,8 +204,111 @@ function AutoConfigure(props: AutoConfigureProps) {
   //   });
   // }
 
+  function getKillinessScorer(
+    minRange: number,
+    maxRange: number
+  ): MouseEventHandler {
+    return (_: MouseEvent<HTMLElement>) => {
+      doKilliness(minRange, maxRange);
+    };
+  }
+  function doKilliness(minRange: number, maxRange: number): void {
+    const selector = SELECTOR_AUTO;
+    const killTempos = getKillTempoForConfigurations(
+      configurator,
+      props.modifiers,
+      selector,
+      maxRange
+    );
+    const relativeToOnlyCurrentWeapons = true;
+    const rangeRelative = true;
+    const values = getMinMaxRanges(killTempos, relativeToOnlyCurrentWeapons);
+    const globalMinMax = getGlobalMinMax(values);
+    const valueFn = getValueFn(values, globalMinMax, rangeRelative);
+    const scores = getMinMaxScores(
+      killTempos,
+      valueFn,
+      relativeToOnlyCurrentWeapons
+    );
+    const globalMinMaxScores = getGlobalMinMaxScores(scores);
+    const threshold = 0.8;
+    configurator.Filter((config) => {
+      let v = values;
+      const killTempo = getKillTempo(
+        config,
+        props.modifiers,
+        selector,
+        maxRange
+      );
+      if (killTempo.length === 0) {
+        return false;
+      }
+      for (let i = minRange; i <= maxRange; i++) {
+        if (i > killTempo.length) {
+          console.warn(
+            "Range exceeds killTempo length." + i + " > " + killTempo.length
+          );
+          break;
+        }
+        // killTempo.length
+        const value = valueFn(killTempo[i]);
+        let minMax = globalMinMaxScores;
+        if (rangeRelative) {
+          minMax = scores[i];
+        }
+        const scoreRange = minMax.maxScore - minMax.minScore;
+        const minRequiredScore = minMax.minScore + scoreRange * threshold;
+        if (value >= minRequiredScore) {
+          console.log(
+            "Selected " +
+              ConfigDisplayName(config) +
+              " at " +
+              i +
+              "m. " +
+              value +
+              " > " +
+              minRequiredScore
+          );
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  const killiness_ranges = [
+    [0, 9],
+    [0, 49],
+    [0, 74],
+    [0, 99],
+    [0, 150],
+    [10, 19],
+    [30, 39],
+    [30, 49],
+    [40, 49],
+    [50, 74],
+    [50, 150],
+    [74, 99],
+    [100, 124],
+    [100, 150],
+  ];
+  const killinessOptions = [];
+  for (const [start, end] of killiness_ranges) {
+    killinessOptions.push(
+      <span className={clickClass} onClick={getKillinessScorer(start, end)}>
+        {" "}
+        {start}-{end}m{""}
+      </span>
+    );
+  }
   return (
     <>
+      <Configurer>
+        <>
+          Select Killiest
+          {killinessOptions}
+        </>
+      </Configurer>
       <Configurer>
         <>
           {"Minimize TTK at "}
@@ -461,6 +578,28 @@ function AutoConfigure(props: AutoConfigureProps) {
             }}
           >
             {"Maximize Magazine Capacity"}
+          </span>
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.Filter((config) => {
+                const weapon = GetWeaponByName(config.name);
+                const stat = GetStatsForConfiguration(config);
+                if (weapon.ammoStats && weapon.ammoStats[stat.ammoType]) {
+                  const data = weapon.ammoStats[stat.ammoType];
+                  if (data && data.magSize && data.magSize >= 30) {
+                    return true;
+                  }
+                }
+                return false;
+              });
+            }}
+          >
+            {"Filter Mag Capacity >= 30"}
           </span>
         </>
       </Configurer>
