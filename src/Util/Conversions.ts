@@ -40,7 +40,7 @@ const TTK = (
 ) => {
   // ttkOffset is for calculating ttk and ignoring the first shot's fire time
   // considering 80% of shots are missed it doesn't make sense to exclude all that time
-  const ttkOffset = 0;
+  const ttkOffset = 1;
   const ttk = Math.round(
     (1000 / (rpm / 60)) *
       (BTK(config, modifiers, damage, numHeadshots) - ttkOffset)

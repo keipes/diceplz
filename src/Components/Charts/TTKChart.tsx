@@ -40,7 +40,7 @@ function TTKChart(props: TTKChartProps) {
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
-
+  const headshotRatio = 0;
   const datasets = [];
   let seenAuto = false;
   let seenBurst = false;
@@ -103,7 +103,7 @@ function TTKChart(props: TTKChartProps) {
         props.modifiers,
         damage,
         rpmSelector(stat) || 0,
-        0.1
+        headshotRatio
       );
     }
   );
@@ -129,7 +129,7 @@ function TTKChart(props: TTKChartProps) {
         props.modifiers,
         dropoff.damage,
         rpmSelector(stats) || 0,
-        0.2
+        headshotRatio
       );
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
@@ -271,6 +271,7 @@ function TTKChart(props: TTKChartProps) {
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           invertScaleColors={false}
+          decimalPlaces={0}
           // min={222}
           // max={551}
         />
