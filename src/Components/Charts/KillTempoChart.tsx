@@ -444,7 +444,7 @@ function KillTempoChart(props: KillTempoChartProps) {
     "violence",
     theme.highlightColor
   );
-  scales.y.ticks.display = true;
+  // scales.y.ticks.display = true;
   // scales.y.max = globalMinMaxScores.maxScore;
   // scales.y.min = globalMinMaxScores.minScore;
   const options: ChartOptions<"line"> = {
