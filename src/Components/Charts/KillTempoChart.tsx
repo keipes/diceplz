@@ -197,7 +197,7 @@ function getValueFn(
     const weights: any = {
       ttk: 2, //2,
       btk: 1, //2,
-      kps: 0.5,
+      kps: 2,
     };
     let sumWeights = 0;
     for (const key in weights) {
@@ -241,99 +241,47 @@ function getKillTempo(
   const ammoStat = weapon.ammoStats[config.ammoType];
   if (!ammoStat) return data;
   if (!ammoStat.magSize) return data;
-  if (!ammoStat.tacticalReload) {
-    console.warn("No tactical reload time for " + ConfigDisplayName(config));
-    ammoStat.tacticalReload = 6;
-  }
+
   const stats = GetStatsForConfiguration(config);
   if (rpmSelector === SELECTOR_AUTO && !stats.rpmAuto) return data;
   if (rpmSelector === SELECTOR_BURST && !stats.rpmBurst) return data;
   if (rpmSelector === SELECTOR_SINGLE && !stats.rpmSingle) return data;
   const rpm = rpmSelector(stats) as number;
-  let lastDatum: KillTempoDatum = {
-    config,
-    killsPerSecond: 0,
-    killsPerMag: 0,
-    timeToEmptyMagInSec: 0,
-    tacticalReload: 0,
-    ttk: 0,
-    averageBTK: 0,
-    range: 0,
-  };
-  for (let dropoff of stats.dropoffs) {
-    // calculate rate of kills per second by dividing mag size by bullets to kill and multiplying by RPM and dividing by 60 and rounding to 2 decimal places
-    // let accuracy = 1;
-    // accuracy = 0.3;
-    // let headShotRatio = 0.5;
-    // headShotRatio = 0.2;
+  let currentDropoff = 0;
+  for (let i = 0; i <= maxRange; i++) {
+    if (
+      stats.dropoffs.length > currentDropoff + 1 &&
+      i >= stats.dropoffs[currentDropoff + 1].range
+    ) {
+      currentDropoff++;
+    }
     let averageBTK = AverageBTK(
       config,
       modifiers,
-      dropoff.damage,
+      stats.dropoffs[currentDropoff].damage,
       HEADSHOT_RATIO
     );
-
     const timeToEmptyMagInSec = (ammoStat?.magSize / rpm) * 60;
     const killsPerMag = (ammoStat?.magSize * ACCURACY) / averageBTK;
-    const ttk = AverageTTK(config, modifiers, dropoff.damage, rpm, ACCURACY);
-    const killsPerSecond =
-      killsPerMag / timeToEmptyMagInSec + ammoStat.tacticalReload;
-    const datum = {
+    const ttk = AverageTTK(
+      config,
+      modifiers,
+      stats.dropoffs[currentDropoff].damage,
+      rpm,
+      ACCURACY
+    );
+    const killsPerSecond = killsPerMag;
+    data.push({
       config,
       killsPerSecond,
       killsPerMag,
       timeToEmptyMagInSec,
-      tacticalReload: ammoStat.tacticalReload,
+      tacticalReload: ammoStat.tacticalReload || 6,
       ttk,
       averageBTK,
-      range: dropoff.range,
-    };
-    if (dropoff !== stats.dropoffs[stats.dropoffs.length - 1]) {
-      // use last datum to fill in missing ranges up to the current dropoff's starting range
-      for (
-        let i = data.length;
-        i <= Math.min(dropoff.range - 1, maxRange);
-        i++
-      ) {
-        let _datum = Object.assign({}, lastDatum);
-        _datum.range = i;
-        data.push(_datum);
-      }
-      if (dropoff.range > maxRange) {
-        break;
-      }
-      data.push(datum);
-      lastDatum = datum;
-    } else {
-      // this is the last dropoff and we haven't reached maxRange yet, so fill up to max range with current datum
-      for (let i = lastDatum.range + 1; i <= maxRange; i++) {
-        const _datum = Object.assign({}, datum); //structuredClone(datum);
-        _datum.range = i;
-        data.push(_datum);
-      }
-    }
-
-    // for (
-    //   let i = lastDatum.range + 1;
-    //   i < Math.min(dropoff.range, maxRange);
-    //   i++
-    // ) {
-    //   let _datum = structuredClone(lastDatum);
-    //   _datum.range = i;
-    //   data.push(_datum);
-    // }
-    // if (dropoff.range > maxRange) {
-    //   break;
-    // }
-    // lastDatum = datum;
-
-    // data.push(datum);
+      range: i,
+    });
   }
-  // for (let i = lastDatum.range + 1; i <= maxRange; i++) {
-  //   const _datum = structuredClone(lastDatum);
-  //   _datum.range = i;
-  //   data.push(_datum);
-  // }
   return data;
 }
 
