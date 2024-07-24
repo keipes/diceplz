@@ -170,7 +170,7 @@ function RPMChart(props: RPMChartProps) {
         <label>
           <input
             type="checkbox"
-            checked={showAuto}
+            checked={_showAuto}
             onChange={(e) => setShowAuto(e.target.checked)}
             disabled={!seenAuto}
           />
@@ -179,7 +179,7 @@ function RPMChart(props: RPMChartProps) {
         <label>
           <input
             type="checkbox"
-            checked={showBurst}
+            checked={_showBurst}
             onChange={(e) => setShowBurst(e.target.checked)}
             disabled={!seenBurst}
           />
@@ -188,7 +188,7 @@ function RPMChart(props: RPMChartProps) {
         <label>
           <input
             type="checkbox"
-            checked={showSingle}
+            checked={_showSingle}
             onChange={(e) => setShowSingle(e.target.checked)}
             disabled={!seenSingle}
           />
