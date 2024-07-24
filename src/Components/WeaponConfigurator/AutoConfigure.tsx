@@ -43,9 +43,16 @@ function AutoConfigure(props: AutoConfigureProps) {
   const [requiredBTK, setRequiredBTK] = useState(4);
   const [requiredBTKRange, setRequiredBTKRange] = useState(30);
   const [requiredBTKWeaponCategory, setRequiredBTKWeaponCategory] = useState(
-    WeaponCategories[0]
+    WeaponCategories[2]
   );
   const [requiredBTKNumHeadshots, setRequiredBTKNumHeadshots] = useState(0);
+  const [requiredTTK, setRequiredTTK] = useState(300);
+  const [requiredTTKRange, setRequiredTTKRange] = useState(30);
+  const [requiredTTKWeaponCategory, setRequiredTTKWeaponCategory] = useState(
+    WeaponCategories[2]
+  );
+  const [requiredTTKNumHeadshots, setRequiredTTKNumHeadshots] = useState(0);
+
   const [allConfigsOnlyLargestMag, setAllConfigsOnlyLargestMag] =
     useState(true);
   const [allConfigsIgnoreAP, setAllConfigsIgnoreAP] = useState(true);
@@ -684,6 +691,7 @@ function AutoConfigure(props: AutoConfigureProps) {
           </span>
         </>
       </Configurer>
+
       <Configurer>
         <>
           <span
@@ -764,6 +772,109 @@ function AutoConfigure(props: AutoConfigureProps) {
             step={1}
           />
           {" headshots."}
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.SelectFromAllWeaponsInCategory(
+                requiredTTKWeaponCategory,
+                (weapon, stat) => {
+                  let damageAtRequiredRange = 0;
+                  for (const dropoff of stat.dropoffs) {
+                    if (dropoff.range <= requiredTTKRange) {
+                      damageAtRequiredRange = dropoff.damage;
+                    } else {
+                      break;
+                    }
+                  }
+                  const ammoStats = GetAmmoStat(weapon, stat);
+                  if (!ammoStats) {
+                    console.warn(
+                      "No ammo stats for " + name + " " + stat.ammoType
+                    );
+                    return false;
+                  }
+
+                  const rpm = Math.max(
+                    stat.rpmAuto ? stat.rpmAuto : 0,
+                    stat.rpmSingle ? stat.rpmSingle : 0,
+                    stat.rpmBurst ? stat.rpmBurst : 0
+                  );
+                  const ttk = TTK(
+                    {
+                      name: weapon.name,
+                      barrelType: stat.barrelType,
+                      ammoType: stat.ammoType,
+                      visible: true,
+                    },
+                    props.modifiers,
+                    damageAtRequiredRange,
+                    rpm
+                  );
+                  console.log(
+                    "TTK: " +
+                      ttk +
+                      " Required: " +
+                      requiredTTK +
+                      " " +
+                      weapon.name +
+                      " " +
+                      stat.ammoType
+                  );
+                  return ttk <= requiredTTK;
+                }
+              );
+            }}
+          >
+            {"Select all weapons with TTK <= "}
+          </span>
+          <input
+            type="number"
+            value={requiredTTK}
+            onChange={(e) => {
+              setRequiredTTK(parseFloat(e.target.value));
+            }}
+            min={0}
+            max={10000}
+            step={1}
+          />
+          {" at "}
+          <input
+            type="number"
+            value={requiredTTKRange}
+            onChange={(e) => {
+              setRequiredTTKRange(parseFloat(e.target.value));
+            }}
+            min={0}
+            max={150}
+            step={1}
+          />
+          {"m in "}
+          <select
+            value={requiredTTKWeaponCategory}
+            onChange={(e) => {
+              setRequiredTTKWeaponCategory(e.target.value);
+            }}
+          >
+            {WeaponCategories.map((category) => (
+              <option value={category}>{category}</option>
+            ))}
+          </select>
+          {" with "}
+          <input
+            type="number"
+            value={requiredTTKNumHeadshots}
+            onChange={(e) => {
+              setRequiredTTKNumHeadshots(parseFloat(e.target.value));
+            }}
+            min={0}
+            // max={1}
+            step={1}
+          />
+          {" headshots"}
         </>
       </Configurer>
     </>
