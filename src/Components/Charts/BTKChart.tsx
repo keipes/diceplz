@@ -8,7 +8,7 @@ import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
@@ -30,6 +30,9 @@ function BTKChart(props: BTKChartProps) {
   );
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
+  const [numHeadshots, setNumHeadshots] = useState(0);
+  const [previousNumHeadshots, setPreviousNumHeadshots] =
+    useState(numHeadshots);
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -39,7 +42,7 @@ function BTKChart(props: BTKChartProps) {
     let range = 0;
     let damage = 0;
     for (let dropoff of stats.dropoffs) {
-      damage = BTK(config, props.modifiers, dropoff.damage);
+      damage = BTK(config, props.modifiers, dropoff.damage, numHeadshots);
       range = dropoff.range;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
@@ -79,7 +82,8 @@ function BTKChart(props: BTKChartProps) {
       data: data,
       fill: false,
       borderColor: configColors.get(label),
-      tension: 0.1,
+      // tension: 0.1,
+      borderWidth: 1.5,
       stepped: true,
     });
   }
@@ -137,6 +141,30 @@ function BTKChart(props: BTKChartProps) {
           eliminate the target. For instance, if a weapon deals 25 damage per
           bullet and the target has 100 health points, the BTK would be 4."
       />
+      <div>
+        <label>
+          {"Num Headshots "}
+          <input
+            type="number"
+            value={numHeadshots}
+            onChange={(e) => setNumHeadshots(parseFloat(e.target.value))}
+            max={10}
+            min={0}
+            step={1}
+          />
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={numHeadshots === 10}
+            onChange={(e) => {
+              setPreviousNumHeadshots(numHeadshots);
+              setNumHeadshots(e.target.checked ? 10 : previousNumHeadshots);
+            }}
+          />
+          {"All Headshots"}
+        </label>
+      </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
         <CustomTooltip

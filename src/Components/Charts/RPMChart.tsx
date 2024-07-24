@@ -166,28 +166,34 @@ function RPMChart(props: RPMChartProps) {
         title="Rounds Per Minute"
         description="The number of rounds fired per minute."
       />
-      <div className="button-container">
-        <button
-          className={showAuto ? "abs-selector btn-enabled" : "abs-selector"}
-          onClick={(_) => setShowAuto(!showAuto)}
-          disabled={!seenAuto}
-        >
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showAuto}
+            onChange={(e) => setShowAuto(e.target.checked)}
+            disabled={!seenAuto}
+          />
           Auto
-        </button>
-        <button
-          className={showBurst ? "abs-selector btn-enabled" : "abs-selector"}
-          onClick={(_) => setShowBurst(!showBurst)}
-          disabled={!seenBurst}
-        >
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showBurst}
+            onChange={(e) => setShowBurst(e.target.checked)}
+            disabled={!seenBurst}
+          />
           Burst
-        </button>
-        <button
-          className={showSingle ? "abs-selector btn-enabled" : "abs-selector"}
-          onClick={(_) => setShowSingle(!showSingle)}
-          disabled={!seenSingle}
-        >
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showSingle}
+            onChange={(e) => setShowSingle(e.target.checked)}
+            disabled={!seenSingle}
+          />
           Single
-        </button>
+        </label>
       </div>
       <div className="chart-container">
         <Bar data={chartData} options={options} />

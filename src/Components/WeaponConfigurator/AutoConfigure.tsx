@@ -1,9 +1,16 @@
 import { Modifiers } from "../../Data/ConfigLoader";
 import {
+  GetAmmoStat,
   GetStatsForConfiguration,
   GetWeaponByName,
+  StatMatchFilter,
+  StatMatchMask,
+  StatsMatch,
+  Weapon,
+  WeaponCategories,
+  WeaponStats,
 } from "../../Data/WeaponData";
-import { KillsPerMag, TTK } from "../../Util/Conversions";
+import { BTK2, KillsPerMag, TTK } from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
 import {
@@ -33,7 +40,15 @@ function AutoConfigure(props: AutoConfigureProps) {
   const clickClass = "wcf-config-action hover-blue";
   const [ttkInputRange, setTTKInputRange] = useState(30);
   const configurator = useContext(ConfiguratorContext);
-
+  const [requiredBTK, setRequiredBTK] = useState(4);
+  const [requiredBTKRange, setRequiredBTKRange] = useState(30);
+  const [requiredBTKWeaponCategory, setRequiredBTKWeaponCategory] = useState(
+    WeaponCategories[0]
+  );
+  const [requiredBTKNumHeadshots, setRequiredBTKNumHeadshots] = useState(0);
+  const [allConfigsOnlyLargestMag, setAllConfigsOnlyLargestMag] =
+    useState(true);
+  const [allConfigsIgnoreAP, setAllConfigsIgnoreAP] = useState(true);
   function minimizeTTK(range: number) {
     configurator.Maximize((config, stat) => {
       let damage = 0;
@@ -118,11 +133,11 @@ function AutoConfigure(props: AutoConfigureProps) {
         ttks.set(key, lowestTTK);
       }
     }
-    configurator.Select((name, stat) => {
+    configurator.Select((weapon, stat) => {
       for (const dropoff of stat.dropoffs) {
         const ttk = TTK(
           {
-            name: name,
+            name: weapon.name,
             barrelType: stat.barrelType,
             ammoType: stat.ammoType,
             visible: true,
@@ -132,9 +147,7 @@ function AutoConfigure(props: AutoConfigureProps) {
           rpmSelector(stat)
         );
         const pctTtk = (ttks.get(dropoff.range) || Infinity) / ttk;
-        // console.log(pctTtk);
         if (pctTtk > 0.9) {
-          // if (ttk === ttks.get(dropoff.range)) {
           if (dropoff.range == highestRangeSeen && ttk > lowestEndTTK) {
             console.log(
               "Did not select " + name + " at " + dropoff.range + "m."
@@ -148,60 +161,6 @@ function AutoConfigure(props: AutoConfigureProps) {
       return false;
     });
   }
-  // function btkSelector(requiredBTK: number, endRange: number) {
-  //   configurator.Select((name, stat) => {
-  //     let lowestEndTTK = Infinity;
-  //     for (const dropoff of stat.dropoffs) {
-  //       if (dropoff.range > endRange) {
-  //         break;
-  //       }
-  //       const btk = BTK(
-  //         {
-  //           name: name,
-  //           barrelType: stat.barrelType,
-  //           ammoType: stat.ammoType,
-  //           visible: true,
-  //         },
-  //         props.modifiers,
-  //         dropoff.damage
-  //       );
-  //       lowestEndTTK = btk;
-  //     }
-  //     if (lowestEndTTK <= requiredBTK) {
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  // }
-
-  // function ttkSelector(requiredTTK: number, endRange: number) {
-  //   configurator.Select((name, stat) => {
-  //     let highestEndTTK = -Infinity;
-  //     for (const dropoff of stat.dropoffs) {
-  //       if (dropoff.range > endRange) {
-  //         break;
-  //       }
-  //       const ttk = TTK(
-  //         {
-  //           name: name,
-  //           barrelType: stat.barrelType,
-  //           ammoType: stat.ammoType,
-  //           visible: true,
-  //         },
-  //         props.modifiers,
-  //         dropoff.damage,
-  //         stat.rpmAuto ? stat.rpmAuto : 0
-  //       );
-  //       if (ttk > highestEndTTK) {
-  //         highestEndTTK = ttk;
-  //       }
-  //     }
-  //     if (highestEndTTK <= requiredTTK) {
-  //       return true;
-  //     }
-  //     return false;
-  //   });
-  // }
 
   function getKillinessScorer(
     minRange: number,
@@ -235,7 +194,7 @@ function AutoConfigure(props: AutoConfigureProps) {
       relativeToOnlyCurrentWeapons
     );
     const globalMinMaxScores = getGlobalMinMaxScores(scores);
-    const threshold = 0.5;
+    const threshold = 0.8;
     configurator.Filter((config) => {
       const killTempo = getKillTempo(
         config,
@@ -271,11 +230,16 @@ function AutoConfigure(props: AutoConfigureProps) {
 
   const killiness_ranges = [
     [0, 9],
+    [0, 19],
+    [0, 29],
+    [0, 39],
     [0, 49],
     [0, 74],
     [0, 99],
+    [0, 149],
     [0, 150],
     [10, 19],
+    [20, 29],
     [30, 39],
     [30, 49],
     [40, 49],
@@ -437,13 +401,132 @@ function AutoConfigure(props: AutoConfigureProps) {
           <span
             className={clickClass}
             onClick={(_: MouseEvent<HTMLElement>) => {
-              configurator.Select((_) => {
-                return true;
-              });
+              interface SeenStats {
+                weapon: Weapon;
+                stats: WeaponStats;
+              }
+              if (allConfigsOnlyLargestMag) {
+                const ammoDedupeStrFn = (ammoType: string) =>
+                  ammoType
+                    .replace(" Extended", "")
+                    .replace(" Beltfed", "")
+                    .replace(" Drum", "");
+                const weaponMap = new Map<string, Map<String, SeenStats[]>>();
+                const ignoreMask = StatMatchMask.FromFilters(
+                  StatMatchFilter.AmmoType,
+                  StatMatchFilter.MagSize,
+                  StatMatchFilter.TacticalReload,
+                  StatMatchFilter.EmptyReload
+                );
+                configurator.ForEach((config) => {
+                  const weapon = GetWeaponByName(config.name);
+                  let seenAmmoTypes = weaponMap.get(weapon.name);
+                  if (!seenAmmoTypes) {
+                    seenAmmoTypes = new Map<string, SeenStats[]>();
+                    weaponMap.set(weapon.name, seenAmmoTypes);
+                  }
+                  for (const stat of weapon.stats) {
+                    const ammoDedupeStr = ammoDedupeStrFn(stat.ammoType);
+
+                    let seenStats = seenAmmoTypes.get(ammoDedupeStr);
+                    if (!seenStats) {
+                      seenStats = [];
+                      seenAmmoTypes.set(ammoDedupeStr, seenStats);
+                    }
+                    let includeStat = true;
+
+                    const newStats = seenStats.filter((seenStat) => {
+                      if (
+                        StatsMatch(
+                          seenStat.weapon,
+                          seenStat.stats,
+                          weapon,
+                          stat,
+                          ignoreMask
+                        )
+                      ) {
+                        const seenAmmoStat = GetAmmoStat(
+                          seenStat.weapon,
+                          seenStat.stats
+                        );
+                        const ammoStat = GetAmmoStat(weapon, stat);
+                        if (seenAmmoStat && ammoStat) {
+                          if (seenAmmoStat.magSize < ammoStat.magSize) {
+                            console.debug(
+                              "Removing previously seen stat with lower mag size. " +
+                                seenStat.weapon.name +
+                                " " +
+                                seenStat.stats.ammoType
+                            );
+                            return false;
+                          }
+                        }
+                        console.debug(
+                          "Ignoring duplicate stat. " +
+                            weapon.name +
+                            " " +
+                            stat.ammoType
+                        );
+                        includeStat = false;
+                      }
+                      return true;
+                    });
+                    if (includeStat) {
+                      newStats.push({ weapon, stats: stat });
+                    }
+                    seenAmmoTypes.set(ammoDedupeStr, newStats);
+                  }
+                });
+                configurator.Select((weapon, stat) => {
+                  if (
+                    allConfigsIgnoreAP &&
+                    stat.ammoType.indexOf("Armor Piercing") >= 0 &&
+                    weapon.name !== "NTW-50"
+                  ) {
+                    return false;
+                  }
+                  let seenAmmoTypes = weaponMap.get(weapon.name);
+                  if (seenAmmoTypes) {
+                    let ammoDedupeStr = ammoDedupeStrFn(stat.ammoType);
+                    let seenStats = seenAmmoTypes.get(ammoDedupeStr);
+                    if (seenStats) {
+                      for (const seenStat of seenStats) {
+                        if (
+                          stat.ammoType == seenStat.stats.ammoType &&
+                          stat.barrelType == seenStat.stats.barrelType
+                        ) {
+                          return true;
+                        }
+                      }
+                    }
+                  }
+                  return false;
+                });
+              } else {
+                configurator.Select((_w, _s) => {
+                  return true;
+                });
+              }
             }}
           >
-            {"Add all configurations for currently selected weapons."}
+            {"Add all configurations for currently selected weapons. "}
           </span>
+          {"Biggest mag only: "}
+          <input
+            type="checkbox"
+            checked={allConfigsOnlyLargestMag}
+            onChange={(e) => {
+              setAllConfigsOnlyLargestMag(e.target.checked);
+            }}
+          />
+          {"Ignore AP: "}
+          <input
+            type="checkbox"
+            checked={allConfigsIgnoreAP}
+            onChange={(e) => {
+              setAllConfigsIgnoreAP(e.target.checked);
+            }}
+          />
         </>
       </Configurer>
       <Configurer>
@@ -594,6 +677,88 @@ function AutoConfigure(props: AutoConfigureProps) {
           >
             {"Filter Mag Capacity >= 30"}
           </span>
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              configurator.SelectFromAllWeaponsInCategory(
+                requiredBTKWeaponCategory,
+                (weapon, stat) => {
+                  let damageAtRequiredRange = 0;
+                  for (const dropoff of stat.dropoffs) {
+                    if (dropoff.range <= requiredBTKRange) {
+                      damageAtRequiredRange = dropoff.damage;
+                    } else {
+                      break;
+                    }
+                  }
+                  const ammoStats = GetAmmoStat(weapon, stat);
+                  if (!ammoStats) {
+                    console.warn(
+                      "No ammo stats for " + name + " " + stat.ammoType
+                    );
+                    return false;
+                  }
+                  const btk = BTK2(
+                    props.modifiers,
+                    damageAtRequiredRange,
+                    requiredBTKNumHeadshots,
+                    ammoStats
+                  );
+                  return btk <= requiredBTK;
+                }
+              );
+            }}
+          >
+            {"Select all weapons with BTK <= "}
+          </span>
+          <input
+            type="number"
+            value={requiredBTK}
+            onChange={(e) => {
+              setRequiredBTK(parseFloat(e.target.value));
+            }}
+            min={1}
+            max={10}
+            step={1}
+          />
+          {" at "}
+          <input
+            type="number"
+            value={requiredBTKRange}
+            onChange={(e) => {
+              setRequiredBTKRange(parseFloat(e.target.value));
+            }}
+            min={0}
+            max={150}
+            step={1}
+          />
+          {"m in "}
+          <select
+            value={requiredBTKWeaponCategory}
+            onChange={(e) => {
+              setRequiredBTKWeaponCategory(e.target.value);
+            }}
+          >
+            {WeaponCategories.map((category) => (
+              <option value={category}>{category}</option>
+            ))}
+          </select>
+          {" with "}
+          <input
+            type="number"
+            value={requiredBTKNumHeadshots}
+            onChange={(e) => {
+              setRequiredBTKNumHeadshots(parseFloat(e.target.value));
+            }}
+            min={0}
+            // max={1}
+            step={1}
+          />
+          {" headshots."}
         </>
       </Configurer>
     </>

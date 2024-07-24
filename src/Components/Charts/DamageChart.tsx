@@ -7,7 +7,7 @@ import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GenerateScales } from "../../Util/ChartCommon.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
@@ -20,6 +20,7 @@ interface DamageChartProps {
 function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
   const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
+  const [headshot, setHeadshot] = useState(false);
   const configurations = useContext(ConfiguratorContext);
   const requiredRanges = RequiredRanges(
     configurations.weaponConfigurations,
@@ -81,6 +82,7 @@ function DamageChart(props: DamageChartProps) {
       borderColor: configColors.get(label),
       tension: 0.1,
       stepped: true,
+      borderWidth: 1.5,
     });
   }
 
@@ -132,6 +134,16 @@ function DamageChart(props: DamageChartProps) {
         title="Damage"
         description="Weapon damage changes with distance through a step-function damage drop-off, altering values at distinct ranges instead of a gradual decrease or increase."
       />
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={headshot}
+            onChange={(e) => setHeadshot(e.target.checked)}
+          />
+          Headshot
+        </label>
+      </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
         <CustomTooltip setTooltipHandler={setTooltipHandler} />

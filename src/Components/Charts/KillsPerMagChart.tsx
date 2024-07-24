@@ -88,6 +88,7 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       borderColor: configColors.get(label),
       tension: 0.1,
       stepped: true,
+      borderWidth: 1.5,
     });
   }
 

@@ -19,6 +19,9 @@ const RequiredRanges = function (
       if (seenConvertedDamages.has(convertedDamage)) {
       } else {
         values.add(dropoff.range);
+        // if (dropoff.range > 0) {
+        //   values.add(dropoff.range - 1);
+        // }
         seenConvertedDamages.add(convertedDamage);
       }
       if (dropoff.range > highestRangeSeen) {
@@ -29,6 +32,7 @@ const RequiredRanges = function (
   for (let i = 0; i <= 150; i++) {
     values.add(i);
   }
+  values.add(150);
   values.add(highestRangeSeen);
   return values;
 };

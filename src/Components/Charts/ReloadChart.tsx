@@ -179,21 +179,23 @@ function ReloadChart(props: ReloadChartProps) {
         title="Reload Time"
         description="Time to reload the weapon. Empty reload is when the weapon is completely out of ammo. Tactical reload is when the weapon still has ammo in the magazine."
       />
-      <div className="button-container">
-        <button
-          className={showEmpty ? "abs-selector btn-enabled" : "abs-selector"}
-          onClick={(_) => setShowEmpty(!showEmpty)}
-          disabled={!seenEmpty}
-        >
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={_showEmpty}
+            onChange={(e) => setShowEmpty(e.target.checked)}
+          />
           Empty
-        </button>
-        <button
-          className={showTactical ? "abs-selector btn-enabled" : "abs-selector"}
-          onClick={(_) => setShowTactical(!showTactical)}
-          disabled={!seenTactical}
-        >
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={_showTactical}
+            onChange={(e) => setShowTactical(e.target.checked)}
+          />
           Tactical
-        </button>
+        </label>
       </div>
       <div className="chart-container">
         <Bar data={chartData} options={options} />

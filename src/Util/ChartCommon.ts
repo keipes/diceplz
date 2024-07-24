@@ -38,6 +38,9 @@ function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string) {
             return index % 10 === 0 ? label : "";
           }
         },
+        // stepSize: 1,
+        // min: 0,
+        // max: 150,
       },
     },
   };

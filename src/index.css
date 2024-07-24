@@ -25,7 +25,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --root-bg: var(-battle-bg-blue);
+    --root-bg: var(--battle-black);
     --chart-background: #01010180;
     --chart-desc-bg: black;
     --font-color: var(--battle-white);

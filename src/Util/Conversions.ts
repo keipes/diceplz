@@ -1,70 +1,93 @@
 import { Modifiers } from "../Data/ConfigLoader";
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
-import { GetStatsForConfiguration, GetWeaponByName } from "../Data/WeaponData";
-import { ConfigDisplayName } from "./LabelMaker";
+import {
+  AmmoStat,
+  GetStatsForConfiguration,
+  GetWeaponByName,
+} from "../Data/WeaponData";
 
-const pelletMultiplierCache = new Map<string, number>();
-const pelletMultiplier = (config: WeaponConfiguration) => {
-  const cacheKey = ConfigDisplayName(config);
-  if (pelletMultiplierCache.has(cacheKey)) {
-    return pelletMultiplierCache.get(cacheKey)!;
-  } else {
-    const weapon = GetWeaponByName(config.name);
-    let pelletMultiplier = 1;
-    if (weapon.ammoStats) {
-      const ammoStats = weapon.ammoStats[config.ammoType];
-      if (ammoStats && ammoStats.pelletCount !== undefined) {
-        pelletMultiplier = ammoStats.pelletCount;
-      }
-    }
-    pelletMultiplierCache.set(cacheKey, pelletMultiplier);
-    return pelletMultiplier;
-  }
-  // const weapon = GetWeaponByName(config.name);
-  // let pelletMultiplier = 1;
-  // if (weapon.ammoStats) {
-  //   const ammoStats = weapon.ammoStats[config.ammoType];
-  //   if (ammoStats && ammoStats.pelletCount !== undefined) {
-  //     pelletMultiplier = ammoStats.pelletCount;
-  //   }
-  // }
-  // return pelletMultiplier;
-};
-
-const TTK = (
+function TTK(
   config: WeaponConfiguration,
   modifiers: Modifiers,
   damage: number,
   rpm: number,
-  numHeadshots?: number
-) => {
-  // ttkOffset is for calculating ttk and ignoring the first shot's fire time
-  // considering 80% of shots are missed it doesn't make sense to exclude all that time
-  const ttkOffset = 1;
+  numHeadshots?: number,
+  includeFirstShotDelay = false
+) {
+  const weapon = GetWeaponByName(config.name);
+  return TTK2(
+    modifiers,
+    damage,
+    rpm,
+    numHeadshots,
+    weapon.ammoStats?.[config.ammoType],
+    includeFirstShotDelay
+  );
+}
+
+function TTK2(
+  modifiers: Modifiers,
+  damage: number,
+  rpm: number,
+  numHeadshots?: number,
+  ammoStats?: AmmoStat | undefined,
+  includeFirstShotDelay = false
+) {
+  let offset = includeFirstShotDelay ? 0 : 1;
   const ttk = Math.round(
     (1000 / (rpm / 60)) *
-      (BTK(config, modifiers, damage, numHeadshots) - ttkOffset)
+      (BTK2(modifiers, damage, numHeadshots, ammoStats) - offset)
   );
   return ttk;
-};
+}
 
 const AverageTTK = (
   config: WeaponConfiguration,
   modifiers: Modifiers,
   damage: number,
   rpm: number,
-  headshotRatio: number
+  headshotRatio: number,
+  includeFirstShotDelay = false
 ) => {
+  let weapon = GetWeaponByName(config.name);
+  return AverageTTK2(
+    modifiers,
+    damage,
+    rpm,
+    headshotRatio,
+    weapon.ammoStats?.[config.ammoType],
+    includeFirstShotDelay
+  );
+};
+
+function AverageTTK2(
+  modifiers: Modifiers,
+  damage: number,
+  rpm: number,
+  headshotRatio: number,
+  ammoStats?: AmmoStat,
+  includeFirstShotDelay = false
+) {
   let ttk = Infinity;
-  let minTTK = TTK(config, modifiers, damage, rpm, Infinity);
+  let minTTK = TTK2(
+    modifiers,
+    damage,
+    rpm,
+    Infinity,
+    ammoStats,
+    includeFirstShotDelay
+  );
   let sumTTK = 0;
   let sumProbabilities = 0;
   for (let headshots = 0; ttk > minTTK; headshots++) {
-    if (headshots > 10) {
-      console.warn("uh oh " + config.name + " " + ttk + " " + minTTK);
-      break;
-    }
-    ttk = TTK(config, modifiers, damage, rpm, headshots);
+    ttk = TTK2(
+      modifiers,
+      damage,
+      rpm,
+      headshots,
+      ammoStats,
+      includeFirstShotDelay
+    );
     if (headshots === 0) {
       sumProbabilities += 1 - headshotRatio;
       sumTTK += ttk * (1 - headshotRatio);
@@ -75,7 +98,7 @@ const AverageTTK = (
     }
   }
   return sumTTK / sumProbabilities;
-};
+}
 
 const AverageBTK = (
   config: WeaponConfiguration,
@@ -83,12 +106,27 @@ const AverageBTK = (
   damage: number,
   headshotRatio: number
 ) => {
+  let weapon = GetWeaponByName(config.name);
+  return AverageBTK2(
+    modifiers,
+    damage,
+    headshotRatio,
+    weapon.ammoStats?.[config.ammoType]
+  );
+};
+
+function AverageBTK2(
+  modifiers: Modifiers,
+  damage: number,
+  headshotRatio: number,
+  ammoStats?: AmmoStat
+) {
   let btk = Infinity;
-  let minBTK = BTK(config, modifiers, damage, Infinity);
+  let minBTK = BTK2(modifiers, damage, Infinity, ammoStats);
   let sumBTK = 0;
   let sumProbabilities = 0;
   for (let headshots = 0; btk > minBTK; headshots++) {
-    btk = BTK(config, modifiers, damage, headshots);
+    btk = BTK2(modifiers, damage, headshots, ammoStats);
     if (headshots === 0) {
       sumProbabilities += 1 - headshotRatio;
       sumBTK += btk * (1 - headshotRatio);
@@ -99,7 +137,7 @@ const AverageBTK = (
     }
   }
   return sumBTK / sumProbabilities;
-};
+}
 
 const BTK = (
   config: WeaponConfiguration,
@@ -108,9 +146,30 @@ const BTK = (
   numHeadshots?: number
 ) => {
   const weapon = GetWeaponByName(config.name);
-  let hsm = 1;
   if (weapon.ammoStats) {
-    hsm = weapon.ammoStats[config.ammoType]?.headshotMultiplier || 1;
+    return BTK2(
+      modifiers,
+      damage,
+      numHeadshots,
+      weapon.ammoStats[config.ammoType]
+    );
+  }
+  return BTK2(modifiers, damage, numHeadshots);
+};
+
+const BTK2 = (
+  modifiers: Modifiers,
+  damage: number,
+  numHeadshots?: number,
+  ammoStats?: AmmoStat
+) => {
+  let pelletMultiplier = 1;
+  if (ammoStats && ammoStats.pelletCount !== undefined) {
+    pelletMultiplier = ammoStats.pelletCount;
+  }
+  let hsm = 1;
+  if (ammoStats) {
+    hsm = ammoStats.headshotMultiplier || 1;
   }
   let btk = 0;
   // Weapons doing 99.75 damage have resulted in a kill. Assumed max player health is 99.5, from 2043 discord.
@@ -120,7 +179,7 @@ const BTK = (
     for (let i = 0; i < numHeadshots; i++) {
       btk += 1;
       playerHealth -=
-        damage * hsm * modifiers.damageMultiplier * pelletMultiplier(config);
+        damage * hsm * modifiers.damageMultiplier * pelletMultiplier;
       if (playerHealth <= 0) {
         break;
       }
@@ -136,7 +195,7 @@ const BTK = (
           (damage *
             modifiers.damageMultiplier *
             modifiers.bodyDamageMultiplier *
-            pelletMultiplier(config))
+            pelletMultiplier)
       );
     return r;
   }
@@ -177,4 +236,15 @@ const KillsPerMag = (
   const magSize = MagazineCapacity(config);
   return Math.floor(magSize / btk);
 };
-export { TTK, AverageTTK, BTK, AverageBTK, KillsPerMag };
+
+export {
+  TTK,
+  TTK2,
+  AverageTTK,
+  AverageTTK2,
+  BTK,
+  BTK2,
+  AverageBTK,
+  AverageBTK2,
+  KillsPerMag,
+};

@@ -1,5 +1,10 @@
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
-import { GetWeaponByName, WeaponStats } from "./WeaponData";
+import {
+  GetCategoryWeapons,
+  GetWeaponByName,
+  Weapon,
+  WeaponStats,
+} from "./WeaponData";
 
 interface AddWeaponFn {
   (config: WeaponConfiguration): void;
@@ -38,7 +43,7 @@ interface MaximizingFn {
 }
 
 interface Selector {
-  (name: string, stats: WeaponStats): boolean;
+  (weapon: Weapon, stats: WeaponStats): boolean;
 }
 
 interface SelectingFn {
@@ -47,7 +52,6 @@ interface SelectingFn {
 
 interface WeaponConfig {
   weaponConfigurations: Map<string, WeaponConfiguration>;
-
   AddWeapon: AddWeaponFn;
   BulkAddWeapon: BulkAddWeaponFn;
   RemoveWeapon: RemoveWeaponFn;
@@ -174,7 +178,29 @@ class WeaponConfigurations implements WeaponConfig {
     for (let name of seenWeapons) {
       const weapon = GetWeaponByName(name);
       for (const stat of weapon.stats) {
-        if (selector(name, stat)) {
+        if (selector(weapon, stat)) {
+          AddConfigToMap(
+            {
+              name,
+              barrelType: stat.barrelType,
+              ammoType: stat.ammoType,
+              visible: true,
+            },
+            configurations
+          );
+        }
+      }
+    }
+    this.setWeaponConfigurations(configurations);
+  }
+
+  // From existing weapons, select all configs which match the selector. May have more configs in configurator window afterwards.
+  SelectFromAllWeaponsInCategory(category: string, selector: Selector) {
+    const configurations = new Map();
+    for (const weapon of GetCategoryWeapons(category)) {
+      const name = weapon.name;
+      for (const stat of weapon.stats) {
+        if (selector(weapon, stat)) {
           AddConfigToMap(
             {
               name,

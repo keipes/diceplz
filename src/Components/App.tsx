@@ -36,9 +36,12 @@ import {
 } from "../Data/SettingsLoader.ts";
 
 import "../Util/CustomPositioner.ts";
+import "../Util/DropoffInteractionMode.ts";
 import { WeaponConfigurations } from "../Data/WeaponConfiguration.ts";
 import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 import KillTempoChart from "./Charts/KillTempoChart.tsx";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import TierList from "./TierList/TierList.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -152,53 +155,64 @@ function App() {
   if (!configuratorOpen) {
     mainContentStyle.paddingBottom = "2.5vh";
   }
+
+  const indexContent = (
+    <>
+      <TopNav
+        configLoader={configLoader}
+        settings={settings}
+        setUseAmmoColorsForGraph={(value: boolean) => {
+          setSettings(SetUseAmmoColorsForGraph(value));
+        }}
+        modifiers={modifiers}
+        setModifiers={setModifiers}
+      />
+      <WeaponConfigurator
+        open={configuratorOpen}
+        setOpen={setConfiguratorOpen}
+        setBottomPadding={setBottomPadding}
+        modifiers={modifiers}
+      />
+      <div className={mainContentClass} style={mainContentStyle}>
+        <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
+        <BTKChart modifiers={modifiers} settings={settings} />
+        <DamageChart modifiers={modifiers} settings={settings} />
+        <KillsPerMagChart
+          settings={settings}
+          modifiers={modifiers}
+        ></KillsPerMagChart>
+        <RPMChart settings={settings} />
+        <VelocityChart settings={settings} />
+        <ReloadChart settings={settings} />
+        <MagazineChart settings={settings} />
+        <KillTempoChart modifiers={modifiers} settings={settings} />
+        <div className={"blurb"}>
+          <p>
+            Thanks for checking out my 2042 weapon stats page. All weapon stats
+            have been painstakingly collected by Sorrow and others on the
+            Battlefield 2043 Discord server. Links to the source Google Sheet,
+            and Discord Server are in the header bar.
+          </p>
+        </div>
+      </div>
+    </>
+  );
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: indexContent,
+    },
+    {
+      path: "tiers/ar",
+      element: <TierList />,
+    },
+  ]);
   return (
     <>
       <ConfiguratorContext.Provider value={wpnCfg}>
         <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
           <SettingsContext.Provider value={settings}>
-            <TopNav
-              configLoader={configLoader}
-              settings={settings}
-              setUseAmmoColorsForGraph={(value: boolean) => {
-                setSettings(SetUseAmmoColorsForGraph(value));
-              }}
-              modifiers={modifiers}
-              setModifiers={setModifiers}
-            />
-            <WeaponConfigurator
-              open={configuratorOpen}
-              setOpen={setConfiguratorOpen}
-              setBottomPadding={setBottomPadding}
-              modifiers={modifiers}
-            />
-            <div className={mainContentClass} style={mainContentStyle}>
-              <TTKChart
-                settings={settings}
-                modifiers={modifiers}
-                title={"TTK"}
-              />
-              <BTKChart modifiers={modifiers} settings={settings} />
-              <DamageChart modifiers={modifiers} settings={settings} />
-              <KillsPerMagChart
-                settings={settings}
-                modifiers={modifiers}
-              ></KillsPerMagChart>
-              <KillTempoChart modifiers={modifiers} settings={settings} />
-              <RPMChart settings={settings} />
-              <VelocityChart settings={settings} />
-              <ReloadChart settings={settings} />
-              <MagazineChart settings={settings} />
-
-              <div className={"blurb"}>
-                <p>
-                  Thanks for checking out my 2042 weapon stats page. All weapon
-                  stats have been painstakingly collected by Sorrow and others
-                  on the Battlefield 2043 Discord server. Links to the source
-                  Google Sheet, and Discord Server are in the header bar.
-                </p>
-              </div>
-            </div>
+            <RouterProvider router={router} />
           </SettingsContext.Provider>
         </ThemeContext.Provider>
       </ConfiguratorContext.Provider>

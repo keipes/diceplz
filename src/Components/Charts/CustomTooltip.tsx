@@ -174,7 +174,7 @@ function CustomTooltip(props: TooltipProps) {
       [min, max] = [props.min, props.max];
       console.warn("used min max from props");
     } else {
-      console.warn("No min max in props", props);
+      // console.warn("No min max in props", props);
     }
     let score: number = (parseFloat(value) - min) / (max - min);
     if (
@@ -184,11 +184,11 @@ function CustomTooltip(props: TooltipProps) {
       score = 1 - score;
     }
     const grades = [
-      ["F", 0.2, 1],
-      ["D", 0.4, 0.8],
-      ["C", 0.6, 0.6],
-      ["B", 0.8, 0.4],
-      ["A", 0.9, 0.2],
+      ["F", 0.3, 1],
+      ["D", 0.5, 0.8],
+      ["C", 0.55, 0.6],
+      ["B", 0.6, 0.4],
+      ["A", 0.7, 0.2],
       ["S", Infinity, 0],
     ];
     if (props.useTierList) {

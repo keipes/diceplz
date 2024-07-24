@@ -13,10 +13,10 @@ interface WeaponCategory {
 }
 
 interface AmmoStat {
-  magSize?: number;
+  magSize: number;
   tacticalReload?: number;
   emptyReload?: number;
-  headshotMultiplier?: number;
+  headshotMultiplier: number;
   pelletCount?: number;
 }
 
@@ -109,6 +109,30 @@ function GetStatsForConfiguration(config: WeaponConfiguration): WeaponStats {
     }
     return statCache[cacheKey];
   }
+}
+
+function GetAmmoStat(weapon: Weapon, stat: WeaponStats): AmmoStat | null {
+  if (weapon.ammoStats) {
+    const ammoStat = weapon.ammoStats[stat.ammoType];
+    if (ammoStat) {
+      return ammoStat;
+    }
+  }
+  return null;
+}
+
+// bad bad bad - time complexity is O(n) for each call - better to iterate through dropoffs in caller
+function GetDropoffForRange(
+  config: WeaponConfiguration,
+  range: number
+): DamageRange {
+  const stat = GetStatsForConfiguration(config);
+  for (const dropoff of stat.dropoffs) {
+    if (dropoff.range >= range) {
+      return dropoff;
+    }
+  }
+  return stat.dropoffs[stat.dropoffs.length - 1];
 }
 
 function GetInitialStatsForWeapon(weapon: Weapon) {
@@ -204,15 +228,150 @@ function AllWeaponDropoffRangeFrequencies() {
 //   });
 // }
 
+// // <hack>
+// // Add in the DFR reload times since they're not in Sorrow's google sheet yet
+// const DFR_RELOAD_TIMES = {
+//   Standard: { Tactical: 2.54, Empty: 2.57 },
+//   "Standard Extended": { Tactical: 2.75, Empty: 2.68 },
+//   "Standard Beltfed": { Tactical: 5.87, Empty: 5.9 },
+//   "Armor Piercing": { Tactical: 7.09, Empty: 7.17 },
+//   "High Power": { Tactical: 2.64, Empty: 2.82 },
+//   "High Power Beltfed": { Tactical: 7.17, Empty: 7.05 },
+//   Subsonic: { Tactical: 2.72, Empty: 2.78 },
+//   "Subsonic Beltfed": { Tactical: 5.95, Empty: 5.87 },
+// };
+// AllWeaponsProcessor((weapon) => {
+//   if (weapon.name == "DFR STRIFE") {
+//     console.log(weapon);
+//     for (const [key, value] of Object.entries(weapon.ammoStats as Object)) {
+//       console.log(key);
+//       const newData: any = DFR_RELOAD_TIMES[key];
+//       if (newData) {
+//         if (!value.tacticalReload || !value.emptyReload) {
+//           value.tacticalReload = newData.Tactical;
+//           value.emptyReload = newData.Empty;
+//         } else {
+//           console.warn("Had existing reload time data for " + key);
+//         }
+//       } else {
+//         if (!value.tacticalReload || !value.emptyReload) {
+//           console.warn("No updated DFR reload data for " + key);
+//         }
+//       }
+//     }
+//   }
+// });
+// // </hack>
+
+enum StatMatchFilter {
+  MagSize = Math.pow(2, 0),
+  TacticalReload = Math.pow(2, 1),
+  EmptyReload = Math.pow(2, 2),
+  AmmoType = Math.pow(2, 3),
+}
+
+class StatMatchMask {
+  private mask: number;
+  constructor() {
+    this.mask = 0;
+  }
+
+  static FromFilters(...filters: StatMatchFilter[]) {
+    const mask = new StatMatchMask();
+    for (const filter of filters) {
+      mask.AddFilter(filter);
+    }
+    return mask;
+  }
+
+  public AddFilter(filter: StatMatchFilter) {
+    this.mask |= filter;
+  }
+  public RemoveFilter(filter: StatMatchFilter) {
+    this.mask &= ~filter;
+  }
+  public ContainsFilter(filter: StatMatchFilter) {
+    return (this.mask & filter) === filter;
+  }
+}
+function StatsMatch(
+  weaponA: Weapon,
+  statA: WeaponStats,
+  weaponB: Weapon,
+  statB: WeaponStats,
+  ignore: StatMatchMask
+) {
+  if (!ignore.ContainsFilter(StatMatchFilter.AmmoType)) {
+    if (statA.ammoType !== statB.ammoType) {
+      return false;
+    }
+  }
+  if (statA.barrelType !== statB.barrelType) {
+    return false;
+  }
+  if (statA.velocity !== statB.velocity) {
+    return false;
+  }
+  if (statA.rpmAuto !== statB.rpmAuto) {
+    return false;
+  }
+  if (statA.rpmBurst !== statB.rpmBurst) {
+    return false;
+  }
+  if (statA.rpmSingle !== statB.rpmSingle) {
+    return false;
+  }
+  if (statA.dropoffs.length !== statB.dropoffs.length) {
+    return false;
+  }
+  for (let i = 0; i < statA.dropoffs.length; i++) {
+    if (statA.dropoffs[i].range !== statB.dropoffs[i].range) {
+      return false;
+    }
+    if (statA.dropoffs[i].damage !== statB.dropoffs[i].damage) {
+      return false;
+    }
+  }
+  const ammoStatA = GetAmmoStat(weaponA, statA);
+  const ammoStatB = GetAmmoStat(weaponB, statB);
+  if (!ignore.ContainsFilter(StatMatchFilter.MagSize)) {
+    if (ammoStatA?.magSize !== ammoStatB?.magSize) {
+      return false;
+    }
+  }
+  if (!ignore.ContainsFilter(StatMatchFilter.TacticalReload)) {
+    if (ammoStatA?.tacticalReload !== ammoStatB?.tacticalReload) {
+      return false;
+    }
+  }
+  if (!ignore.ContainsFilter(StatMatchFilter.EmptyReload)) {
+    if (ammoStatA?.emptyReload !== ammoStatB?.emptyReload) {
+      return false;
+    }
+  }
+  if (ammoStatA?.headshotMultiplier !== ammoStatB?.headshotMultiplier) {
+    return false;
+  }
+  if (ammoStatA?.pelletCount !== ammoStatB?.pelletCount) {
+    return false;
+  }
+  return true;
+}
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
   GetWeaponByName,
   GetStatsForConfiguration,
+  GetAmmoStat,
   GetInitialStatsForWeapon,
   AllWeaponsProcessor,
   AllWeaponDropoffRangeFrequencies,
+  GetDropoffForRange,
+  StatsMatch,
+  StatMatchFilter,
+  StatMatchMask,
   // WeaponStats,
 };
 
-export type { Weapon, WeaponStats, DamageRange };
+export type { Weapon, WeaponStats, DamageRange, AmmoStat };

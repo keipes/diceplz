@@ -49,7 +49,8 @@ function getKillTempoForConfigurations(
   configs: WeaponConfigurations,
   modifiers: Modifiers,
   rpmSelector: RPMSelectorFn,
-  maxRange: number
+  maxRange: number,
+  includeTravelTime = false
 ): KillTempoDatum[][] {
   const data: KillTempoDatum[][] = [];
   for (const [_id, config] of configs.weaponConfigurations) {
@@ -57,7 +58,8 @@ function getKillTempoForConfigurations(
       config,
       modifiers,
       rpmSelector,
-      maxRange
+      maxRange,
+      includeTravelTime
     );
     if (killTempoData.length !== maxRange + 1) {
       const stats = GetStatsForConfiguration(config);
@@ -195,9 +197,9 @@ function getValueFn(
         ? 1
         : (kps - minMax.minKPS) / (minMax.maxKPS - minMax.minKPS);
     const weights: any = {
-      ttk: 2, //2,
-      btk: 1, //2,
-      kps: 2,
+      ttk: 3, //2,
+      btk: 2, //2,
+      kps: 1,
     };
     let sumWeights = 0;
     for (const key in weights) {
@@ -230,7 +232,8 @@ function getKillTempo(
   config: any,
   modifiers: Modifiers,
   rpmSelector: RPMSelectorFn,
-  maxRange: number
+  maxRange: number,
+  includeTravelTime = false
 ): KillTempoDatum[] {
   const ACCURACY = 0.2;
   const HEADSHOT_RATIO = 0.2;
@@ -263,13 +266,21 @@ function getKillTempo(
     );
     const timeToEmptyMagInSec = (ammoStat?.magSize / rpm) * 60;
     const killsPerMag = (ammoStat?.magSize * ACCURACY) / averageBTK;
-    const ttk = AverageTTK(
-      config,
-      modifiers,
-      stats.dropoffs[currentDropoff].damage,
-      rpm,
-      ACCURACY
-    );
+    let velocity = 600;
+    if (stats.velocity) {
+      velocity = stats.velocity;
+    }
+    const travelTime = includeTravelTime ? (i / velocity) * 1000 : 0;
+    // const travelTime = i / stats.velocity? || 0;
+    const ttk =
+      AverageTTK(
+        config,
+        modifiers,
+        stats.dropoffs[currentDropoff].damage,
+        rpm,
+        ACCURACY,
+        true
+      ) + travelTime;
     const killsPerSecond = killsPerMag;
     data.push({
       config,
@@ -324,6 +335,7 @@ function KillTempoChart(props: KillTempoChartProps) {
   const [rpmSelector, setRpmSelector] = useState<RPMSelectorFn>(
     () => SELECTOR_AUTO
   );
+  const [includeTravelTime, setIncludeTravelTime] = useState(false);
   let minMaxRanges = GetMinMaxValues(rpmSelector);
   let minMaxValues = GetMinMaxScores(rpmSelector);
   const relative = false;
@@ -341,7 +353,8 @@ function KillTempoChart(props: KillTempoChartProps) {
     configurations,
     props.modifiers,
     rpmSelector,
-    highestRangeSeen
+    highestRangeSeen,
+    includeTravelTime
   );
   minMaxRanges = getMinMaxRanges(myData, rpmSelector);
   const globalMinMax: MinMaxValue = getGlobalMinMax(minMaxRanges);
@@ -372,6 +385,7 @@ function KillTempoChart(props: KillTempoChartProps) {
       borderColor: configColors.get(label),
       tension: 0.1,
       stepped: true,
+      borderWidth: 1.5,
     });
   }
 
@@ -431,36 +445,41 @@ function KillTempoChart(props: KillTempoChartProps) {
         title={"Killiness"}
         description="Sustained kill potential. The exact calculation is subject to change, but it's based on the weapon's RPM, magazine size, reload time, and bullets to kill. Higher is better."
       />
-      <button
-        className={
-          rpmSelector === SELECTOR_AUTO
-            ? "abs-selector btn-enabled"
-            : "abs-selector"
-        }
-        onClick={() => setRpmSelector(() => SELECTOR_AUTO)}
-      >
-        Auto
-      </button>
-      <button
-        className={
-          rpmSelector === SELECTOR_SINGLE
-            ? "abs-selector btn-enabled"
-            : "abs-selector"
-        }
-        onClick={() => setRpmSelector(() => SELECTOR_SINGLE)}
-      >
-        Single
-      </button>
-      <button
-        className={
-          rpmSelector === SELECTOR_BURST
-            ? "abs-selector btn-enabled"
-            : "abs-selector"
-        }
-        onClick={() => setRpmSelector(() => SELECTOR_BURST)}
-      >
-        Burst
-      </button>
+      <div>
+        <label>
+          {"Fire Mode: "}
+          <select
+            value={
+              rpmSelector === SELECTOR_AUTO
+                ? "Auto"
+                : rpmSelector === SELECTOR_BURST
+                ? "Burst"
+                : "Single"
+            }
+            onChange={(e) =>
+              setRpmSelector(
+                e.target.value === "Auto"
+                  ? () => SELECTOR_AUTO
+                  : e.target.value === "Burst"
+                  ? () => SELECTOR_BURST
+                  : () => SELECTOR_SINGLE
+              )
+            }
+          >
+            <option value={"Auto"}>Auto</option>
+            <option value={"Burst"}>Burst</option>
+            <option value={"Single"}>Single</option>
+          </select>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includeTravelTime}
+            onChange={(e) => setIncludeTravelTime(e.target.checked)}
+          />
+          {" Include Travel Time"}
+        </label>
+      </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
         <CustomTooltip

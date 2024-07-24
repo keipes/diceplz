@@ -9,7 +9,7 @@ import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useContext, useState } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
-import { AverageTTK } from "../../Util/Conversions.ts";
+import { AverageTTK, TTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
@@ -36,11 +36,13 @@ const SELECTOR_SINGLE: RPMSelectorFn = (stats: WeaponStats) => stats.rpmSingle;
 function TTKChart(props: TTKChartProps) {
   const [_selectedFireMode, setSelectedFireMode] = useState(FIREMODE_AUTO);
   const theme = useContext(ThemeContext);
-
+  let [includeTravelTime, setIncludeTravelTime] = useState(false);
+  let [includeFirstShotDelay, _setIncludeFirstShotDelay] = useState(false);
+  let [numHeadshots, setNumHeadshots] = useState(0);
+  let [previousNumHeadshots, setPreviousNumHeadshots] = useState(numHeadshots);
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
-  const headshotRatio = 0;
   const datasets = [];
   let seenAuto = false;
   let seenBurst = false;
@@ -103,7 +105,8 @@ function TTKChart(props: TTKChartProps) {
         props.modifiers,
         damage,
         rpmSelector(stat) || 0,
-        headshotRatio
+        numHeadshots,
+        false
       );
     }
   );
@@ -120,53 +123,37 @@ function TTKChart(props: TTKChartProps) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const data = [];
-    let lastRange = 0;
-    let range = 0;
-    let lastTTK = Infinity;
-    for (let dropoff of stats.dropoffs) {
-      const ttk = AverageTTK(
-        config,
-        props.modifiers,
-        dropoff.damage,
-        rpmSelector(stats) || 0,
-        headshotRatio
-      );
-      range = dropoff.range;
-      for (let i = lastRange + 1; i < range; i++) {
-        const rpm = rpmSelector(stats);
-        if (requiredRanges.has(i) && rpm) {
-          data.push(lastTTK);
-        } else {
-          data.push(null);
+    let currentDropoff = -1;
+    let ttk = Infinity;
+    for (let i = 0; i <= highestRangeSeen; i++) {
+      if (stats.dropoffs.length > currentDropoff + 1) {
+        if (i >= stats.dropoffs[currentDropoff + 1].range) {
+          currentDropoff++;
+          ttk = TTK(
+            config,
+            props.modifiers,
+            stats.dropoffs[currentDropoff].damage,
+            rpmSelector(stats) || 0,
+            numHeadshots,
+            includeFirstShotDelay
+          );
         }
       }
-      lastTTK = ttk;
-      lastRange = range;
-      const rpm = rpmSelector(stats);
-      if (requiredRanges.has(dropoff.range) && rpm) {
-        data.push(ttk);
+      if (requiredRanges.has(i)) {
+        if (includeTravelTime) {
+          let velocity = 600;
+          if (stats.velocity) {
+            velocity = stats.velocity;
+          }
+          data.push(ttk + (i / velocity) * 1000);
+        } else {
+          data.push(ttk);
+        }
       } else {
         data.push(null);
       }
     }
-    if (lastTTK < Infinity) {
-      for (let i = range + 1; i < highestRangeSeen; i++) {
-        const rpm = rpmSelector(stats);
-        if (requiredRanges.has(i) && rpm) {
-          data.push(lastTTK);
-        } else {
-          data.push(null);
-        }
-      }
-      if (range != highestRangeSeen) {
-        const rpm = rpmSelector(stats);
-        if (rpm) {
-          data.push(lastTTK);
-        } else {
-          data.push(null);
-        }
-      }
-    }
+
     const label = ConfigDisplayName(config);
     if (props.settings.useAmmoColorsForGraph) {
       configColors.set(label, ConfigAmmoColor(config));
@@ -179,6 +166,7 @@ function TTKChart(props: TTKChartProps) {
       fill: false,
       borderColor: configColors.get(label),
       stepped: true,
+      borderWidth: 1.5,
     });
   }
   const labels = [];
@@ -231,40 +219,48 @@ function TTKChart(props: TTKChartProps) {
         title={props.title}
         description="TTK (Time to Kill) is determined by the formula: TTK = (BTK - 1) / (RPM * 60 / 1000). This considers the Bullets to Kill (BTK), subtracting 1, and dividing by the weapon's Rate of Fire (RPM) converted to rounds per second. The result indicates the time it takes to eliminate an opponent with the weapon, incorporating both damage and firing rate."
       />
-      <div className="button-container">
-        <button
-          className={
-            selectedFireMode === FIREMODE_AUTO
-              ? "abs-selector btn-enabled"
-              : "abs-selector"
-          }
-          onClick={(_) => setSelectedFireMode(FIREMODE_AUTO)}
-          disabled={!seenAuto}
-        >
-          Auto
-        </button>
-        <button
-          className={
-            selectedFireMode === FIREMODE_BURST
-              ? "abs-selector btn-enabled"
-              : "abs-selector"
-          }
-          onClick={(_) => setSelectedFireMode(FIREMODE_BURST)}
-          disabled={!seenBurst}
-        >
-          Burst
-        </button>
-        <button
-          className={
-            selectedFireMode === FIREMODE_SINGLE
-              ? "abs-selector btn-enabled"
-              : "abs-selector"
-          }
-          onClick={(_) => setSelectedFireMode(FIREMODE_SINGLE)}
-          disabled={!seenSingle}
-        >
-          Single
-        </button>
+      <div>
+        <label>
+          {" Fire Mode "}
+          <select
+            value={selectedFireMode}
+            onChange={(e) => setSelectedFireMode(e.target.value)}
+          >
+            {seenAuto && <option value={FIREMODE_AUTO}>{"Auto"}</option>}
+            {seenBurst && <option value={FIREMODE_BURST}>{"Burst"}</option>}
+            {seenSingle && <option value={FIREMODE_SINGLE}>{"Single"}</option>}
+          </select>
+        </label>
+        <label>
+          {" Num Headshots "}
+          <input
+            type="number"
+            value={numHeadshots}
+            onChange={(e) => setNumHeadshots(parseFloat(e.target.value))}
+            max={10}
+            min={0}
+            step={1}
+          />
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={numHeadshots === 10}
+            onChange={(e) => {
+              setPreviousNumHeadshots(numHeadshots);
+              setNumHeadshots(e.target.checked ? 10 : previousNumHeadshots);
+            }}
+          />
+          {"All Headshots"}
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={includeTravelTime}
+            onChange={(e) => setIncludeTravelTime(e.target.checked)}
+          />
+          {"Include Travel Time"}
+        </label>
       </div>
       <div className="chart-container">
         <Line data={chartData} options={options} />
@@ -272,8 +268,6 @@ function TTKChart(props: TTKChartProps) {
           setTooltipHandler={setTooltipHandler}
           invertScaleColors={false}
           decimalPlaces={0}
-          // min={222}
-          // max={551}
         />
       </div>
     </div>
