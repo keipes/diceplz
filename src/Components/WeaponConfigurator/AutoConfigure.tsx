@@ -512,23 +512,26 @@ function AutoConfigure(props: AutoConfigureProps) {
             {"Add all configurations for currently selected weapons. "}
           </span>
 
-          <input
-            type="checkbox"
-            checked={allConfigsOnlyLargestMag}
-            onChange={(e) => {
-              setAllConfigsOnlyLargestMag(e.target.checked);
-            }}
-          />
-          {"Ignore Smaller Mags For Same Ammo Type"}
-
-          <input
-            type="checkbox"
-            checked={allConfigsIgnoreAP}
-            onChange={(e) => {
-              setAllConfigsIgnoreAP(e.target.checked);
-            }}
-          />
-          {"Ignore AP"}
+          <label style={{ userSelect: "none" }}>
+            <input
+              type="checkbox"
+              checked={allConfigsOnlyLargestMag}
+              onChange={(e) => {
+                setAllConfigsOnlyLargestMag(e.target.checked);
+              }}
+            />
+            {"Ignore Smaller Mags For Same Ammo Type"}
+          </label>
+          <label style={{ userSelect: "none" }}>
+            <input
+              type="checkbox"
+              checked={allConfigsIgnoreAP}
+              onChange={(e) => {
+                setAllConfigsIgnoreAP(e.target.checked);
+              }}
+            />
+            {"Ignore AP"}
+          </label>
         </>
       </Configurer>
       <Configurer>
