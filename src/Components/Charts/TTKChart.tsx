@@ -227,9 +227,9 @@ function TTKChart(props: TTKChartProps) {
             value={selectedFireMode}
             onChange={(e) => setSelectedFireMode(e.target.value)}
           >
-            {seenAuto && <option value={FIREMODE_AUTO}>{"Auto"}</option>}
-            {seenBurst && <option value={FIREMODE_BURST}>{"Burst"}</option>}
-            {seenSingle && <option value={FIREMODE_SINGLE}>{"Single"}</option>}
+            {<option value={FIREMODE_AUTO}>{"Auto"}</option>}
+            {<option value={FIREMODE_BURST}>{"Burst"}</option>}
+            {<option value={FIREMODE_SINGLE}>{"Single"}</option>}
           </select>
         </label>
         <label>
