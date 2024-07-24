@@ -349,8 +349,17 @@ function KillTempoChart(props: KillTempoChartProps) {
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const highestRangeSeen = Math.max(...requiredRanges);
   const configColors = new Map();
+  const onlyVisibleConfigs: WeaponConfigurations = new WeaponConfigurations(
+    new Map(),
+    () => {}
+  );
+  for (const [id, config] of configurations.weaponConfigurations) {
+    if (config.visible) {
+      onlyVisibleConfigs.weaponConfigurations.set(id, config);
+    }
+  }
   const myData: KillTempoDatum[][] = getKillTempoForConfigurations(
-    configurations,
+    onlyVisibleConfigs,
     props.modifiers,
     rpmSelector,
     highestRangeSeen,
