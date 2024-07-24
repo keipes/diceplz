@@ -1,4 +1,5 @@
 import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { GetStatsForConfiguration } from "./WeaponData";
 
 interface StringVoidFn {
   (value: string): void;
@@ -87,7 +88,20 @@ class WebStoreConfigLoader implements ConfigLoader {
     const cached = this.storage.getItem(LOCAL_STORAGE_CONFIG_PREFIX + name);
     if (cached) {
       const loaded = JSON.parse(cached);
-      this.setConfigurations(new Map(loaded.configurations));
+      const configurations = new Map();
+      for (const [key, value] of loaded.configurations) {
+        try {
+          GetStatsForConfiguration(value);
+        } catch (e) {
+          console.error(
+            "Failed to load configuration: " + key + " because of error: " + e
+          );
+          continue;
+        }
+        configurations.set(key, value);
+      }
+      this.setConfigurations(configurations);
+      // this.setConfigurations(new Map(loaded.configurations));
       this.setModifiers(loaded.modifiers);
     }
   }

@@ -74,14 +74,6 @@ for (const category of WeaponCategories) {
 function GetWeaponByName(name: string): Weapon {
   return weaponsByName.get(name)!;
 }
-const dummyStat: WeaponStats = {
-  barrelType: "Factory",
-  ammoType: "Standard",
-  dropoffs: [{ damage: 0, range: 0 }],
-  rpmBurst: 0,
-  rpmSingle: 0,
-  rpmAuto: 0,
-};
 
 const statCache: any = {};
 function GetStatsForConfiguration(config: WeaponConfiguration): WeaponStats {
@@ -102,10 +94,7 @@ function GetStatsForConfiguration(config: WeaponConfiguration): WeaponStats {
       }
     }
     if (!statCache[cacheKey]) {
-      console.error(
-        "No stats for config! Using dummy! " + ConfigDisplayName(config)
-      );
-      statCache[cacheKey] = dummyStat;
+      throw new Error("No stats for config! " + ConfigDisplayName(config));
     }
     return statCache[cacheKey];
   }
