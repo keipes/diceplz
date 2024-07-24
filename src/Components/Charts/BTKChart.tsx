@@ -120,7 +120,7 @@ function BTKChart(props: BTKChartProps) {
         external: tooltipHandler,
         position: "eventXPositioner",
         itemSort: function (a, b) {
-          return (a.raw as number) - (b.raw as number);
+          return (b.raw as number) - (a.raw as number);
         },
         callbacks: {
           label: function (ctx) {
@@ -169,7 +169,7 @@ function BTKChart(props: BTKChartProps) {
         <Line data={chartData} options={options} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
-          invertScaleColors={false}
+          invertScaleColors={true}
         />
       </div>
     </div>
