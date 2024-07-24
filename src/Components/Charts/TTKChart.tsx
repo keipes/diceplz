@@ -165,7 +165,8 @@ function TTKChart(props: TTKChartProps) {
       data: data,
       fill: false,
       borderColor: configColors.get(label),
-      stepped: true,
+      stepped: false,
+      temsion: 0,
       borderWidth: 1.5,
     });
   }

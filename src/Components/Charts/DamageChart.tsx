@@ -80,8 +80,8 @@ function DamageChart(props: DamageChartProps) {
       data: data,
       fill: false,
       borderColor: configColors.get(label),
-      tension: 0.1,
-      stepped: true,
+      tension: 0,
+      stepped: false,
       borderWidth: 1.5,
     });
   }

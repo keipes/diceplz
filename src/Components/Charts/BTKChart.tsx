@@ -82,9 +82,9 @@ function BTKChart(props: BTKChartProps) {
       data: data,
       fill: false,
       borderColor: configColors.get(label),
-      // tension: 0.1,
+      tension: 0,
       borderWidth: 1.5,
-      stepped: true,
+      stepped: false,
     });
   }
 
