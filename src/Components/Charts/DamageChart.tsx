@@ -1,7 +1,11 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
-import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
+import {
+  GetAmmoStat,
+  GetStatsForConfiguration,
+  GetWeaponByName,
+} from "../../Data/WeaponData.ts";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
@@ -34,6 +38,8 @@ function DamageChart(props: DamageChartProps) {
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
+    const ammoStat = GetAmmoStat(GetWeaponByName(config.name), stats);
+    const headshotMultiplier = headshot ? ammoStat?.headshotMultiplier ?? 1 : 1;
     const data = [];
     let lastDamage = 0;
     let lastRange = 0;
@@ -44,7 +50,8 @@ function DamageChart(props: DamageChartProps) {
       damage =
         dropoff.damage *
         props.modifiers.damageMultiplier *
-        props.modifiers.bodyDamageMultiplier;
+        props.modifiers.bodyDamageMultiplier *
+        headshotMultiplier;
       damage = Math.round(damage * 100) / 100;
       for (let i = lastRange + 1; i < range; i++) {
         if (requiredRanges.has(i)) {
