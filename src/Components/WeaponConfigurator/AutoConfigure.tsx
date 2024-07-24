@@ -3,6 +3,7 @@ import {
   GetAmmoStat,
   GetStatsForConfiguration,
   GetWeaponByName,
+  OnlyStatsWithBiggestMags,
   StatMatchFilter,
   StatMatchMask,
   StatsMatch,
@@ -31,6 +32,7 @@ import {
   getValueFn,
 } from "../Charts/KillTempoChart";
 import { SELECTOR_AUTO } from "../Charts/TTKChart";
+import { ConfigDisplayName } from "../../Util/LabelMaker";
 
 interface AutoConfigureProps {
   modifiers: Modifiers;
@@ -459,21 +461,9 @@ function AutoConfigure(props: AutoConfigureProps) {
                         const ammoStat = GetAmmoStat(weapon, stat);
                         if (seenAmmoStat && ammoStat) {
                           if (seenAmmoStat.magSize < ammoStat.magSize) {
-                            console.debug(
-                              "Removing previously seen stat with lower mag size. " +
-                                seenStat.weapon.name +
-                                " " +
-                                seenStat.stats.ammoType
-                            );
                             return false;
                           }
                         }
-                        console.debug(
-                          "Ignoring duplicate stat. " +
-                            weapon.name +
-                            " " +
-                            stat.ammoType
-                        );
                         includeStat = false;
                       }
                       return true;
@@ -875,6 +865,39 @@ function AutoConfigure(props: AutoConfigureProps) {
             step={1}
           />
           {" headshots"}
+        </>
+      </Configurer>
+      <Configurer>
+        <>
+          <span
+            className={clickClass}
+            onClick={(_: MouseEvent<HTMLElement>) => {
+              let toFilter = [];
+              for (let [_, config] of configurator.weaponConfigurations) {
+                toFilter.push({
+                  weapon: GetWeaponByName(config.name),
+                  stat: GetStatsForConfiguration(config),
+                });
+              }
+              const filtered = OnlyStatsWithBiggestMags(toFilter);
+              const seen = new Set<string>();
+              for (const stat of filtered) {
+                seen.add(
+                  ConfigDisplayName({
+                    name: stat.weapon.name,
+                    barrelType: stat.stat.barrelType,
+                    ammoType: stat.stat.ammoType,
+                    visible: true,
+                  })
+                );
+              }
+              configurator.Filter((config) =>
+                seen.has(ConfigDisplayName(config))
+              );
+            }}
+          >
+            {"Remove lower capacity ammo types if stats match."}
+          </span>
         </>
       </Configurer>
     </>

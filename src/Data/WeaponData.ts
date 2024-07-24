@@ -347,6 +347,61 @@ function StatsMatch(
   return true;
 }
 
+interface WeaponAndStat {
+  weapon: Weapon;
+  stat: WeaponStats;
+}
+function OnlyStatsWithBiggestMags(
+  weaponsToFilter: WeaponAndStat[]
+): WeaponAndStat[] {
+  const ignore = StatMatchMask.FromFilters(
+    StatMatchFilter.TacticalReload,
+    StatMatchFilter.EmptyReload,
+    StatMatchFilter.AmmoType,
+    StatMatchFilter.MagSize
+  );
+  const ammoDedupeStrFn = (weapon: Weapon, stat: WeaponStats) =>
+    weapon.name +
+    stat.barrelType +
+    stat.ammoType
+      .replace(" Extended", "")
+      .replace(" Beltfed", "")
+      .replace(" Drum", "");
+  const biggestCapacityStats = new Map<string, WeaponAndStat[]>();
+  for (const { weapon, stat } of weaponsToFilter) {
+    const ammoStat = GetAmmoStat(weapon, stat);
+    if (ammoStat) {
+      const dedupeStr = ammoDedupeStrFn(weapon, stat);
+      if (biggestCapacityStats.has(dedupeStr)) {
+        const seenStats = biggestCapacityStats.get(dedupeStr)!;
+        let found = false;
+        for (const seenStat of seenStats) {
+          if (
+            StatsMatch(weapon, stat, seenStat.weapon, seenStat.stat, ignore)
+          ) {
+            found = true;
+            if (
+              ammoStat.magSize >
+              GetAmmoStat(seenStat.weapon, seenStat.stat)!.magSize
+            ) {
+              console.log("replacing " + seenStat.weapon.name);
+              seenStat.weapon = weapon;
+              seenStat.stat = stat;
+            }
+            break;
+          }
+        }
+        if (!found) {
+          seenStats.push({ weapon, stat });
+        }
+      } else {
+        biggestCapacityStats.set(dedupeStr, [{ weapon, stat }]);
+      }
+    }
+  }
+  return Array.from(biggestCapacityStats.values()).flatMap((x) => x);
+}
+
 export {
   WeaponCategories,
   GetCategoryWeapons,
@@ -360,6 +415,7 @@ export {
   StatsMatch,
   StatMatchFilter,
   StatMatchMask,
+  OnlyStatsWithBiggestMags,
   // WeaponStats,
 };
 
