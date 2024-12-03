@@ -11,7 +11,12 @@ import {
   WeaponCategories,
   WeaponStats,
 } from "../../Data/WeaponData";
-import { BTK2, KillsPerMag, TTK } from "../../Util/Conversions";
+import {
+  BTK2,
+  DamageAtRangeFromStat,
+  KillsPerMag,
+  TTK,
+} from "../../Util/Conversions";
 import { ConfiguratorContext } from "../App";
 import "./AutoConfigure.css";
 import {
@@ -98,24 +103,32 @@ function AutoConfigure(props: AutoConfigureProps) {
   }
 
   function bestTTKFinder(rpmSelector: (stat: any) => number) {
-    const ttks = new Map<number, number>();
+    const minTtkAtRange = new Map<number, number>();
     let lowestEndTTK = Infinity;
     let highestRangeSeen = 0;
+    const r_ranges = new Set<number>();
     configurator.ForEach((config) => {
       GetWeaponByName(config.name).stats.forEach((stat) => {
         for (let i = 0; i < stat.dropoffs.length; i++) {
-          const ttk = TTK(
-            config,
-            props.modifiers,
-            stat.dropoffs[i].damage,
-            rpmSelector(stat)
-          );
-          const range = stat.dropoffs[i].range;
-          if (range > highestRangeSeen) {
-            highestRangeSeen = range;
+          r_ranges.add(stat.dropoffs[i].range);
+        }
+      });
+    });
+    configurator.ForEach((config) => {
+      GetWeaponByName(config.name).stats.forEach((stat) => {
+        for (const rr_range of r_ranges) {
+          const damage = DamageAtRangeFromStat(stat, rr_range);
+          // for (let i = 0; i < stat.dropoffs.length; i++) {
+          const ttk = TTK(config, props.modifiers, damage, rpmSelector(stat));
+          // const range = rr_range;
+          if (rr_range > highestRangeSeen) {
+            highestRangeSeen = rr_range;
           }
-          if (!ttks.has(range) || ttks.get(range)! > ttk) {
-            ttks.set(range, ttk);
+          if (
+            !minTtkAtRange.has(rr_range) ||
+            minTtkAtRange.get(rr_range)! > ttk
+          ) {
+            minTtkAtRange.set(rr_range, ttk);
           }
         }
         const ttk = TTK(
@@ -129,21 +142,22 @@ function AutoConfigure(props: AutoConfigureProps) {
         }
       });
     });
-    // console.log(highestRangeSeen);
-    // console.log(lowestEndTTK);
-    let keys = Array.from(ttks.keys());
-    keys.sort((a, b) => b - a);
+    const ranges = Array.from(minTtkAtRange.keys());
+    ranges.sort((a, b) => b - a);
+    console.log(ranges);
     let lowestTTK = 10000;
-    for (const key of keys) {
-      let ttk = ttks.get(key);
+    for (const range of ranges) {
+      let ttk = minTtkAtRange.get(range);
       if (ttk && ttk < lowestTTK) {
         lowestTTK = ttk;
       } else if (ttk && ttk > lowestTTK) {
-        ttks.set(key, lowestTTK);
+        minTtkAtRange.set(range, lowestTTK);
       }
     }
+    ranges.sort((a, b) => a - b);
     configurator.Select((weapon, stat) => {
-      for (const dropoff of stat.dropoffs) {
+      for (const range of ranges) {
+        const damage = DamageAtRangeFromStat(stat, range);
         const ttk = TTK(
           {
             name: weapon.name,
@@ -152,18 +166,27 @@ function AutoConfigure(props: AutoConfigureProps) {
             visible: true,
           },
           props.modifiers,
-          dropoff.damage,
+          damage,
           rpmSelector(stat)
         );
-        const pctTtk = (ttks.get(dropoff.range) || Infinity) / ttk;
-        if (pctTtk > 0.9) {
-          if (dropoff.range == highestRangeSeen && ttk > lowestEndTTK) {
-            console.log(
-              "Did not select " + name + " at " + dropoff.range + "m."
-            );
-            return false;
-          }
-          console.log("Selected " + name + " at " + dropoff.range + "m.");
+        const minTtk = minTtkAtRange.get(range) || Infinity;
+        const pctTtk = ttk / minTtk;
+        if (pctTtk < 1.1) {
+          const statStr = stat.barrelType + " " + stat.ammoType;
+          console.log(
+            "Selected " +
+              weapon.name +
+              " " +
+              statStr +
+              " at " +
+              range +
+              "m ttk=" +
+              ttk +
+              " minTTK=" +
+              minTtk +
+              " pctTTK=" +
+              pctTtk
+          );
           return true;
         }
       }
@@ -557,7 +580,7 @@ function AutoConfigure(props: AutoConfigureProps) {
             }}
           >
             {
-              "Select configurations which are within 90% of the best ttk of all weapons at some range. (Automatic Fire)"
+              "Select configurations for the current weapons which are within 110% of the lowest ttk of current weapons at some range. (Automatic Fire)"
             }
           </span>
         </>
@@ -571,7 +594,7 @@ function AutoConfigure(props: AutoConfigureProps) {
             }}
           >
             {
-              "Select configurations which are within 90% of the best ttk of all weapons at some range. (Single Fire)"
+              "Select configurations for the current weapons which are within 110% of the lowest ttk of current weapons at some range. (Single Fire)"
             }
           </span>
         </>

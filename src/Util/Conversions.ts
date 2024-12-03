@@ -4,6 +4,7 @@ import {
   AmmoStat,
   GetStatsForConfiguration,
   GetWeaponByName,
+  WeaponStats,
 } from "../Data/WeaponData";
 
 function TTK(
@@ -202,8 +203,12 @@ const BTK2 = (
 };
 
 const DamageAtRange = (config: WeaponConfiguration, range: number) => {
-  let damage = 0;
   const stat = GetStatsForConfiguration(config);
+  return DamageAtRangeFromStat(stat, range);
+};
+
+const DamageAtRangeFromStat = (stat: WeaponStats, range: number) => {
+  let damage = 0;
   for (const dropoff of stat.dropoffs) {
     if (dropoff.range <= range) {
       damage = dropoff.damage;
@@ -247,4 +252,5 @@ export {
   AverageBTK,
   AverageBTK2,
   KillsPerMag,
+  DamageAtRangeFromStat,
 };
