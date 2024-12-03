@@ -8051,6 +8051,30 @@
               "headshotMultiplier": 1.6
             }
           }
+        },
+        {
+          "name": "M1 Garand",
+          "stats": [
+            {
+              "barrelType": "Factory",
+              "ammoType": "Default",
+              "dropoffs": [
+                { "damage": 70, "range": 0 },
+                { "damage": 60, "range": 30 },
+                { "damage": 45, "range": 75 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 270
+            }
+          ],
+          "ammoStats": {
+            "Default": {
+              "magSize": 8,
+              "emptyReload": 2.88,
+              "tacticalReload": 2.51,
+              "headshotMultiplier": 1.6
+            }
+          }
         }
       ]
     },

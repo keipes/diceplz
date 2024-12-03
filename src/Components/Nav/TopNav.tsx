@@ -374,7 +374,7 @@ function TopNav(props: NavProps) {
   // patch label
   weaponSelectDropdowns.push(
     <li className="nav-item" key="patch-label">
-      <div className="nav-label nav-label-patch">8.0.0</div>
+      <div className="nav-label nav-label-patch">8.2.1</div>
     </li>
   );
   return (
