@@ -39,7 +39,7 @@ import "../Util/CustomPositioner.ts";
 import "../Util/DropoffInteractionMode.ts";
 import { WeaponConfigurations } from "../Data/WeaponConfiguration.ts";
 import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
-import KillTempoChart from "./Charts/KillTempoChart.tsx";
+// import KillTempoChart from "./Charts/KillTempoChart.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
 
