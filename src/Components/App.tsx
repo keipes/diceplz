@@ -185,7 +185,7 @@ function App() {
         <VelocityChart settings={settings} />
         <ReloadChart settings={settings} />
         <MagazineChart settings={settings} />
-        <KillTempoChart modifiers={modifiers} settings={settings} />
+        {/* <KillTempoChart modifiers={modifiers} settings={settings} /> */}
         <div className={"blurb"}>
           <p>
             Thanks for checking out my 2042 weapon stats page. All weapon stats
