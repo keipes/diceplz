@@ -42,6 +42,7 @@ import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 // import KillTempoChart from "./Charts/KillTempoChart.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
+import DPSChart from "./Charts/DPSChart.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -177,6 +178,7 @@ function App() {
         <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
         <BTKChart modifiers={modifiers} settings={settings} />
         <DamageChart modifiers={modifiers} settings={settings} />
+        <DPSChart modifiers={modifiers} settings={settings} />
         <KillsPerMagChart
           settings={settings}
           modifiers={modifiers}
