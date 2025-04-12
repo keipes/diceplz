@@ -111,7 +111,7 @@ button {
   font-family: inherit;
   background-color: var(--button-bg);
   cursor: pointer;
-  transition: border-color 0.25s;
+  /* transition: border-color 0.25s; */
 }
 
 button:hover:not([disabled]) {

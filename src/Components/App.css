@@ -1,6 +1,7 @@
 #root {
-  margin: 0 auto;
+  /* margin: 0 auto; */
   text-align: center;
+  width: 100%;
 }
 
 .blurb {
@@ -35,10 +36,6 @@
   margin: 0;
 }
 
-.main-content {
-  margin-top: 4.5rem;
-}
-
 .configurator-closed {
   padding-bottom: 2.5vh;
 }
@@ -49,4 +46,23 @@
 
 .hover-red:hover {
   color: var(--battle-red);
+}
+
+.app-container {
+  display: flex;
+  /* flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--font-color); */
+  /* min-width: 1200px; */
+  /* width: 1200px; */
+}
+
+.main-content {
+  /* width: 100%; */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }

@@ -24,11 +24,11 @@
   text-align: justify;
   pointer-events: none;
   width: 400px;
-  transition: opacity 0.2s ease;
+  /* transition: opacity 0.2s ease; */
 }
 
 .chart-description-open {
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.2s ease;
+  /* transition: opacity 0.2s ease; */
 }
