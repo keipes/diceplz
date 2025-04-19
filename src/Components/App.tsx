@@ -43,6 +43,7 @@ import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
 import Sidebar from "./WeaponConfigurator/Sidebar.tsx";
+import Resizer from "./WeaponConfigurator/Resizer.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -97,6 +98,7 @@ function App() {
   const [modifiers, setModifiers] = useState(mods);
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
+  const [sidebarWidth, setSidebarWidth] = useState(540);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(configs);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
@@ -168,31 +170,32 @@ function App() {
         modifiers={modifiers}
         setModifiers={setModifiers}
       />
-      <div className="app-container">
-        <Sidebar />
-        <div className={mainContentClass} style={mainContentStyle}>
-          <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
-          <BTKChart modifiers={modifiers} settings={settings} />
-          <DamageChart modifiers={modifiers} settings={settings} />
-          <KillsPerMagChart
-            settings={settings}
-            modifiers={modifiers}
-          ></KillsPerMagChart>
-          <RPMChart settings={settings} />
-          <VelocityChart settings={settings} />
-          <ReloadChart settings={settings} />
-          <MagazineChart settings={settings} />
-          {/* <KillTempoChart modifiers={modifiers} settings={settings} /> */}
-          <div className={"blurb"}>
-            <p>
-              Thanks for checking out my 2042 weapon stats page. All weapon
-              stats have been painstakingly collected by Sorrow and others on
-              the Battlefield 2043 Discord server. Links to the source Google
-              Sheet, and Discord Server are in the header bar.
-            </p>
-          </div>
+      <Sidebar width={sidebarWidth} />
+      <Resizer setSidebarWidth={setSidebarWidth} />
+      {/* <div className="app-container"> */}
+      <div className={mainContentClass} style={mainContentStyle}>
+        <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
+        <BTKChart modifiers={modifiers} settings={settings} />
+        <DamageChart modifiers={modifiers} settings={settings} />
+        <KillsPerMagChart
+          settings={settings}
+          modifiers={modifiers}
+        ></KillsPerMagChart>
+        <RPMChart settings={settings} />
+        <VelocityChart settings={settings} />
+        <ReloadChart settings={settings} />
+        <MagazineChart settings={settings} />
+        {/* <KillTempoChart modifiers={modifiers} settings={settings} /> */}
+        <div className={"blurb"}>
+          <p>
+            Thanks for checking out my 2042 weapon stats page. All weapon stats
+            have been painstakingly collected by Sorrow and others on the
+            Battlefield 2043 Discord server. Links to the source Google Sheet,
+            and Discord Server are in the header bar.
+          </p>
         </div>
       </div>
+      {/* </div> */}
     </>
   );
   const router = createBrowserRouter([

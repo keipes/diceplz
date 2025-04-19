@@ -3,7 +3,11 @@ import Weapon from "./Weapon";
 import { useContext } from "react";
 import { ConfiguratorContext } from "../App";
 
-function Sidebar() {
+interface SidebarProps {
+  width: number;
+}
+
+function Sidebar(props: SidebarProps) {
   const weapons = [];
   const configurator = useContext(ConfiguratorContext);
   for (const [id, config] of configurator.weaponConfigurations) {
@@ -13,7 +17,9 @@ function Sidebar() {
   }
   return (
     <>
-      <div className="sidebar">{weapons}</div>
+      <div className="sidebar" style={{ width: props.width + "px" }}>
+        {weapons}
+      </div>
     </>
   );
 }

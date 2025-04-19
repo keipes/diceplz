@@ -46,10 +46,10 @@ function Weapon(props: WeaponProps) {
   const ammoOptions = [];
 
   const style = {
-    borderColor: ConfigHSL(props.config),
+    backgroundColor: ConfigHSL(props.config),
   };
   const nameStyle = {
-    color: ConfigHSL(props.config),
+    // color: ConfigHSL(props.config),
   };
   let ammoTypeConverter = (ammoTypeString: string) => {
     if (ammoTypeString.endsWith(" Extended")) {

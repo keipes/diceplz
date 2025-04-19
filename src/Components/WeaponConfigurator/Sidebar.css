@@ -1,12 +1,16 @@
 .sidebar {
-  width: 250px;
+  width: 300px;
   background-color: #f4f4f4;
-  padding: 20px;
+  /* padding: 20px; */
   position: relative;
   overflow-y: scroll;
-  /* height: calc(100vh - 2rem); */
-  flex-shrink: 0;
-  flex: 1;
+  height: calc(100vh - 4rem);
+  /* flex-shrink: 0; */
+  /* flex: 1; */
+  /* resize: horizontal; */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .sidebar-weapon-titlebar {
@@ -19,4 +23,3 @@
   gap: 10px;
   justify-content: space-between;
 }
-
