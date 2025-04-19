@@ -1,6 +1,7 @@
 import { GetWeaponByName } from "../../Data/WeaponData.ts";
 import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
 import { ConfigHSL } from "../../Util/StringColor.ts";
+import "./Weapon.css";
 
 import {
   ContentCopyIcon,

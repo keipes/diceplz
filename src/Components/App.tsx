@@ -42,7 +42,7 @@ import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 // import KillTempoChart from "./Charts/KillTempoChart.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
-import Sidebar from "./Sidebar/Sidebar.tsx";
+import Sidebar from "./WeaponConfigurator/Sidebar.tsx";
 
 ChartJS.register(
   CategoryScale,

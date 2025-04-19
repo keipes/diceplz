@@ -1,0 +1,22 @@
+.sidebar {
+  width: 250px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  position: relative;
+  overflow-y: scroll;
+  /* height: calc(100vh - 2rem); */
+  flex-shrink: 0;
+  flex: 1;
+}
+
+.sidebar-weapon-titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-weapon-options {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+

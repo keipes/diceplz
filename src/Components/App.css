@@ -2,6 +2,8 @@
   /* margin: 0 auto; */
   text-align: center;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .blurb {
@@ -50,19 +52,18 @@
 
 .app-container {
   display: flex;
-  /* flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--font-color); */
-  /* min-width: 1200px; */
-  /* width: 1200px; */
+  height: 100vh - 2rem;
+  position: relative;
+  flex: 1;
+  overflow-y: scroll;
+  /* height: calc(100vh - 2rem); */
 }
 
 .main-content {
   /* width: 100%; */
-  flex-grow: 1;
+  /* flex: 1; */
+  /* flex-grow: 1; */
   display: flex;
   flex-direction: column;
+  overflow: scroll;
 }

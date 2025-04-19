@@ -1,7 +1,7 @@
 .nav {
-  position: sticky;
-  top: 0px;
-  left: 0;
+  /* position: sticky; */
+  /* top: 0px; */
+  /* left: 0; */
   background-color: var(--nav-bg);
   z-index: 100;
   width: 100%;
