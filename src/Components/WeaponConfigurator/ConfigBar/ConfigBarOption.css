@@ -1,0 +1,14 @@
+.config-bar-option {
+  /* width: 100%; */
+  /* padding: 10px; */
+  background-color: #111;
+  border-radius: 2rem;
+  margin: 5px 0;
+  cursor: pointer;
+  text-align: center;
+  height: 2rem;
+  padding: 0 1rem;
+  line-height: 2rem;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+}

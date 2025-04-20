@@ -46,7 +46,7 @@ function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
 
 let STICK_LEFT = false; // shared by all charts so tooltips don't flop sides
 const COLUMN_WIDTH_PX = 300;
-const COLUMN_ROWS = 20;
+const COLUMN_ROWS = 40;
 function MaxColumns() {
   return Math.max(Math.floor(window.innerWidth / COLUMN_WIDTH_PX), 1);
 }

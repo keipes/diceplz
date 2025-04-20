@@ -3,6 +3,8 @@ import "./Resizer.css";
 
 interface ResizerProps {
   setSidebarWidth: (width: number) => void;
+  rightHandSide: boolean;
+  setDragging: (isDragging: boolean) => void;
 }
 
 interface MouseEventHandler {
@@ -34,11 +36,17 @@ function Resizer(props: ResizerProps) {
           e.preventDefault();
           e.stopPropagation();
           mouseMoveHandler = (e) => {
-            props.setSidebarWidth(e.clientX);
+            if (props.rightHandSide) {
+              props.setSidebarWidth(window.innerWidth - e.clientX);
+            } else {
+              props.setSidebarWidth(e.clientX);
+            }
+            props.setDragging(true);
           };
           mouseUpHandler = (_) => {
             mouseMoveHandler = null;
             mouseUpHandler = null;
+            props.setDragging(false);
           };
         }}
       ></div>

@@ -15,7 +15,7 @@
   /* padding-right: 1rem; */
   /* min-width: 100px; */
   /* flex: 1; */
-  /* flex-grow: 1; */
+  flex-grow: 1;
   flex-basis: 267px;
   /* justify-content: center; */
   width: 267px;
@@ -28,6 +28,7 @@
   background-color: var(--wcf-container);
   font-weight: 600;
   /* width: 180px; */
+  min-width: 180px;
 }
 
 .wcf-selector-ammo-standard {

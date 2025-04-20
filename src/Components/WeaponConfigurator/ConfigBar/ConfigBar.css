@@ -1,0 +1,13 @@
+.config-bar {
+  width: 100%;
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  z-index: 98;
+  align-self: flex-start;
+  height: 8rem;
+}

@@ -3,6 +3,7 @@ import "./App.css";
 import DamageChart from "./Charts/DamageChart.tsx";
 import TTKChart from "./Charts/TTKChart.tsx";
 import RPMChart from "./Charts/RPMChart.tsx";
+import ConfigBar from "./WeaponConfigurator/ConfigBar/ConfigBar.tsx";
 // import WeaponConfigurator, {
 //   WeaponConfiguration,
 // } from "./WeaponConfigurator/WeaponConfigurator.tsx";
@@ -99,7 +100,10 @@ function App() {
   const [settings, setSettings] = useState(InitialSettings);
   const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [sidebarWidth, setSidebarWidth] = useState(540);
+  const [configBarWidth, setConfigBarWidth] = useState(300);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(configs);
+  const [sidebarDragging, setSidebarDragging] = useState(false);
+  const [configBarDragging, setConfigBarDragging] = useState(false);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
   ) => {
@@ -147,18 +151,31 @@ function App() {
     setModifiers
   );
 
-  const [configuratorOpen, setConfiguratorOpen] = useState(true);
   let mainContentClass = "main-content";
-  if (!configuratorOpen) {
-    mainContentClass += " configurator-closed";
+  if (sidebarDragging || configBarDragging) {
+    mainContentClass += " dragging";
   }
-  const mainContentStyle = {
-    paddingBottom: bottomPadding + "px",
-  };
-  if (!configuratorOpen) {
-    mainContentStyle.paddingBottom = "2.5vh";
+  const charts: JSX.Element[] = [];
+  if (!sidebarDragging && !configBarDragging) {
+    // <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />,
+    // <BTKChart modifiers={modifiers} settings={settings} />,
+    // <DamageChart modifiers={modifiers} settings={settings} />,
+    // <KillsPerMagChart settings={settings} modifiers={modifiers} />,
+    // <RPMChart settings={settings} />,
+    // <VelocityChart settings={settings} />,
+    // <ReloadChart settings={settings} />,
+    // <MagazineChart settings={settings} />,
+    charts.push(
+      <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
+    );
+    charts.push(<BTKChart modifiers={modifiers} settings={settings} />);
+    charts.push(<DamageChart modifiers={modifiers} settings={settings} />);
+    charts.push(<KillsPerMagChart settings={settings} modifiers={modifiers} />);
+    charts.push(<RPMChart settings={settings} />);
+    charts.push(<VelocityChart settings={settings} />);
+    charts.push(<ReloadChart settings={settings} />);
+    charts.push(<MagazineChart settings={settings} />);
   }
-
   const indexContent = (
     <>
       <TopNav
@@ -170,31 +187,23 @@ function App() {
         modifiers={modifiers}
         setModifiers={setModifiers}
       />
-      <Sidebar width={sidebarWidth} />
-      <Resizer setSidebarWidth={setSidebarWidth} />
+      <Sidebar width={sidebarWidth} dragging={sidebarDragging} />
+      <Resizer
+        setSidebarWidth={setSidebarWidth}
+        setDragging={setSidebarDragging}
+        rightHandSide={false}
+      />
       {/* <div className="app-container"> */}
-      <div className={mainContentClass} style={mainContentStyle}>
-        <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
-        <BTKChart modifiers={modifiers} settings={settings} />
-        <DamageChart modifiers={modifiers} settings={settings} />
-        <KillsPerMagChart
-          settings={settings}
-          modifiers={modifiers}
-        ></KillsPerMagChart>
-        <RPMChart settings={settings} />
-        <VelocityChart settings={settings} />
-        <ReloadChart settings={settings} />
-        <MagazineChart settings={settings} />
+      <div className={mainContentClass}>
+        {charts}
         {/* <KillTempoChart modifiers={modifiers} settings={settings} /> */}
-        <div className={"blurb"}>
-          <p>
-            Thanks for checking out my 2042 weapon stats page. All weapon stats
-            have been painstakingly collected by Sorrow and others on the
-            Battlefield 2043 Discord server. Links to the source Google Sheet,
-            and Discord Server are in the header bar.
-          </p>
-        </div>
       </div>
+      {/* <Resizer
+        setSidebarWidth={setConfigBarWidth}
+        setDragging={setConfigBarDragging}
+        rightHandSide={true}
+      />
+      <ConfigBar width={configBarWidth} dragging={configBarDragging} /> */}
       {/* </div> */}
     </>
   );

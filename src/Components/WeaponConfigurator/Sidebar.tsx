@@ -2,9 +2,11 @@ import "./Sidebar.css";
 import Weapon from "./Weapon";
 import { useContext } from "react";
 import { ConfiguratorContext } from "../App";
+import ConfigBar from "./ConfigBar/ConfigBar";
 
 interface SidebarProps {
   width: number;
+  dragging: boolean;
 }
 
 function Sidebar(props: SidebarProps) {
@@ -15,10 +17,23 @@ function Sidebar(props: SidebarProps) {
       <Weapon id={id} config={config} key={id} weaponConfig={configurator} />
     );
   }
+  let sidebarClass = "sidebar";
+  if (props.dragging && false) {
+    sidebarClass += " dragging";
+  }
   return (
     <>
-      <div className="sidebar" style={{ width: props.width + "px" }}>
-        {weapons}
+      <div className={sidebarClass} style={{ width: props.width + "px" }}>
+        <ConfigBar />
+
+        <div className="sidebar-weapon-list-container">
+          <div
+            style={{ display: "flex", flexDirection: "row" }}
+            className="sidebar-weapon-list"
+          >
+            {weapons}
+          </div>
+        </div>
       </div>
     </>
   );

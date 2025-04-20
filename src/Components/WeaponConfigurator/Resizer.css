@@ -1,6 +1,6 @@
 .resizer {
   width: 5px;
-  background-color: #ccc;
+  background-color: var(--battle-blue);
   cursor: ew-resize;
   /* position: absolute; */
   /* top: 0; */

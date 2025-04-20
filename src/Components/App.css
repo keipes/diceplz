@@ -32,18 +32,18 @@
 
 .chart-container {
   position: relative;
-  height: 600px;
-  width: 80vw;
-  max-width: 1280px;
+  height: 400px;
+  /* width: 80vw; */
+  /* max-width: 1280px; */
 }
 
 .disclosure > p {
   margin: 0;
 }
 
-.configurator-closed {
+/* .configurator-closed {
   padding-bottom: 2.5vh;
-}
+} */
 
 .hover-blue:hover {
   color: var(--battle-blue);
@@ -64,4 +64,8 @@
   /* height: 200px; */
   /* height: calc(20vh - 2rem); */
   flex: 1;
+}
+
+.dragging > div {
+  display: none;
 }

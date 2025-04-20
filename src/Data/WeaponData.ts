@@ -34,6 +34,7 @@ interface WeaponStats {
   rpmAuto?: number;
   velocity?: number;
 }
+interface WeaponConfiguration extends Weapon, WeaponStats {}
 
 interface DamageRange {
   damage: number;
