@@ -1,0 +1,26 @@
+.config-bar-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  /* space-between */
+  justify-content: space-between;
+  /* flex: 1; */
+  /* flex-grow: 1; */
+  /* flex-basis: 100%; */
+  /* width: 100%; */
+  /* margin: 16px 0; */
+}
+
+.config-bar-checkbox-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.config-bar-checkbox {
+  display: inline-block;
+}

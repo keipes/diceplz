@@ -1,9 +1,11 @@
-import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
 import {
   GetCategoryWeapons,
   GetWeaponByName,
   Weapon,
   WeaponStats,
+  WeaponCategories,
+  AmmoStat,
+  GetAmmoStat,
 } from "./WeaponData";
 
 interface AddWeaponFn {
@@ -50,7 +52,24 @@ interface SelectingFn {
   (selector: Selector): void;
 }
 
-interface WeaponConfig {
+interface WeaponSelector {
+  (weapon: WeaponConfigurationStats): boolean;
+}
+
+interface WeaponConfiguration {
+  name: string;
+  visible: boolean;
+  barrelType: string;
+  ammoType: string;
+}
+
+interface WeaponConfigurationStats //WeaponConfiguration,
+  extends WeaponStats,
+    AmmoStat {
+  name: string;
+}
+
+interface WeaponConfigurationMap {
   weaponConfigurations: Map<string, WeaponConfiguration>;
   AddWeapon: AddWeaponFn;
   BulkAddWeapon: BulkAddWeaponFn;
@@ -80,7 +99,11 @@ function AddConfigToMap(
   configurations.set(id, config);
 }
 
-class WeaponConfigurations implements WeaponConfig {
+function ConfigKey(config: WeaponConfiguration): string {
+  return `${config.name}-${config.barrelType}-${config.ammoType}`;
+}
+
+class WeaponConfigurations implements WeaponConfigurationMap {
   weaponConfigurations: Map<string, WeaponConfiguration>;
   private setWeaponConfigurations: SetConfigurationsFn;
 
@@ -92,7 +115,10 @@ class WeaponConfigurations implements WeaponConfig {
       throw new Error("uh oh");
     }
     this.weaponConfigurations = configurations;
-    this.setWeaponConfigurations = setConfigurations;
+    this.setWeaponConfigurations = (configurations) => {
+      setConfigurations(configurations);
+      this.weaponConfigurations = configurations;
+    };
   }
 
   BulkAddWeapon(configs: WeaponConfiguration[]) {
@@ -194,6 +220,39 @@ class WeaponConfigurations implements WeaponConfig {
     this.setWeaponConfigurations(configurations);
   }
 
+  SelectWeapons(selector: WeaponSelector) {
+    const configurations = new Map();
+    for (const category of WeaponCategories) {
+      for (const weapon of GetCategoryWeapons(category)) {
+        let weaponStats = GetWeaponByName(weapon.name);
+        let configuredStats: WeaponConfigurationStats[] = [];
+        for (const stat of weaponStats.stats) {
+          let ammoStat = GetAmmoStat(weaponStats, stat);
+          if (ammoStat) {
+            const weaponStat: WeaponConfigurationStats = {
+              name: weapon.name,
+              ...stat,
+              ...ammoStat,
+            };
+            if (selector(weaponStat)) {
+              configuredStats.push(weaponStat);
+              AddConfigToMap(
+                {
+                  name: weapon.name,
+                  barrelType: stat.barrelType,
+                  ammoType: stat.ammoType,
+                  visible: true,
+                },
+                configurations
+              );
+            }
+          }
+        }
+      }
+    }
+    this.setWeaponConfigurations(configurations);
+  }
+
   // From existing weapons, select all configs which match the selector. May have more configs in configurator window afterwards.
   SelectFromAllWeaponsInCategory(category: string, selector: Selector) {
     const configurations = new Map();
@@ -222,11 +281,28 @@ class WeaponConfigurations implements WeaponConfig {
     });
   }
 
+  ForEachWeapon(fn: (config: WeaponConfigurationStats) => void) {
+    for (let [_, config] of this.weaponConfigurations) {
+      const weapon = GetWeaponByName(config.name);
+      for (const stat of weapon.stats) {
+        const ammoStat = GetAmmoStat(weapon, stat);
+        if (ammoStat) {
+          const weaponStat: WeaponConfigurationStats = {
+            name: config.name,
+            ...stat,
+            ...ammoStat,
+          };
+          fn(weaponStat);
+        }
+      }
+    }
+  }
+
   Filter(filterFn: ConfigFilter) {
     const configurations = new Map();
     const seenConfigs = new Set<string>();
     for (let [id, config] of this.weaponConfigurations) {
-      let cfgKey = `${config.name}-${config.barrelType}-${config.ammoType}`;
+      let cfgKey = ConfigKey(config);
       if (filterFn(config) && !seenConfigs.has(cfgKey)) {
         configurations.set(id, config);
         seenConfigs.add(cfgKey);
@@ -234,7 +310,19 @@ class WeaponConfigurations implements WeaponConfig {
     }
     this.setWeaponConfigurations(configurations);
   }
+
+  Dedupe() {
+    this.Filter((_config) => true);
+  }
 }
 
 export { WeaponConfigurations };
-export type { StatScorer, MaximizingFn, Selector, SelectingFn, WeaponConfig };
+export type {
+  StatScorer,
+  MaximizingFn,
+  Selector,
+  SelectingFn,
+  WeaponConfigurationMap as WeaponConfig,
+  WeaponConfiguration,
+  WeaponConfigurationStats,
+};

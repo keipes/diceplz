@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "./WeaponConfiguration.ts";
 import { GetStatsForConfiguration } from "./WeaponData";
 
 interface StringVoidFn {

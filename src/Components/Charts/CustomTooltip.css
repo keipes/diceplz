@@ -1,5 +1,5 @@
 .tooltip {
-  z-index: 99;
+  z-index: 1000;
   background: var(--chart-desc-bg);
   border-radius: 4px;
   color: var(--font-color);

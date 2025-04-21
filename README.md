@@ -9,3 +9,7 @@ BF2042 weapon stats.
 - Sidebar
   ** left side bar for the list of current weapons, allow to select one, more, or all as currently being configured
   ** right side bar handles modifying the selected weapons
+
+
+Weapon data
+Weapon configurations

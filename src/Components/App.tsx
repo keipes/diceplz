@@ -3,10 +3,7 @@ import "./App.css";
 import DamageChart from "./Charts/DamageChart.tsx";
 import TTKChart from "./Charts/TTKChart.tsx";
 import RPMChart from "./Charts/RPMChart.tsx";
-import ConfigBar from "./WeaponConfigurator/ConfigBar/ConfigBar.tsx";
-// import WeaponConfigurator, {
-//   WeaponConfiguration,
-// } from "./WeaponConfigurator/WeaponConfigurator.tsx";
+import { WeaponConfiguration } from "../Data/WeaponConfiguration.ts";
 
 import {
   Chart as ChartJS,
@@ -98,12 +95,10 @@ const [configs, mods] = LoadInitialSessionData();
 function App() {
   const [modifiers, setModifiers] = useState(mods);
   const [settings, setSettings] = useState(InitialSettings);
-  const [bottomPadding, setBottomPadding] = useState(window.innerHeight / 3);
   const [sidebarWidth, setSidebarWidth] = useState(540);
-  const [configBarWidth, setConfigBarWidth] = useState(300);
   const [weaponConfigurations, _setWeaponConfigurations] = useState(configs);
   const [sidebarDragging, setSidebarDragging] = useState(false);
-  const [configBarDragging, setConfigBarDragging] = useState(false);
+  const [configBarDragging, _setConfigBarDragging] = useState(false);
   const setWeaponConfigurations = (
     configurations: Map<string, WeaponConfiguration>
   ) => {

@@ -3,6 +3,7 @@ import Weapon from "./Weapon";
 import { useContext } from "react";
 import { ConfiguratorContext } from "../App";
 import ConfigBar from "./ConfigBar/ConfigBar";
+import WeaponTable from "./WeaponTable/WeaponTable";
 
 interface SidebarProps {
   width: number;
@@ -18,15 +19,22 @@ function Sidebar(props: SidebarProps) {
     );
   }
   let sidebarClass = "sidebar";
-  if (props.dragging && false) {
-    sidebarClass += " dragging";
+  let weaponListContainerClass = "sidebar-weapon-list-container";
+  if (props.dragging) {
+    weaponListContainerClass += " dragging";
   }
+  // if (props.dragging && true) {
+  //   sidebarClass += " dragging";
+  // }
   return (
     <>
       <div className={sidebarClass} style={{ width: props.width + "px" }}>
         <ConfigBar />
-
-        <div className="sidebar-weapon-list-container">
+        {/* <WeaponTable
+          options={["Standard", "Subsonic"]}
+          selectedWeapons={["AK5C", "M5A3"]}
+        /> */}
+        <div className={weaponListContainerClass}>
           <div
             style={{ display: "flex", flexDirection: "row" }}
             className="sidebar-weapon-list"

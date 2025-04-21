@@ -387,7 +387,7 @@ function TopNav(props: NavProps) {
                 className="nav-title"
                 onClick={() => window.location.reload()}
               >
-                DP
+                D
               </h1>
             </a>
           </li>

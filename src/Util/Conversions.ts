@@ -1,5 +1,5 @@
 import { Modifiers } from "../Data/ConfigLoader";
-import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../Data/WeaponConfiguration";
 import {
   AmmoStat,
   GetStatsForConfiguration,

@@ -1,5 +1,5 @@
 import { GetCategoryWeapons, WeaponCategories } from "../../Data/WeaponData";
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../../Data/WeaponConfiguration";
 
 import {
   MetricEvaluator,

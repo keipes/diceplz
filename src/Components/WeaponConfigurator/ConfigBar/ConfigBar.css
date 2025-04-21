@@ -1,6 +1,6 @@
 .config-bar {
   width: 100%;
-  background-color: #f4f4f4;
+  /* background-color: #f4f4f4; */
   position: sticky;
   top: 0;
   display: flex;
@@ -9,5 +9,6 @@
   justify-content: space-around;
   z-index: 98;
   align-self: flex-start;
-  height: 8rem;
+  /* height: 8rem; */
+  min-width: 267px;
 }

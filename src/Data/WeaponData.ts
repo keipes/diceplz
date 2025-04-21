@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "./WeaponConfiguration";
 import { ConfigDisplayName } from "../Util/LabelMaker";
 import _weaponData from "../assets/weapons.json";
 const weaponData: WeaponDataJSON = _weaponData;
@@ -34,7 +34,7 @@ interface WeaponStats {
   rpmAuto?: number;
   velocity?: number;
 }
-interface WeaponConfiguration extends Weapon, WeaponStats {}
+// interface WeaponConfiguration extends Weapon, WeaponStats {}
 
 interface DamageRange {
   damage: number;
@@ -202,6 +202,15 @@ function AllWeaponDropoffRangeFrequencies() {
     console.log(key + " " + ranges.get(key));
   }
 }
+
+const BaseAmmoType = function (ammoType: string) {
+  return ammoType
+    .replace(" Extended", "")
+    .replace(" Beltfed", "")
+    .replace(" Drum", "")
+    .replace(" High Power", "")
+    .replace(" Close Combat", "");
+};
 
 // function AllBestConfigurations() {
 //   AllWeaponsProcessor((weapon) => {
@@ -417,6 +426,7 @@ export {
   StatMatchFilter,
   StatMatchMask,
   OnlyStatsWithBiggestMags,
+  BaseAmmoType,
   // WeaponStats,
 };
 

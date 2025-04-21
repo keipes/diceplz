@@ -1,4 +1,4 @@
-import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../../Data/WeaponConfiguration";
 import { GetWeaponByName, WeaponStats } from "../../Data/WeaponData";
 
 interface SortableWeaponData {

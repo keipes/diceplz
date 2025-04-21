@@ -26,7 +26,7 @@ import {
   useState,
   MouseEvent,
 } from "react";
-import { WeaponConfiguration } from "./WeaponConfigurator";
+import { WeaponConfiguration } from "../../Data/WeaponConfiguration";
 import {
   getGlobalMinMax,
   getGlobalMinMaxScores,

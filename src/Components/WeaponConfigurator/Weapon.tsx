@@ -1,5 +1,5 @@
 import { GetWeaponByName } from "../../Data/WeaponData.ts";
-import { WeaponConfiguration } from "./WeaponConfigurator.tsx";
+import { WeaponConfiguration } from "../../Data/WeaponConfiguration.ts";
 import { ConfigHSL } from "../../Util/StringColor.ts";
 import "./Weapon.css";
 

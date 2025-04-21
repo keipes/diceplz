@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./ConfigBarOption.css";
 
 interface ConfigBarOptionProps {

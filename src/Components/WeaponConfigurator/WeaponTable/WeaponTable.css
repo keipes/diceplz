@@ -1,0 +1,7 @@
+.option-header {
+  /* text-orientation: sideways; */
+  writing-mode: sideways-lr;
+  transform: rotate(45deg);
+  translate: 1rem;
+  margin: 0.5rem;
+}

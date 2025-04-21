@@ -1,4 +1,8 @@
-import { WeaponConfigurations } from "./WeaponConfiguration";
+import {
+  WeaponConfigurations,
+  WeaponConfigurationStats,
+  WeaponConfiguration,
+} from "./WeaponConfiguration";
 import {
   StatMatchMask,
   StatMatchFilter,
@@ -7,6 +11,9 @@ import {
   GetAmmoStat,
   Weapon,
   WeaponStats,
+  GetInitialStatsForWeapon,
+  GetStatsForConfiguration,
+  BaseAmmoType,
 } from "./WeaponData";
 
 interface SeenStats {
@@ -106,10 +113,104 @@ export const AddAllConfigurations = (config: WeaponConfigurations) => {
 };
 
 export const ResetWeaponConfigurations = (config: WeaponConfigurations) => {
-  config.Select((weapon, stat) => {
-    if (stat.ammoType.indexOf("Armor Piercing") >= 0) {
-      return false;
+  const currentWeapons = new Set<string>();
+  config.ForEachWeapon((weapon) => {
+    currentWeapons.add(weapon.name);
+  });
+
+  const seenWeapons = new Set<string>();
+  config.SelectWeapons((weapon) => {
+    if (currentWeapons.has(weapon.name) && !seenWeapons.has(weapon.name)) {
+      const weaponData = GetWeaponByName(weapon.name);
+      const basicStats = GetInitialStatsForWeapon(weaponData);
+      if (
+        weapon.ammoType === basicStats.ammoType &&
+        weapon.barrelType === basicStats.barrelType
+      ) {
+        seenWeapons.add(weapon.name);
+        return true;
+      }
     }
-    return true;
+    return false;
   });
 };
+
+const AmmoTypeComparator = (a: string, b: string) => {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+};
+
+export const AmmoTypes = (configurations: WeaponConfigurations) => {
+  const ammoTypes = new Set<string>();
+  configurations.ForEach((config) => {
+    const weapon = GetWeaponByName(config.name);
+    for (const stat of weapon.stats) {
+      ammoTypes.add(stat.ammoType);
+    }
+  });
+  return Array.from(ammoTypes).sort(AmmoTypeComparator);
+};
+
+export const BaseAmmoTypes = (configurations: WeaponConfigurations) => {
+  const baseAmmoTypes = new Set<string>();
+  AmmoTypes(configurations).forEach((ammoType) => {
+    const baseAmmoType = BaseAmmoType(ammoType);
+    if (baseAmmoType) {
+      baseAmmoTypes.add(baseAmmoType);
+    }
+  });
+  return Array.from(baseAmmoTypes).sort(AmmoTypeComparator);
+};
+
+export const SelectAmmo = (
+  configurations: WeaponConfigurations,
+  ammoType: string
+) => {
+  const seenWeapons = new Set<string>();
+  const weapons = new Array<WeaponConfiguration>();
+  configurations.ForEach((config) => {
+    seenWeapons.add(config.name);
+  });
+  seenWeapons.forEach((weaponName) => {
+    const weapon = GetWeaponByName(weaponName);
+    let addedAny = false;
+    const stats = weapon.stats;
+    for (const stat of stats) {
+      if (stat.ammoType.indexOf(ammoType) >= 0) {
+        const newConfig = {
+          name: weapon.name,
+          barrelType: stat.barrelType,
+          ammoType: stat.ammoType,
+          visible: true,
+        };
+        weapons.push(newConfig);
+        addedAny = true;
+      }
+    }
+    if (!addedAny) {
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stats[0].barrelType,
+        ammoType: stats[0].ammoType,
+        visible: false,
+      };
+      weapons.push(newConfig);
+    }
+  });
+  configurations.Reset();
+  configurations.BulkAddWeapon(weapons);
+  configurations.Dedupe();
+};
+
+// const Weapons = function(config: WeaponConfigurations) {
+//   const weapons = new Map<string, WeaponConfiguration>();
+//   config.ForEach((weapon) => {
+//     weapons.set(weapon.name, weapon);
+//   });
+//   return weapons;
+// }

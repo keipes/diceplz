@@ -22,13 +22,6 @@ interface SetOpenFn {
   (visible: boolean): void;
 }
 
-interface WeaponConfiguration {
-  name: string;
-  visible: boolean;
-  barrelType: string;
-  ammoType: string;
-}
-
 interface MouseEventHandler {
   (e: MouseEvent): void;
 }
@@ -143,4 +136,3 @@ function WeaponConfigurator(props: WeaponConfiguratorProps) {
 }
 
 export default WeaponConfigurator;
-export type { WeaponConfiguration };

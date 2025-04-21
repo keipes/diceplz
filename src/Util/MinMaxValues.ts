@@ -11,7 +11,7 @@ import {
   SELECTOR_BURST,
   SELECTOR_SINGLE,
 } from "../Components/Charts/TTKChart";
-import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+import { WeaponConfiguration } from "../Data/WeaponConfiguration";
 import { DefaultModifiers } from "../Data/ConfigLoader";
 import { WeaponConfigurations } from "../Data/WeaponConfiguration";
 import { AllWeaponsProcessor } from "../Data/WeaponData";
