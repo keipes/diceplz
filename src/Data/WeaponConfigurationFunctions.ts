@@ -184,8 +184,17 @@ export const SelectAmmo = (
 ) => {
   const seenWeapons = new Set<string>();
   const weapons = new Array<WeaponConfiguration>();
+  const currentBarrelTypes = new Map<string, Set<string>>();
   configurations.ForEach((config) => {
     seenWeapons.add(config.name);
+    let currentBarrelTypesForWeapon = currentBarrelTypes.get(config.name);
+    if (!currentBarrelTypesForWeapon) {
+      currentBarrelTypesForWeapon = new Set<string>();
+      currentBarrelTypesForWeapon.add(config.barrelType);
+      currentBarrelTypes.set(config.name, currentBarrelTypesForWeapon);
+    } else {
+      currentBarrelTypesForWeapon.add(config.barrelType);
+    }
   });
   seenWeapons.forEach((weaponName) => {
     const weapon = GetWeaponByName(weaponName);
@@ -196,6 +205,13 @@ export const SelectAmmo = (
       for (const ammoType of ammoTypes) {
         console.log("Checking ammo type:", ammoType);
         if (stat.ammoType.indexOf(ammoType) >= 0) {
+          const barrelTypesForWeapon = currentBarrelTypes.get(weapon.name);
+          if (
+            barrelTypesForWeapon &&
+            !barrelTypesForWeapon.has(stat.barrelType)
+          ) {
+            continue; // Skip if the barrel type is not in the current set
+          }
           const newConfig = {
             name: weapon.name,
             barrelType: stat.barrelType,
@@ -223,14 +239,25 @@ export const SelectAmmo = (
   configurations.Dedupe();
 };
 
+// include existing stats if they don't have the new barrel types, but hide them
+//
 export const SelectBarrel = (
   configurations: WeaponConfigurations,
   barrelTypes: Set<string>
 ) => {
   const seenWeapons = new Set<string>();
   const weapons = new Array<WeaponConfiguration>();
+  const currentAmmoTypes = new Map<string, Set<string>>();
   configurations.ForEach((config) => {
     seenWeapons.add(config.name);
+    let currentAmmoTypesForWeapon = currentAmmoTypes.get(config.name);
+    if (!currentAmmoTypesForWeapon) {
+      currentAmmoTypesForWeapon = new Set<string>();
+      currentAmmoTypesForWeapon.add(config.ammoType);
+      currentAmmoTypes.set(config.name, currentAmmoTypesForWeapon);
+    } else {
+      currentAmmoTypesForWeapon.add(config.ammoType);
+    }
   });
   seenWeapons.forEach((weaponName) => {
     const weapon = GetWeaponByName(weaponName);
@@ -239,6 +266,10 @@ export const SelectBarrel = (
     for (const stat of stats) {
       for (const barrelType of barrelTypes) {
         if (stat.barrelType.indexOf(barrelType) >= 0) {
+          const ammoTypesForWeapon = currentAmmoTypes.get(weapon.name);
+          if (ammoTypesForWeapon && !ammoTypesForWeapon.has(stat.ammoType)) {
+            continue; // Skip if the ammo type is not in the current set
+          }
           const newConfig = {
             name: weapon.name,
             barrelType: stat.barrelType,
