@@ -167,9 +167,20 @@ export const BaseAmmoTypes = (configurations: WeaponConfigurations) => {
   return Array.from(baseAmmoTypes).sort(AmmoTypeComparator);
 };
 
+export const BarrelTypes = (configurations: WeaponConfigurations) => {
+  const barrelTypes = new Set<string>();
+  configurations.ForEach((config) => {
+    const weapon = GetWeaponByName(config.name);
+    for (const stat of weapon.stats) {
+      barrelTypes.add(stat.barrelType);
+    }
+  });
+  return Array.from(barrelTypes).sort();
+};
+
 export const SelectAmmo = (
   configurations: WeaponConfigurations,
-  ammoType: string
+  ammoTypes: Set<string>
 ) => {
   const seenWeapons = new Set<string>();
   const weapons = new Array<WeaponConfiguration>();
@@ -181,16 +192,113 @@ export const SelectAmmo = (
     let addedAny = false;
     const stats = weapon.stats;
     for (const stat of stats) {
-      if (stat.ammoType.indexOf(ammoType) >= 0) {
-        const newConfig = {
-          name: weapon.name,
-          barrelType: stat.barrelType,
-          ammoType: stat.ammoType,
-          visible: true,
-        };
-        weapons.push(newConfig);
-        addedAny = true;
+      console.log(ammoTypes);
+      for (const ammoType of ammoTypes) {
+        console.log("Checking ammo type:", ammoType);
+        if (stat.ammoType.indexOf(ammoType) >= 0) {
+          const newConfig = {
+            name: weapon.name,
+            barrelType: stat.barrelType,
+            ammoType: stat.ammoType,
+            visible: true,
+          };
+          weapons.push(newConfig);
+          addedAny = true;
+          console.log(newConfig);
+        }
       }
+    }
+    if (!addedAny) {
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stats[0].barrelType,
+        ammoType: stats[0].ammoType,
+        visible: false,
+      };
+      weapons.push(newConfig);
+    }
+  });
+  configurations.Reset();
+  configurations.BulkAddWeapon(weapons);
+  configurations.Dedupe();
+};
+
+export const SelectBarrel = (
+  configurations: WeaponConfigurations,
+  barrelTypes: Set<string>
+) => {
+  const seenWeapons = new Set<string>();
+  const weapons = new Array<WeaponConfiguration>();
+  configurations.ForEach((config) => {
+    seenWeapons.add(config.name);
+  });
+  seenWeapons.forEach((weaponName) => {
+    const weapon = GetWeaponByName(weaponName);
+    let addedAny = false;
+    const stats = weapon.stats;
+    for (const stat of stats) {
+      for (const barrelType of barrelTypes) {
+        if (stat.barrelType.indexOf(barrelType) >= 0) {
+          const newConfig = {
+            name: weapon.name,
+            barrelType: stat.barrelType,
+            ammoType: stat.ammoType,
+            visible: true,
+          };
+          weapons.push(newConfig);
+          addedAny = true;
+        }
+      }
+    }
+    if (!addedAny) {
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stats[0].barrelType,
+        ammoType: stats[0].ammoType,
+        visible: false,
+      };
+      weapons.push(newConfig);
+    }
+  });
+  configurations.Reset();
+  configurations.BulkAddWeapon(weapons);
+  configurations.Dedupe();
+};
+
+interface SelectMatchingFilter {
+  ammoTypes?: Set<string>;
+  barrelTypes?: Set<string>;
+}
+
+export const SelectMatching = (
+  configurations: WeaponConfigurations,
+  filter: SelectMatchingFilter
+) => {
+  const seenWeapons = new Set<string>();
+  const weapons = new Array<WeaponConfiguration>();
+  configurations.ForEach((config) => {
+    seenWeapons.add(config.name);
+  });
+  seenWeapons.forEach((weaponName) => {
+    const weapon = GetWeaponByName(weaponName);
+    let addedAny = false;
+    const stats = weapon.stats;
+    for (const stat of stats) {
+      const baseAmmoType = BaseAmmoType(stat.ammoType);
+      if (filter.ammoTypes && !filter.ammoTypes.has(baseAmmoType)) {
+        continue;
+      }
+      if (filter.barrelTypes && !filter.barrelTypes.has(stat.barrelType)) {
+        continue;
+      }
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stat.barrelType,
+        ammoType: stat.ammoType,
+        visible: true,
+      };
+      weapons.push(newConfig);
+      addedAny = true;
     }
     if (!addedAny) {
       const newConfig = {

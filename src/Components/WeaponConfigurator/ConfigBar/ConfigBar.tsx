@@ -12,6 +12,7 @@ import {
 } from "../../../Data/WeaponConfigurationFunctions";
 import { BaseAmmoType } from "../../../Data/WeaponData";
 import AmmoSelector from "./AmmoSelector";
+import BarrelSelector from "./BarrelSelector";
 
 interface ConfigBarProps {
   // width: number;
@@ -34,7 +35,7 @@ function ConfigBar(_props: ConfigBarProps) {
     );
     configBarOptions.push(
       <ConfigBarOption
-        label={"Reset Configurations"}
+        label={"Default Configurations"}
         onClick={() => {
           // configurator.AutoConfigure();
           ResetWeaponConfigurations(configurator);
@@ -60,20 +61,20 @@ function ConfigBar(_props: ConfigBarProps) {
         key={configBarOptions.length}
       />
     );
-    // const ammoTypes = new Set<string>();
-    // AmmoTypes(configurator).forEach((ammoType) => {
-    //   ammoTypes.add(BaseAmmoType(ammoType));
-    // });
-    // const ammoTypesArray = Array.from(ammoTypes);
-    // ammoTypesArray.sort((a, b) => {
-    //   if (a < b) {
-    //     return -1;
-    //   }
-    //   if (a > b) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
+    const ammoTypes = new Set<string>();
+    AmmoTypes(configurator).forEach((ammoType) => {
+      ammoTypes.add(BaseAmmoType(ammoType));
+    });
+    const ammoTypesArray = Array.from(ammoTypes);
+    ammoTypesArray.sort((a, b) => {
+      if (a < b) {
+        return -1;
+      }
+      if (a > b) {
+        return 1;
+      }
+      return 0;
+    });
     // configBarOptions.push(
     //   <ConfigBarSelect
     //     label={"Weapon"}
@@ -84,7 +85,9 @@ function ConfigBar(_props: ConfigBarProps) {
     //     key={configBarOptions.length}
     //   />
     // );
-    // configBarOptions.push(<AmmoSelector key={configBarOptions.length} />);
+    configBarOptions.push(<BarrelSelector key={configBarOptions.length} />);
+
+    configBarOptions.push(<AmmoSelector key={configBarOptions.length} />);
   }
 
   let configBarClass = "config-bar";
