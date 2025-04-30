@@ -108,12 +108,58 @@ function Weapon(props: WeaponProps) {
     visibilitySvg = <VisibilityOffIcon alt="toggle visibility" />;
   }
   return (
-    <div className="wcf-weapon" style={style}>
-      <div className="wcf-header">
+    <tr className="wcf-weapon" style={style}>
+      <td className="wcf-header">
         <div className="wcf-header-item wcf-name" style={nameStyle}>
           {config.name}
         </div>
+      </td>
 
+      <td className="wcf-weapon-selector">
+        {/* <label htmlFor="barrel" className="wcf-selector-label">
+          BL
+        </label>
+        <span></span> */}
+        <select
+          className="wcf-selector-select"
+          value={props.config.barrelType}
+          name="barrel"
+          id="barrel"
+          onChange={(e) => {
+            const cloned = JSON.parse(JSON.stringify(props.config));
+            cloned.barrelType = e.target.value;
+            props.weaponConfig.UpdateWeapon(props.id, cloned);
+          }}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenBarrels.size < 2}
+        >
+          {barrelOptions}
+        </select>
+      </td>
+      <td className="wcf-weapon-selector">
+        {/* <label htmlFor="barrel" className="wcf-selector-label">
+          AM
+        </label>
+        <span></span> */}
+        <select
+          className={
+            "wcf-selector-select " + ammoTypeConverter(config.ammoType)
+          }
+          value={props.config.ammoType}
+          name="ammo"
+          id="ammo"
+          onChange={(e) => {
+            const cloned = JSON.parse(JSON.stringify(props.config));
+            cloned.ammoType = e.target.value;
+            props.weaponConfig.UpdateWeapon(props.id, cloned);
+          }}
+          onClick={(e) => e.stopPropagation()}
+          disabled={seenAmmo.size < 2}
+        >
+          {ammoOptions}
+        </select>
+      </td>
+      <td className={"wcf-weapon-controls"}>
         <span
           className={
             "config-delete wcf-header-item wcf-header-button wcf-duplicate svg-white svg-hover-blue"
@@ -146,53 +192,8 @@ function Weapon(props: WeaponProps) {
         >
           <DeleteIcon />
         </span>
-      </div>
-
-      <div className="wcf-weapon-selector">
-        <label htmlFor="barrel" className="wcf-selector-label">
-          BL
-        </label>
-        <span></span>
-        <select
-          className="wcf-selector-select"
-          value={props.config.barrelType}
-          name="barrel"
-          id="barrel"
-          onChange={(e) => {
-            const cloned = JSON.parse(JSON.stringify(props.config));
-            cloned.barrelType = e.target.value;
-            props.weaponConfig.UpdateWeapon(props.id, cloned);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          disabled={seenBarrels.size < 2}
-        >
-          {barrelOptions}
-        </select>
-      </div>
-      <div className="wcf-weapon-selector">
-        <label htmlFor="barrel" className="wcf-selector-label">
-          AM
-        </label>
-        <span></span>
-        <select
-          className={
-            "wcf-selector-select " + ammoTypeConverter(config.ammoType)
-          }
-          value={props.config.ammoType}
-          name="ammo"
-          id="ammo"
-          onChange={(e) => {
-            const cloned = JSON.parse(JSON.stringify(props.config));
-            cloned.ammoType = e.target.value;
-            props.weaponConfig.UpdateWeapon(props.id, cloned);
-          }}
-          onClick={(e) => e.stopPropagation()}
-          disabled={seenAmmo.size < 2}
-        >
-          {ammoOptions}
-        </select>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }
 

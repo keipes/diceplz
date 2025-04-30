@@ -22,7 +22,7 @@ function ConfigBar(_props: ConfigBarProps) {
   const configurator = useContext(ConfiguratorContext);
   const configBarOptions: any[] = [];
 
-  if (configurator.weaponConfigurations.size > 0) {
+  if (configurator.weaponConfigurations.size > 0 || true) {
     configBarOptions.push(
       <ConfigBarOption
         label={"All Configurations"}
@@ -60,60 +60,31 @@ function ConfigBar(_props: ConfigBarProps) {
         key={configBarOptions.length}
       />
     );
-    const ammoTypes = new Set<string>();
-    AmmoTypes(configurator).forEach((ammoType) => {
-      ammoTypes.add(BaseAmmoType(ammoType));
-    });
-    const ammoTypesArray = Array.from(ammoTypes);
-    ammoTypesArray.sort((a, b) => {
-      if (a < b) {
-        return -1;
-      }
-      if (a > b) {
-        return 1;
-      }
-      return 0;
-    });
-    configBarOptions.push(
-      <ConfigBarSelect
-        label={"Weapon"}
-        options={ammoTypesArray}
-        onOptionChange={(value) => {
-          // const currentWeapons: any[] = [];
-          // configurator.weaponConfigurations.forEach((config) => {
-          //   currentWeapons.push(config.name);
-          // });
-          // configurator.SelectWeapons((weapon) => {
-          //   return weapon.name === value;
-          // });
-          SelectAmmo(configurator, value);
-        }}
-        key={configBarOptions.length}
-      />
-    );
-    // const ammoTypeOptions: any[] = [];
-    // for (const ammoType of ammoTypesArray) {
-    //   ammoTypeOptions.push({
-    //     label: ammoType,
-    //     value: ammoType,
-    //     checked: false,
-    //   });
-    // }
-    // const ammoTypeOptionsArray = Array.from(ammoTypeOptions);
-
+    // const ammoTypes = new Set<string>();
+    // AmmoTypes(configurator).forEach((ammoType) => {
+    //   ammoTypes.add(BaseAmmoType(ammoType));
+    // });
+    // const ammoTypesArray = Array.from(ammoTypes);
+    // ammoTypesArray.sort((a, b) => {
+    //   if (a < b) {
+    //     return -1;
+    //   }
+    //   if (a > b) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
     // configBarOptions.push(
-    //   <ConfigBarCheckboxList
-    //     label={"Select Options"}
-    //     options={ammoTypeOptionsArray}
-    //     onChange={(option, checked) => {
-    //       console.log("Option: ", option, " Checked: ", checked);
+    //   <ConfigBarSelect
+    //     label={"Weapon"}
+    //     options={ammoTypesArray}
+    //     onOptionChange={(value) => {
+    //       SelectAmmo(configurator, value);
     //     }}
     //     key={configBarOptions.length}
     //   />
     // );
-
-    configBarOptions.push(<AmmoSelector key={configBarOptions.length} />);
-    // configBarOptions.push(
+    // configBarOptions.push(<AmmoSelector key={configBarOptions.length} />);
   }
 
   let configBarClass = "config-bar";

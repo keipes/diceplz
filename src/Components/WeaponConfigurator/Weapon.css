@@ -1,34 +1,44 @@
 .wcf-weapon {
-  display: grid;
+  /* display: flex; */
   /* width: 1fr; */
 
-  box-sizing: border-box;
+  /* box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   border-color: black;
   border-width: 1px;
-  border-style: solid;
-  height: 10rem;
+  border-style: solid; */
+  /* height: 10rem; */
   /* margin-right: 1rem; */
-  padding: 0 1rem 0 1rem;
+  /* padding: 0 1rem 0 1rem; */
   /* margin-top: 1rem; */
   /* padding-right: 1rem; */
   /* min-width: 100px; */
   /* flex: 1; */
-  flex-grow: 1;
-  flex-basis: 267px;
+  /* flex-grow: 1; */
+  /* flex-basis: 267px; */
+  /* flex-basis: 100%; */
   /* justify-content: center; */
-  width: 267px;
+  /* width: 267px; */
+  /* height: 2rem; */
+  /* line-height: 1rem; */
+  font-size: 12pt;
 }
 
 .wcf-selector-select {
-  border-radius: 0;
-  border-color: rgb(216, 216, 216);
+  /* border-radius: 0;
+  border-color: rgb(216, 216, 216); */
+  border: 0;
   color: var(--font-color);
   background-color: var(--wcf-container);
   font-weight: 600;
   /* width: 180px; */
   min-width: 180px;
+  /* padding: 0; */
+  padding-left: 0.5rem;
+  width: 100%;
+  /* height: 1.8rem; */
+  padding: 0;
 }
 
 .wcf-selector-ammo-standard {
@@ -50,46 +60,53 @@
 }
 
 .wcf-selector-option {
-  line-height: 2.8rem;
+  /* line-height: 2.8rem; */
 }
 .wcf-name {
   text-align: left;
   font-weight: 600;
+  color: black;
+  padding-left: 0.5rem;
 }
 
 .wcf-weapon-selector {
-  height: 2.8rem;
-  display: grid;
-  grid-template-columns: 2.8rem 1rem 1fr;
-  margin-bottom: 0.5rem;
+  /* height: 2.8rem; */
+  /* display: grid;
+  grid-template-columns: 2.8rem 1rem 1fr; */
+  /* margin-bottom: 0.5rem; */
   font-size: 14pt;
   color: rgb(120, 120, 120);
+  padding: 0;
 }
 
 .wcf-selector-label {
-  display: grid;
+  /* display: grid;
   font-weight: 600;
   border: 0.2rem solid rgb(120, 120, 120);
-  line-height: 2.4rem;
+  line-height: 2.4rem; */
 }
 
 .wcf-header {
-  display: grid;
+  /* display: grid;
   font-size: 18px;
   grid-template-columns: 1fr 30px 30px 30px;
   height: 2.2rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.6rem; */
+  padding: 0;
 }
 .wcf-header-item {
-  display: grid;
+  /* display: grid;
   overflow: hidden;
-  height: 2.2rem;
+  height: 2.2rem; */
 }
 
 .wcf-header-button {
   cursor: pointer;
   user-select: none;
-  height: 1.8rem;
+  height: 1rem;
+}
+.wcf-header-button > img {
+  height: 1rem;
 }
 
 .wcf-visibility {
@@ -99,4 +116,16 @@
 .wcf-close {
   position: relative;
   top: 0.2rem;
+}
+
+.wcf-weapon-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 0;
+  height: 0.5rem;
 }

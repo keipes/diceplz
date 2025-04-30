@@ -17,12 +17,21 @@ const WeaponTable: React.FC<WeaponTableProps> = ({
   configurator.ForEach((config) => {
     selectedWeapons.push(config.name);
   });
+
+  const weaponOptions: Map<string, string[]> = new Map();
+  configurator.ForEach((config) => {
+    const weaponName = config.name;
+    // const weaponOption = config.GetWeaponOptions();
+    // if (weaponOption) {
+    //   weaponOptions.set(weaponName, weaponOption);
+    // }
+  });
   return (
     <table>
       <thead>
         <tr>
           <th>Weapons / Options</th>
-          {options.map((option, index) => (
+          {["Barrel", "Ammo"].map((option, index) => (
             <th key={index} className={"option-header"}>
               {option}
             </th>

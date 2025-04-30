@@ -35,12 +35,22 @@ function Sidebar(props: SidebarProps) {
           selectedWeapons={["AK5C", "M5A3"]}
         /> */}
         <div className={weaponListContainerClass}>
-          <div
-            style={{ display: "flex", flexDirection: "row" }}
+          <table
+            // style={{ display: "flex", flexDirection: "row" }}
             className="sidebar-weapon-list"
           >
-            {weapons}
-          </div>
+            <thead className="sidebar-weapon-list-header">
+              <tr>
+                {/* <th className={"option-header"}>Weapon</th> */}
+                {["Weapon", "Barrel", "Ammo", ""].map((option, index) => (
+                  <th key={index} className={"option-header"}>
+                    {option}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>{weapons}</tbody>
+          </table>
         </div>
       </div>
     </>
