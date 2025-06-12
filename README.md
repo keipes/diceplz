@@ -12,4 +12,6 @@ BF2042 weapon stats.
     - BTK, TTK at range
     - Velocity
     - Kills per mag?
+  - Ammo/Barrel select should be a button to add/remove types, instead of a set of checkboxes.
+  - Grey-out the ammo/barrel selectors if the current settings don't explicitly match the operational set.
 - Fix tooltip width now that sidebar takes up part of the screen.

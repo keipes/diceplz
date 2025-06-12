@@ -2,13 +2,15 @@ import "./ConfigBar.css";
 import ConfigBarOption from "./ConfigBarOption";
 import ConfigBarSelect from "./ConfigBarSelect";
 import ConfigBarCheckboxList from "./ConfigBarCheckboxList";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ConfiguratorContext } from "../../App";
 import {
   AddAllConfigurations,
   AmmoTypes,
   ResetWeaponConfigurations,
   SelectAmmo,
+  SelectMatching,
+  SelectMatchingConfigsMatcher,
 } from "../../../Data/WeaponConfigurationFunctions";
 import { BaseAmmoType } from "../../../Data/WeaponData";
 import AmmoSelector from "./AmmoSelector";
@@ -19,14 +21,20 @@ interface ConfigBarProps {
   // dragging: boolean;
 }
 
+export interface SetSelectMatchingConfigsMatcher {
+  (configMatcher: SelectMatchingConfigsMatcher): void;
+}
+
 function ConfigBar(_props: ConfigBarProps) {
   const configurator = useContext(ConfiguratorContext);
   const configBarOptions: any[] = [];
-
+  const defaultFilter: SelectMatchingConfigsMatcher = {};
+  const [configMatcher, setConfigMatcher] = useState(defaultFilter);
+  // SelectMatching(configurator, configMatcher);
   if (configurator.weaponConfigurations.size > 0 || true) {
     configBarOptions.push(
       <ConfigBarOption
-        label={"All Configurations"}
+        label={"All Wpn Configs"}
         onClick={() => {
           AddAllConfigurations(configurator);
         }}
@@ -35,7 +43,7 @@ function ConfigBar(_props: ConfigBarProps) {
     );
     configBarOptions.push(
       <ConfigBarOption
-        label={"Default Configurations"}
+        label={"Default Wpn Configs"}
         onClick={() => {
           // configurator.AutoConfigure();
           ResetWeaponConfigurations(configurator);
@@ -85,9 +93,21 @@ function ConfigBar(_props: ConfigBarProps) {
     //     key={configBarOptions.length}
     //   />
     // );
-    configBarOptions.push(<BarrelSelector key={configBarOptions.length} />);
+    configBarOptions.push(
+      <BarrelSelector
+        key={configBarOptions.length}
+        configMatcher={configMatcher}
+        setConfigMatcher={setConfigMatcher}
+      />
+    );
 
-    configBarOptions.push(<AmmoSelector key={configBarOptions.length} />);
+    configBarOptions.push(
+      <AmmoSelector
+        key={configBarOptions.length}
+        configMatcher={configMatcher}
+        setConfigMatcher={setConfigMatcher}
+      />
+    );
   }
 
   let configBarClass = "config-bar";
@@ -103,7 +123,6 @@ function ConfigBar(_props: ConfigBarProps) {
         // }}
       >
         {/* <ConfigbarSearch /> */}
-
         {configBarOptions}
       </div>
     </>

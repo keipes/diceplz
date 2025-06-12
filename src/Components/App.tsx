@@ -128,16 +128,14 @@ function App() {
         setDarkMode(event.matches);
       });
   }, []);
-  useEffect(
-    () =>
-      new SessionStoreConfigLoader(
-        weaponConfigurations,
-        setWeaponConfigurations,
-        modifiers,
-        setModifiers
-      ).saveConfig(DEFAULT_SESSION_CONFIG_NAME),
-    [weaponConfigurations, modifiers]
-  );
+  useEffect(() => {
+    new SessionStoreConfigLoader(
+      weaponConfigurations,
+      setWeaponConfigurations,
+      modifiers,
+      setModifiers
+    ).saveConfig(DEFAULT_SESSION_CONFIG_NAME);
+  }, [weaponConfigurations, modifiers]);
 
   const configLoader = new LocalStoreConfigLoader(
     weaponConfigurations,

@@ -50,6 +50,7 @@
 
 .option-header {
   text-align: left;
+  background-color: var(--button-bg);
 }
 
 .sidebar-weapon-list-header {

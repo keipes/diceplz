@@ -346,6 +346,65 @@ export const SelectMatching = (
   configurations.Dedupe();
 };
 
+export interface SelectMatchingConfigsMatcher {
+  ammoTypes?: Set<string>;
+  barrelTypes?: Set<string>;
+}
+
+export const SelectMatchingConfigs = (
+  configurator: WeaponConfigurations,
+  matcher: ConfigMatcher
+) => {
+  const seenWeapons = new Set<string>();
+  const weapons = new Array<WeaponConfiguration>();
+
+  configurator.ForEach((config) => {
+    seenWeapons.add(config.name);
+  });
+
+  seenWeapons.forEach((weaponName) => {
+    const weapon = GetWeaponByName(weaponName);
+    let addedAny = false;
+    const stats = weapon.stats;
+
+    for (const stat of stats) {
+      const baseAmmoType = BaseAmmoType(stat.ammoType);
+
+      if (matcher.ammoTypes && !matcher.ammoTypes.has(baseAmmoType)) {
+        continue;
+      }
+
+      if (matcher.barrelTypes && !matcher.barrelTypes.has(stat.barrelType)) {
+        continue;
+      }
+
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stat.barrelType,
+        ammoType: stat.ammoType,
+        visible: true,
+      };
+
+      weapons.push(newConfig);
+      addedAny = true;
+    }
+
+    if (!addedAny) {
+      const newConfig = {
+        name: weapon.name,
+        barrelType: stats[0].barrelType,
+        ammoType: stats[0].ammoType,
+        visible: false,
+      };
+      weapons.push(newConfig);
+    }
+  });
+
+  configurator.Reset();
+  configurator.BulkAddWeapon(weapons);
+  configurator.Dedupe();
+};
+
 // const Weapons = function(config: WeaponConfigurations) {
 //   const weapons = new Map<string, WeaponConfiguration>();
 //   config.ForEach((weapon) => {
