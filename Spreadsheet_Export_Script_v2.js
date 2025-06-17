@@ -12,6 +12,7 @@ function ExportStats() {
   const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
   const weaponStatsSheet = spreadSheet.getSheetByName("Weapon Stats");
   const columns = getCategoryColumns(weaponStatsSheet);
+  console.log("Found " + columns.length + " categories");
   const data = {
     categories: [],
   };
@@ -332,32 +333,21 @@ function getWeaponRanges(columns, weaponStatsSheet) {
 
 function getCategoryColumns(weaponStatsSheet) {
   const firstRow = weaponStatsSheet.getRange(
-    2,
+    3,
     1,
-    2,
+    1,
     weaponStatsSheet.getLastColumn() + 1
   );
-  const firstRowBackgrounds = firstRow.getBackgrounds();
+  const merged = firstRow.getMergedRanges();
   const ranges = [];
-  let currentColor = "#000000";
-  let rangeStart = 0;
-  for (let i = 0; i < firstRowBackgrounds[0].length; i++) {
-    const cellColor = firstRowBackgrounds[0][i];
-    if (cellColor !== currentColor) {
-      if (cellColor == "#434343") {
-        // console.log("new range start");
-        rangeStart = i;
-      } else if (cellColor == "#000000") {
-        // console.log("new range end");
-        ranges.push({
-          start: rangeStart + 1,
-          end: i + 1,
-        });
-      } else {
-        console.error("unknown color detected: " + cellColor);
-      }
-      currentColor = cellColor;
-    }
+  for (const range of merged) {
+    const startColumn = range.getColumn();
+    const endColumn = startColumn + range.getWidth() - 1;
+    // console.log("Found merged range: " + startColumn + " to " + endColumn);
+    ranges.push({
+      start: startColumn,
+      end: endColumn,
+    });
   }
   return ranges;
 }
