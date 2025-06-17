@@ -5044,8 +5044,6 @@
               "barrelType": "Factory",
               "dropoffs": [
                 { "damage": 22, "range": 0 },
-                { "damage": 21, "range": 40 },
-                { "damage": 22, "range": 50 },
                 { "damage": 18, "range": 75 }
               ],
               "velocity": 845,
@@ -5058,8 +5056,6 @@
               "barrelType": "Factory",
               "dropoffs": [
                 { "damage": 22, "range": 0 },
-                { "damage": 21, "range": 40 },
-                { "damage": 22, "range": 50 },
                 { "damage": 18, "range": 75 }
               ],
               "velocity": 845,
@@ -5072,8 +5068,6 @@
               "barrelType": "6KU",
               "dropoffs": [
                 { "damage": 20.24, "range": 0 },
-                { "damage": 19.32, "range": 40 },
-                { "damage": 20.24, "range": 50 },
                 { "damage": 16.56, "range": 75 }
               ],
               "velocity": 845,
@@ -5086,8 +5080,6 @@
               "barrelType": "6KU",
               "dropoffs": [
                 { "damage": 20.24, "range": 0 },
-                { "damage": 19.32, "range": 40 },
-                { "damage": 20.24, "range": 50 },
                 { "damage": 16.56, "range": 75 }
               ],
               "velocity": 845,
@@ -5100,8 +5092,6 @@
               "barrelType": "Type 4",
               "dropoffs": [
                 { "damage": 20.9, "range": 0 },
-                { "damage": 19.95, "range": 40 },
-                { "damage": 20.9, "range": 50 },
                 { "damage": 17.1, "range": 75 }
               ],
               "velocity": 615,
@@ -5114,8 +5104,6 @@
               "barrelType": "Type 4",
               "dropoffs": [
                 { "damage": 20.9, "range": 0 },
-                { "damage": 19.95, "range": 40 },
-                { "damage": 20.9, "range": 50 },
                 { "damage": 17.1, "range": 75 }
               ],
               "velocity": 615,
@@ -5128,8 +5116,6 @@
               "barrelType": "PB",
               "dropoffs": [
                 { "damage": 19.8, "range": 0 },
-                { "damage": 18.9, "range": 40 },
-                { "damage": 19.8, "range": 50 },
                 { "damage": 16.2, "range": 75 }
               ],
               "velocity": 675,
@@ -5142,8 +5128,6 @@
               "barrelType": "PB",
               "dropoffs": [
                 { "damage": 19.8, "range": 0 },
-                { "damage": 18.9, "range": 40 },
-                { "damage": 19.8, "range": 50 },
                 { "damage": 16.2, "range": 75 }
               ],
               "velocity": 675,
@@ -9074,7 +9058,7 @@
                 { "damage": 20, "range": 0 },
                 { "damage": 15, "range": 15 },
                 { "damage": 12, "range": 20 },
-                { "damage": 10, "range": 29 },
+                { "damage": 10, "range": 30 },
                 { "damage": 9, "range": 35 },
                 { "damage": 8, "range": 45 }
               ],
