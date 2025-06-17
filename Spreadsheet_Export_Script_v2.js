@@ -59,8 +59,8 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     reserveCol,
     reloadCol,
     hsmCol;
-  for (let i = 0; i < values[1].length; i++) {
-    const header = values[1][i].toString();
+  for (let i = 0; i < values[0].length; i++) {
+    const header = values[0][i].toString();
     switch (header) {
       case "Barrel":
         barrelCol = i;
@@ -151,7 +151,7 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
       );
     }
     // check for a new ammo type
-    let newAmmoType = values[row][1].toString();
+    let newAmmoType = values[row][0].toString();
     if (newAmmoType && newAmmoType !== "CellImage") {
       if (ammoType == newAmmoType) {
         // end ammo type
@@ -165,16 +165,16 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
       }
     }
     // check for a new barrel type indicating a new set of dropoffs
-    let newBarrelType = values[row][2];
+    let newBarrelType = values[row][1];
     if (newBarrelType && newBarrelType !== "Barrel") {
       if (barrelType) {
         // end barrel type
-        // console.log("End Barrel Type: " + barrelType);
+        console.log("End Barrel Type: " + barrelType);
         pushStat();
       }
       barrelType = getBarrelType(newBarrelType);
       if (barrelType) {
-        // console.log("Barrel Type: " + barrelType);
+        console.log("Barrel Type: " + barrelType);
         curStat = {
           barrelType: barrelType,
           dropoffs: [],
@@ -291,34 +291,49 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
 }
 
 function getWeaponRanges(columns, weaponStatsSheet) {
+  const rowStart = 6;
   const categoryRanges = [];
   let colStop = columns.length;
-  //   colStop = 2;
+  // colStop = 2;
   for (let i = 0; i < colStop; i++) {
     const ranges = [];
     const range = weaponStatsSheet.getRange(
-      2,
+      rowStart,
       columns[i].start,
       weaponStatsSheet.getLastRow(),
       1
     );
     const values = range.getValues();
+    const backgroundColors = range.getBackgrounds();
     let currentRange;
     let rowStop = values.length;
     // rowStop = 40;
     let row = 0;
     for (; row < rowStop; row++) {
       // values.length
-      const weaponName = values[row][0];
-      if (weaponName) {
+      const weaponName = values[row][0].toString().trim();
+      // background color black, not part of a range, contains text
+      if (
+        (backgroundColors[row][0] === "#000000" ||
+          backgroundColors[row][0] === "#444444") &&
+        weaponName &&
+        weaponName !== "CellImage"
+      ) {
+        console.log(
+          "Found weapon name in black cell: " +
+            weaponName +
+            " at row " +
+            row +
+            rowStart
+        );
         if (currentRange) {
-          currentRange.endRow = row + 1;
+          currentRange.endRow = row + rowStart - 1;
           ranges.push(currentRange);
         }
         currentRange = {
           startColumn: columns[i].start,
           endColumn: columns[i].end,
-          startRow: row + 2,
+          startRow: row + rowStart,
         };
       }
     }
