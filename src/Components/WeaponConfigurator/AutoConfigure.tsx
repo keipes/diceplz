@@ -294,12 +294,6 @@ function AutoConfigure(props: AutoConfigureProps) {
     <>
       <Configurer>
         <>
-          Select Killiest
-          {killinessOptions}
-        </>
-      </Configurer>
-      <Configurer>
-        <>
           {"Minimize TTK at "}
           <span className={clickClass} onClick={getRangeScorer(0)}>
             <>(0m)</>
