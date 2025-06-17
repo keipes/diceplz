@@ -119,8 +119,12 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     );
     return;
   }
+  let outputWeaponName = weaponName.toString().trim();
+  if (outputWeaponName === "GOL-SNIPER") {
+    outputWeaponName = "GOL";
+  }
   const weapon = {
-    name: weaponName,
+    name: outputWeaponName,
     stats: [],
     ammoStats: {},
   };
