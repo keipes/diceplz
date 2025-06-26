@@ -1,5 +1,5 @@
-import { GetAmmoStat } from "../../../Data/WeaponData";
-import { BTK2, TTK } from "../../../Util/Conversions";
+import { GetAmmoStat } from "../../../../Data/WeaponData";
+import { BTK2, TTK } from "../../../../Util/Conversions";
 import { OptimizerContext } from "./types";
 
 export interface BTKRequirements {

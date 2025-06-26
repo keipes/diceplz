@@ -8,8 +8,8 @@ import {
   StatsMatch,
   Weapon,
   WeaponStats,
-} from "../../../Data/WeaponData";
-import { ConfigDisplayName } from "../../../Util/LabelMaker";
+} from "../../../../Data/WeaponData";
+import { ConfigDisplayName } from "../../../../Util/LabelMaker";
 import { OptimizerContext } from "./types";
 
 interface SeenStats {

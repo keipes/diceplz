@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react";
-import { WeaponCategories } from "../../Data/WeaponData";
+import { WeaponCategories } from "../../../Data/WeaponData";
 import { AutoConfigureActions } from "./Optimizers/AutoConfigureActions";
 
 interface RequirementsOptimizerUIProps {

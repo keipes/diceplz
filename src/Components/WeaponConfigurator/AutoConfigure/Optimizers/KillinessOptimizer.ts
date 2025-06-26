@@ -6,8 +6,8 @@ import {
   getMinMaxRanges,
   getMinMaxScores,
   getValueFn,
-} from "../../Charts/KillTempoChart";
-import { SELECTOR_AUTO } from "../../Charts/TTKChart";
+} from "../../../Charts/KillTempoChart";
+import { SELECTOR_AUTO } from "../../../Charts/TTKChart";
 import { OptimizerContext } from "./types";
 
 export class KillinessOptimizer {

@@ -1,5 +1,5 @@
-import { Modifiers } from "../../../Data/ConfigLoader";
-import { WeaponConfigurations } from "../../../Data/WeaponConfiguration";
+import { Modifiers } from "../../../../Data/ConfigLoader";
+import { WeaponConfigurations } from "../../../../Data/WeaponConfiguration";
 
 export interface OptimizerContext {
   configurator: WeaponConfigurations;

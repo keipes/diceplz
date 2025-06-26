@@ -1,7 +1,7 @@
 import {
   GetStatsForConfiguration,
   GetWeaponByName,
-} from "../../../Data/WeaponData";
+} from "../../../../Data/WeaponData";
 import { OptimizerContext } from "./types";
 
 export class FilterOptimizer {

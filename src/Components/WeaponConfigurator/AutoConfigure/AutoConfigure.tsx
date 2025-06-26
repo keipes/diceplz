@@ -1,5 +1,5 @@
-import { Modifiers } from "../../Data/ConfigLoader";
-import { ConfiguratorContext } from "../App";
+import { Modifiers } from "../../../Data/ConfigLoader";
+import { ConfiguratorContext } from "../../App";
 import "./AutoConfigure.css";
 import { useContext } from "react";
 import { AutoConfigureActions } from "./Optimizers/AutoConfigureActions";

@@ -1,5 +1,5 @@
-import { KillsPerMag } from "../../../Util/Conversions";
-import { WeaponConfiguration } from "../WeaponConfigurator";
+import { KillsPerMag } from "../../../../Util/Conversions";
+import { WeaponConfiguration } from "../../WeaponConfigurator";
 import { OptimizerContext } from "./types";
 
 export class KillsPerMagOptimizer {

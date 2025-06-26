@@ -1,5 +1,5 @@
-import { GetWeaponByName } from "../../../Data/WeaponData";
-import { DamageAtRangeFromStat, TTK } from "../../../Util/Conversions";
+import { GetWeaponByName } from "../../../../Data/WeaponData";
+import { DamageAtRangeFromStat, TTK } from "../../../../Util/Conversions";
 import { OptimizerContext, RPMSelector } from "./types";
 
 export class TTKOptimizer {
