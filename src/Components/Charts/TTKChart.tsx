@@ -7,7 +7,7 @@ import {
 } from "../../Data/WeaponData.ts";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { AverageTTK, TTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
@@ -40,6 +40,9 @@ function TTKChart(props: TTKChartProps) {
   let [includeFirstShotDelay, _setIncludeFirstShotDelay] = useState(false);
   let [numHeadshots, setNumHeadshots] = useState(0);
   let [previousNumHeadshots, setPreviousNumHeadshots] = useState(numHeadshots);
+  let [currentElementHoverLabels, setCurrentElementHoverLabels] = useState(
+    new Set<string>()
+  );
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
@@ -155,7 +158,10 @@ function TTKChart(props: TTKChartProps) {
     }
 
     const label = ConfigDisplayName(config);
-    if (props.settings.useAmmoColorsForGraph) {
+
+    if (currentElementHoverLabels.has(label)) {
+      configColors.set(label, theme.highlightColor);
+    } else if (props.settings.useAmmoColorsForGraph) {
       configColors.set(label, ConfigAmmoColor(config));
     } else {
       configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
@@ -183,6 +189,7 @@ function TTKChart(props: TTKChartProps) {
     datasets: datasets,
   };
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
+  let chartRef = useRef<any>();
   const options: ChartOptions<"line"> = {
     maintainAspectRatio: false,
     animation: false,
@@ -212,6 +219,56 @@ function TTKChart(props: TTKChartProps) {
       },
     },
     scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      // console.log(
+      //   "Hover event: " +
+      //     chartElement.length +
+      //     " " +
+      //     (chartRef ? chartRef.current : "null")
+      // );
+      if (chartElement.length > 0 && chartRef.current) {
+        const chartValueForMouseY = chartRef.current.scales.y.getValueForPixel(
+          event.y
+        );
+
+        // Find the element(s) with the closest y value to chartValueForMouseY
+        let closestDistance = Infinity;
+        const closestElements: typeof chartElement = [];
+
+        for (const element of chartElement) {
+          // Access the element's parsed data through the chart
+          const chart = chartRef.current;
+          const datasetIndex = element.datasetIndex;
+          const index = element.index;
+
+          if (chart && chart.data.datasets[datasetIndex]) {
+            const dataset = chart.data.datasets[datasetIndex];
+            const dataPoint = dataset.data[index];
+
+            if (typeof dataPoint === "number") {
+              const distance = Math.abs(dataPoint - chartValueForMouseY);
+
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                closestElements.length = 0; // Clear array
+                closestElements.push(element);
+              } else if (distance === closestDistance) {
+                closestElements.push(element);
+              }
+            }
+          }
+        }
+        setCurrentElementHoverLabels(
+          new Set(
+            closestElements.map((el) =>
+              ConfigDisplayName(
+                chartData.datasets[el.datasetIndex].label as any
+              )
+            )
+          )
+        );
+      }
+    },
   };
 
   return (
@@ -264,11 +321,12 @@ function TTKChart(props: TTKChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} />
+        <Line data={chartData} options={options} ref={chartRef} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           invertScaleColors={true}
           decimalPlaces={0}
+          currentHighlightedLabels={currentElementHoverLabels}
         />
       </div>
     </div>

@@ -3,7 +3,7 @@ import "./CustomTooltip.css";
 import { ReactElement, useContext, useState } from "react";
 import { ConfigAmmoColor, ConfigHSL } from "../../Util/StringColor";
 import { ConfigDisplayName } from "../../Util/LabelMaker";
-import { SettingsContext } from "../App";
+import { SettingsContext, ThemeContext } from "../App";
 import { WeaponConfiguration } from "../WeaponConfigurator/WeaponConfigurator";
 import { MinMaxScore } from "../../Util/MinMaxValues";
 
@@ -29,6 +29,7 @@ interface TooltipProps {
   min?: number;
   max?: number;
   scores?: MinMaxScore[];
+  currentHighlightedLabels?: Set<string>;
 }
 
 function useTooltipHandler(): [TooltipHandler, TooltipHandlerSetter] {
@@ -66,6 +67,7 @@ function CustomTooltip(props: TooltipProps) {
   const [titleLines, setTitleLines] = useState<string[]>([]);
   const [precision, setPrecision] = useState(2);
   const settingsContext = useContext(SettingsContext);
+  const theme = useContext(ThemeContext);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(Infinity);
   const [_chartMin, setChartMin] = useState(0);
@@ -158,6 +160,15 @@ function CustomTooltip(props: TooltipProps) {
     let bgColor = ConfigHSL(config as unknown as WeaponConfiguration);
     if (settingsContext.useAmmoColorsForGraph) {
       bgColor = ConfigAmmoColor(config as unknown as WeaponConfiguration);
+    }
+    if (props.currentHighlightedLabels) {
+      if (
+        props.currentHighlightedLabels.has(
+          ConfigDisplayName(config as unknown as WeaponConfiguration)
+        )
+      ) {
+        bgColor = theme.highlightColor;
+      }
     }
     let [min, max] = [minValue, maxValue];
     const range = parseFloat(titleLines[0]);
