@@ -3,7 +3,7 @@ import Weapon from "./Weapon";
 import { SyntheticEvent, useContext, useState } from "react";
 
 import { ExpandMoreIcon, ExpandLessIcon } from "../Icons";
-import AutoConfigure from "./AutoConfigure";
+import AutoConfigure from "./AutoConfigure/AutoConfigure";
 import { Modifiers } from "../../Data/ConfigLoader";
 import { ConfiguratorContext } from "../App";
 
