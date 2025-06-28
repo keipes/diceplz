@@ -1,11 +1,9 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   WeaponStats,
 } from "../../Data/WeaponData.ts";
-import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { useContext, useState, useRef } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
@@ -13,8 +11,12 @@ import { AverageTTK, TTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
+import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
 
 interface TTKChartProps {
   title: string;
@@ -40,9 +42,8 @@ function TTKChart(props: TTKChartProps) {
   let [includeFirstShotDelay, _setIncludeFirstShotDelay] = useState(false);
   let [numHeadshots, setNumHeadshots] = useState(0);
   let [previousNumHeadshots, setPreviousNumHeadshots] = useState(numHeadshots);
-  let [currentElementHoverLabels, setCurrentElementHoverLabels] = useState(
-    new Set<string>()
-  );
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useChartHoverHandler();
   let rpmSelector: RPMSelectorFn = (_) => {
     throw new Error("Undefined weapon selector.");
   };
@@ -121,7 +122,6 @@ function TTKChart(props: TTKChartProps) {
     seenBurst = seenBurst || typeof stats.rpmBurst === "number";
     seenSingle = seenSingle || typeof stats.rpmSingle === "number";
   }
-  const configColors = new Map();
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -157,20 +157,16 @@ function TTKChart(props: TTKChartProps) {
       }
     }
 
-    const label = ConfigDisplayName(config);
-
-    if (currentElementHoverLabels.has(label)) {
-      configColors.set(label, theme.highlightColor);
-    } else if (props.settings.useAmmoColorsForGraph) {
-      configColors.set(label, ConfigAmmoColor(config));
-    } else {
-      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
-    }
     datasets.push({
       label: config as unknown as string,
       data: data,
       fill: false,
-      borderColor: configColors.get(label),
+      borderColor: ConfigureChartColors(
+        config,
+        props.settings,
+        currentElementHoverLabels,
+        theme.highlightColor
+      ),
       stepped: false,
       temsion: 0,
       borderWidth: 1.5,
@@ -220,54 +216,7 @@ function TTKChart(props: TTKChartProps) {
     },
     scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
     onHover: (event, chartElement) => {
-      // console.log(
-      //   "Hover event: " +
-      //     chartElement.length +
-      //     " " +
-      //     (chartRef ? chartRef.current : "null")
-      // );
-      if (chartElement.length > 0 && chartRef.current) {
-        const chartValueForMouseY = chartRef.current.scales.y.getValueForPixel(
-          event.y
-        );
-
-        // Find the element(s) with the closest y value to chartValueForMouseY
-        let closestDistance = Infinity;
-        const closestElements: typeof chartElement = [];
-
-        for (const element of chartElement) {
-          // Access the element's parsed data through the chart
-          const chart = chartRef.current;
-          const datasetIndex = element.datasetIndex;
-          const index = element.index;
-
-          if (chart && chart.data.datasets[datasetIndex]) {
-            const dataset = chart.data.datasets[datasetIndex];
-            const dataPoint = dataset.data[index];
-
-            if (typeof dataPoint === "number") {
-              const distance = Math.abs(dataPoint - chartValueForMouseY);
-
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                closestElements.length = 0; // Clear array
-                closestElements.push(element);
-              } else if (distance === closestDistance) {
-                closestElements.push(element);
-              }
-            }
-          }
-        }
-        setCurrentElementHoverLabels(
-          new Set(
-            closestElements.map((el) =>
-              ConfigDisplayName(
-                chartData.datasets[el.datasetIndex].label as any
-              )
-            )
-          )
-        );
-      }
+      chartHoverHandler(event, chartElement, chartRef, chartData);
     },
   };
 

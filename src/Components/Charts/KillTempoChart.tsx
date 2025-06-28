@@ -1,6 +1,5 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   GetWeaponByName,
@@ -11,9 +10,12 @@ import { AverageBTK, AverageTTK, BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 import {
   RPMSelectorFn,
@@ -28,6 +30,7 @@ import {
   MinMaxValue,
 } from "../../Util/MinMaxValues.ts";
 import { WeaponConfigurations } from "../../Data/WeaponConfiguration.ts";
+import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
 
 interface KillTempoChartProps {
   modifiers: Modifiers;
@@ -330,6 +333,9 @@ function getGlobalMinMax(minMaxRanges: MinMaxValue[]): MinMaxValue {
 
 function KillTempoChart(props: KillTempoChartProps) {
   const theme = useContext(ThemeContext);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useChartHoverHandler();
+  const chartRef = useRef<any>();
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
   const [rpmSelector, setRpmSelector] = useState<RPMSelectorFn>(
@@ -348,7 +354,6 @@ function KillTempoChart(props: KillTempoChartProps) {
 
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const highestRangeSeen = Math.max(...requiredRanges);
-  const configColors = new Map();
   const onlyVisibleConfigs: WeaponConfigurations = new WeaponConfigurations(
     new Map(),
     () => {}
@@ -381,17 +386,16 @@ function KillTempoChart(props: KillTempoChartProps) {
       }
     }
     const config = dataset[0].config;
-    const label = ConfigDisplayName(config);
-    if (props.settings.useAmmoColorsForGraph) {
-      configColors.set(label, ConfigAmmoColor(config));
-    } else {
-      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
-    }
     datasets.push({
       label: config as unknown as string,
       data: data,
       fill: false,
-      borderColor: configColors.get(label),
+      borderColor: ConfigureChartColors(
+        config,
+        props.settings,
+        currentElementHoverLabels,
+        theme.highlightColor
+      ),
       tension: 0,
       stepped: false,
       borderWidth: 1.5,
@@ -447,6 +451,9 @@ function KillTempoChart(props: KillTempoChartProps) {
       },
     },
     scales,
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -490,9 +497,10 @@ function KillTempoChart(props: KillTempoChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} />
+        <Line data={chartData} options={options} ref={chartRef} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
+          currentHighlightedLabels={currentElementHoverLabels}
           useTierList={true}
           invertScaleColors={true}
           // useChartBoundsForScoring={true}

@@ -1,4 +1,9 @@
 //@ts-nocheck
+import StringHue, { ConfigAmmoColor } from "./StringColor";
+import { ConfigDisplayName } from "./LabelMaker";
+import { Settings } from "../Data/SettingsLoader";
+import { WeaponConfiguration } from "../Components/WeaponConfigurator/WeaponConfigurator";
+
 function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string) {
   return {
     y: {
@@ -46,4 +51,21 @@ function GenerateScales(xAxisLabel: string, yAxisLabel: string, color: string) {
   };
 }
 
-export { GenerateScales };
+function ConfigureChartColors(
+  config: WeaponConfiguration,
+  settings: Settings,
+  currentElementHoverLabels: Set<string>,
+  highlightColor: string
+): string {
+  const label = ConfigDisplayName(config);
+
+  if (currentElementHoverLabels.has(label)) {
+    return highlightColor;
+  } else if (settings.useAmmoColorsForGraph) {
+    return ConfigAmmoColor(config);
+  } else {
+    return "hsl(" + StringHue(label) + ", 50%, 50%)";
+  }
+}
+
+export { GenerateScales, ConfigureChartColors };

@@ -43,6 +43,7 @@ import KillsPerMagChart from "./Charts/KillsPerMagChart.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
 import DPSChart from "./Charts/DPSChart.tsx";
+import { HoverHighlightProvider } from "./Charts/HoverContext.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -214,7 +215,9 @@ function App() {
       <ConfiguratorContext.Provider value={wpnCfg}>
         <ThemeContext.Provider value={darkMode ? DarkTheme : LightTheme}>
           <SettingsContext.Provider value={settings}>
-            <RouterProvider router={router} />
+            <HoverHighlightProvider>
+              <RouterProvider router={router} />
+            </HoverHighlightProvider>
           </SettingsContext.Provider>
         </ThemeContext.Provider>
       </ConfiguratorContext.Provider>

@@ -1,17 +1,21 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetStatsForConfiguration,
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
+import { useHoverHighlight, useBarChartHoverHandler } from "./HoverContext.tsx";
 
 interface ReloadChartProps {
   settings: Settings;
@@ -19,6 +23,9 @@ interface ReloadChartProps {
 
 function ReloadChart(props: ReloadChartProps) {
   const theme = useContext(ThemeContext);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useBarChartHoverHandler();
+  const chartRef = useRef<any>();
   const [_showEmpty, setShowEmpty] = useState(true);
   const [_showTactical, setShowTactical] = useState(true);
   const labels = [];
@@ -97,11 +104,12 @@ function ReloadChart(props: ReloadChartProps) {
       ammoStats = weapon.ammoStats[config.ammoType];
     }
     let color;
-    if (props.settings.useAmmoColorsForGraph) {
-      color = ConfigAmmoColor(config);
-    } else {
-      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)";
-    }
+    color = ConfigureChartColors(
+      config,
+      props.settings,
+      currentElementHoverLabels,
+      theme.highlightColor
+    );
     if (showEmpty) {
       if (ammoStats && ammoStats.emptyReload) {
         data.push(ammoStats.emptyReload);
@@ -154,6 +162,9 @@ function ReloadChart(props: ReloadChartProps) {
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
+        borderColor: theme.tooltipBg,
+        borderWidth: 1,
+        multiKeyBackground: theme.tooltipBg,
         callbacks: {
           label: function (ctx) {
             if (ctx.parsed.y == null) {
@@ -168,10 +179,39 @@ function ReloadChart(props: ReloadChartProps) {
             }
             return label;
           },
+          labelColor: function (ctx) {
+            // Force the label color indicator to use the original color, not the highlight color
+            const hoveredLabel = chartData.labels?.[ctx.dataIndex] as string;
+            if (props.settings.useAmmoColorsForGraph) {
+              // Find the config by label to get the original color
+              for (const [_, config] of configurations.weaponConfigurations) {
+                if (ConfigDisplayName(config) === hoveredLabel) {
+                  return {
+                    borderColor: ConfigAmmoColor(config),
+                    backgroundColor: ConfigAmmoColor(config),
+                  };
+                }
+              }
+            } else {
+              const originalColor =
+                "hsl(" + StringHue(hoveredLabel) + ", 50%, 50%)";
+              return {
+                borderColor: originalColor,
+                backgroundColor: originalColor,
+              };
+            }
+            return {
+              borderColor: theme.tooltipBody,
+              backgroundColor: theme.tooltipBody,
+            };
+          },
         },
       },
     },
     scales: GenerateScales("", "seconds", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -198,7 +238,7 @@ function ReloadChart(props: ReloadChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Bar data={chartData} options={options} />
+        <Bar data={chartData} options={options} ref={chartRef} />
       </div>
     </div>
   );

@@ -1,14 +1,18 @@
 import { Bar } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
+import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
+import { useHoverHighlight, useBarChartHoverHandler } from "./HoverContext.tsx";
 
 interface RPMChartProps {
   settings: Settings;
@@ -16,6 +20,9 @@ interface RPMChartProps {
 
 function RPMChart(props: RPMChartProps) {
   const theme = useContext(ThemeContext);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useBarChartHoverHandler();
+  const chartRef = useRef<any>();
   const [_showAuto, setShowAuto] = useState(true);
   const [_showSingle, setShowSingle] = useState(true);
   const [_showBurst, setShowBurst] = useState(true);
@@ -66,11 +73,12 @@ function RPMChart(props: RPMChartProps) {
     const weaponName = ConfigDisplayName(config);
     labels.push(weaponName);
     let color;
-    if (props.settings.useAmmoColorsForGraph) {
-      color = ConfigAmmoColor(config);
-    } else {
-      color = "hsl(" + StringHue(weaponName) + ", 50%, 50%)";
-    }
+    color = ConfigureChartColors(
+      config,
+      props.settings,
+      currentElementHoverLabels,
+      theme.highlightColor
+    );
     if (showAuto) {
       if (stats.rpmAuto) {
         data.push(stats.rpmAuto);
@@ -141,6 +149,9 @@ function RPMChart(props: RPMChartProps) {
         backgroundColor: theme.tooltipBg,
         bodyColor: theme.tooltipBody,
         titleColor: theme.tooltipTitle,
+        borderColor: theme.tooltipBg,
+        borderWidth: 1,
+        multiKeyBackground: theme.tooltipBg,
         callbacks: {
           label: function (ctx) {
             if (ctx.parsed.y == null) {
@@ -155,10 +166,30 @@ function RPMChart(props: RPMChartProps) {
             }
             return label;
           },
+          labelColor: function (ctx) {
+            // Force the label color indicator to use the original color, not the highlight color
+            const config = ctx.dataset.label as any;
+            const label = ConfigDisplayName(config);
+            if (props.settings.useAmmoColorsForGraph) {
+              return {
+                borderColor: ConfigAmmoColor(config),
+                backgroundColor: ConfigAmmoColor(config),
+              };
+            } else {
+              const originalColor = "hsl(" + StringHue(label) + ", 50%, 50%)";
+              return {
+                borderColor: originalColor,
+                backgroundColor: originalColor,
+              };
+            }
+          },
         },
       },
     },
     scales: GenerateScales("", "rounds", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -196,7 +227,7 @@ function RPMChart(props: RPMChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Bar data={chartData} options={options} />
+        <Bar data={chartData} options={options} ref={chartRef} />
       </div>
     </div>
   );

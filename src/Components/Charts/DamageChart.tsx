@@ -1,20 +1,22 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import {
   GetAmmoStat,
   GetStatsForConfiguration,
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
-import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { useContext, useState } from "react";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import { useContext, useState, useRef } from "react";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
+import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
 
 interface DamageChartProps {
   modifiers: Modifiers;
@@ -25,6 +27,9 @@ function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
   const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const [headshot, setHeadshot] = useState(false);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useChartHoverHandler();
+  const chartRef = useRef<any>();
   const configurations = useContext(ConfiguratorContext);
   const requiredRanges = RequiredRanges(
     configurations.weaponConfigurations,
@@ -34,7 +39,6 @@ function DamageChart(props: DamageChartProps) {
   );
   const highestRangeSeen = Math.max(...requiredRanges);
   const datasets = [];
-  const configColors = new Map();
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -76,17 +80,16 @@ function DamageChart(props: DamageChartProps) {
         data.push(damage);
       }
     }
-    const label = ConfigDisplayName(config);
-    if (props.settings.useAmmoColorsForGraph) {
-      configColors.set(label, ConfigAmmoColor(config));
-    } else {
-      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
-    }
     datasets.push({
       label: config as unknown as string,
       data: data,
       fill: false,
-      borderColor: configColors.get(label),
+      borderColor: ConfigureChartColors(
+        config,
+        props.settings,
+        currentElementHoverLabels,
+        theme.highlightColor
+      ),
       tension: 0,
       stepped: false,
       borderWidth: 1.5,
@@ -134,6 +137,9 @@ function DamageChart(props: DamageChartProps) {
       },
     },
     scales: GenerateScales("meters", "damage", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -152,8 +158,11 @@ function DamageChart(props: DamageChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <Line data={chartData} options={options} ref={chartRef} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          currentHighlightedLabels={currentElementHoverLabels}
+        />
       </div>
     </div>
   );

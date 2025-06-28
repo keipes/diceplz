@@ -1,17 +1,19 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
+import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
 
 interface BTKChartProps {
   modifiers: Modifiers;
@@ -20,6 +22,9 @@ interface BTKChartProps {
 
 function BTKChart(props: BTKChartProps) {
   const theme = useContext(ThemeContext);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useChartHoverHandler();
+  const chartRef = useRef<any>();
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
   const requiredRanges = RequiredRanges(
@@ -29,7 +34,6 @@ function BTKChart(props: BTKChartProps) {
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
-  const configColors = new Map();
   const [numHeadshots, setNumHeadshots] = useState(0);
   const [previousNumHeadshots, setPreviousNumHeadshots] =
     useState(numHeadshots);
@@ -71,17 +75,16 @@ function BTKChart(props: BTKChartProps) {
         data.push(damage);
       }
     }
-    const label = ConfigDisplayName(config);
-    if (props.settings.useAmmoColorsForGraph) {
-      configColors.set(label, ConfigAmmoColor(config));
-    } else {
-      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
-    }
     datasets.push({
       label: config as unknown as string,
       data: data,
       fill: false,
-      borderColor: configColors.get(label),
+      borderColor: ConfigureChartColors(
+        config,
+        props.settings,
+        currentElementHoverLabels,
+        theme.highlightColor
+      ),
       tension: 0,
       borderWidth: 1.5,
       stepped: false,
@@ -130,6 +133,9 @@ function BTKChart(props: BTKChartProps) {
       },
     },
     scales: GenerateScales("meters", "bullets", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -166,9 +172,10 @@ function BTKChart(props: BTKChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} />
+        <Line data={chartData} options={options} ref={chartRef} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
+          currentHighlightedLabels={currentElementHoverLabels}
           invertScaleColors={true}
         />
       </div>

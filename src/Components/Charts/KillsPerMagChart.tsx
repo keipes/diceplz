@@ -1,18 +1,20 @@
 import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
-import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
-import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
 import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { GenerateScales } from "../../Util/ChartCommon.ts";
+import {
+  GenerateScales,
+  ConfigureChartColors,
+} from "../../Util/ChartCommon.ts";
 import { GetCapacity } from "./SharedTypes.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
+import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
 
 interface KillsPerMagChartProps {
   modifiers: Modifiers;
@@ -22,6 +24,9 @@ interface KillsPerMagChartProps {
 function KillsPerMagChart(props: KillsPerMagChartProps) {
   const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   const theme = useContext(ThemeContext);
+  const { currentElementHoverLabels } = useHoverHighlight();
+  const chartHoverHandler = useChartHoverHandler();
+  const chartRef = useRef<any>();
   const datasets = [];
   const configurations = useContext(ConfiguratorContext);
   const requiredRanges = RequiredRanges(
@@ -31,7 +36,6 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
-  const configColors = new Map();
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
@@ -75,17 +79,16 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
         data.push(damage);
       }
     }
-    const label = ConfigDisplayName(config);
-    if (props.settings.useAmmoColorsForGraph) {
-      configColors.set(label, ConfigAmmoColor(config));
-    } else {
-      configColors.set(label, "hsl(" + StringHue(label) + ", 50%, 50%)");
-    }
     datasets.push({
       label: config as unknown as string,
       data: data,
       fill: false,
-      borderColor: configColors.get(label),
+      borderColor: ConfigureChartColors(
+        config,
+        props.settings,
+        currentElementHoverLabels,
+        theme.highlightColor
+      ),
       tension: 0,
       stepped: false,
       borderWidth: 1.5,
@@ -133,6 +136,9 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       },
     },
     scales: GenerateScales("meters", "kills", theme.highlightColor),
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -141,8 +147,11 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
         description="floor(magazine capacity / bullets to kill)"
       />
       <div className="chart-container">
-        <Line data={chartData} options={options} />
-        <CustomTooltip setTooltipHandler={setTooltipHandler} />
+        <Line data={chartData} options={options} ref={chartRef} />
+        <CustomTooltip
+          setTooltipHandler={setTooltipHandler}
+          currentHighlightedLabels={currentElementHoverLabels}
+        />
       </div>
     </div>
   );
