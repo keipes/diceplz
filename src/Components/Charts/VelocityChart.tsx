@@ -6,7 +6,7 @@ import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useRef } from "react";
+import { useContext, useRef, useMemo, memo } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import {
   GenerateScales,
@@ -23,112 +23,136 @@ function VelocityChart(props: VelocityChartProps) {
   const { currentElementHoverLabels } = useHoverHighlight();
   const chartHoverHandler = useBarChartHoverHandler();
   const chartRef = useRef<any>();
-  const labels = [];
-  const datasets = [];
-  const data = [];
-  const backgroundColors = [];
-  const weaponData: SortableWeaponData[] = [];
   const configurations = useContext(ConfiguratorContext);
-  for (const [_, config] of configurations.weaponConfigurations) {
-    if (!config.visible) continue;
-    const stats = GetStatsForConfiguration(config);
-    weaponData.push({ config: config, stats: stats });
-  }
-  weaponData.sort((a, b) => {
-    return (b.stats.velocity || 0) - (a.stats.velocity || 0);
-  });
-  for (const wd of weaponData) {
-    // if (wd.stats.velocity === undefined) continue;
-    let velocity = wd.stats.velocity;
-    if (velocity === undefined) velocity = 1;
-    const label = ConfigDisplayName(wd.config);
-    labels.push(label);
-    backgroundColors.push(
-      ConfigureChartColors(
-        wd.config,
-        props.settings,
-        currentElementHoverLabels,
-        theme.highlightColor
-      )
-    );
-    data.push(velocity);
-  }
-  datasets.push({
-    label: "Velocity",
-    data: data,
-    backgroundColor: backgroundColors,
-    borderWidth: 0,
-  });
-  const chartData: ChartData<"bar"> = {
-    labels: labels,
-    datasets: datasets,
-  };
-  const options: ChartOptions<"bar"> = {
-    maintainAspectRatio: false,
-    animation: false,
-    interaction: {
-      intersect: false,
-      mode: "index",
-    },
-    plugins: {
-      tooltip: {
-        backgroundColor: theme.tooltipBg,
-        bodyColor: theme.tooltipBody,
-        titleColor: theme.tooltipTitle,
-        borderColor: theme.tooltipBg,
-        borderWidth: 1,
-        multiKeyBackground: theme.tooltipBg,
-        itemSort: function (a, b) {
-          return (b.raw as number) - (a.raw as number);
+
+  // Memoize weapon data processing
+  const weaponData = useMemo(() => {
+    const data: SortableWeaponData[] = [];
+    for (const [_, config] of configurations.weaponConfigurations) {
+      if (!config.visible) continue;
+      const stats = GetStatsForConfiguration(config);
+      data.push({ config: config, stats: stats });
+    }
+    return data.sort((a, b) => {
+      return (b.stats.velocity || 0) - (a.stats.velocity || 0);
+    });
+  }, [configurations.weaponConfigurations]);
+
+  // Memoize chart data
+  const chartData = useMemo((): ChartData<"bar"> => {
+    const labels = [];
+    const data = [];
+    const backgroundColors = [];
+
+    for (const wd of weaponData) {
+      let velocity = wd.stats.velocity;
+      if (velocity === undefined) velocity = 1;
+      const label = ConfigDisplayName(wd.config);
+      labels.push(label);
+      backgroundColors.push(
+        ConfigureChartColors(
+          wd.config,
+          props.settings,
+          currentElementHoverLabels,
+          theme.highlightColor
+        )
+      );
+      data.push(velocity);
+    }
+
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: "Velocity",
+          data: data,
+          backgroundColor: backgroundColors,
+          borderWidth: 0,
         },
-        callbacks: {
-          label: function (ctx) {
-            if (ctx.parsed.y == null) {
-              return "";
-            }
-            let label = ctx.dataset.label || "";
-            if (label) {
-              label += ": ";
-            }
-            if (ctx.parsed.y !== null) {
-              label += ctx.parsed.y;
-            }
-            return label;
+      ],
+    };
+  }, [
+    weaponData,
+    props.settings,
+    currentElementHoverLabels,
+    theme.highlightColor,
+  ]);
+
+  // Memoize chart options
+  const options = useMemo((): ChartOptions<"bar"> => {
+    return {
+      maintainAspectRatio: false,
+      animation: false,
+      interaction: {
+        intersect: false,
+        mode: "index",
+      },
+      plugins: {
+        tooltip: {
+          backgroundColor: theme.tooltipBg,
+          bodyColor: theme.tooltipBody,
+          titleColor: theme.tooltipTitle,
+          borderColor: theme.tooltipBg,
+          borderWidth: 1,
+          multiKeyBackground: theme.tooltipBg,
+          itemSort: function (a, b) {
+            return (b.raw as number) - (a.raw as number);
           },
-          labelColor: function (ctx) {
-            // Force the label color indicator to use the original color, not the highlight color
-            const hoveredLabel = chartData.labels?.[ctx.dataIndex] as string;
-            if (props.settings.useAmmoColorsForGraph) {
-              // Find the config by label to get the original color
-              for (const [_, config] of configurations.weaponConfigurations) {
-                if (ConfigDisplayName(config) === hoveredLabel) {
-                  return {
-                    borderColor: ConfigAmmoColor(config),
-                    backgroundColor: ConfigAmmoColor(config),
-                  };
-                }
+          callbacks: {
+            label: function (ctx) {
+              if (ctx.parsed.y == null) {
+                return "";
               }
-            } else {
-              const originalColor =
-                "hsl(" + StringHue(hoveredLabel) + ", 50%, 50%)";
+              let label = ctx.dataset.label || "";
+              if (label) {
+                label += ": ";
+              }
+              if (ctx.parsed.y !== null) {
+                label += ctx.parsed.y;
+              }
+              return label;
+            },
+            labelColor: function (ctx) {
+              // Force the label color indicator to use the original color, not the highlight color
+              const hoveredLabel = chartData.labels?.[ctx.dataIndex] as string;
+              if (props.settings.useAmmoColorsForGraph) {
+                // Find the config by label to get the original color
+                for (const [_, config] of configurations.weaponConfigurations) {
+                  if (ConfigDisplayName(config) === hoveredLabel) {
+                    return {
+                      borderColor: ConfigAmmoColor(config),
+                      backgroundColor: ConfigAmmoColor(config),
+                    };
+                  }
+                }
+              } else {
+                const originalColor =
+                  "hsl(" + StringHue(hoveredLabel) + ", 50%, 50%)";
+                return {
+                  borderColor: originalColor,
+                  backgroundColor: originalColor,
+                };
+              }
               return {
-                borderColor: originalColor,
-                backgroundColor: originalColor,
+                borderColor: theme.tooltipBody,
+                backgroundColor: theme.tooltipBody,
               };
-            }
-            return {
-              borderColor: theme.tooltipBody,
-              backgroundColor: theme.tooltipBody,
-            };
+            },
           },
         },
       },
-    },
-    scales: GenerateScales("", "m / s", theme.highlightColor),
-    onHover: (event, chartElement) => {
-      chartHoverHandler(event, chartElement, chartRef, chartData);
-    },
-  };
+      scales: GenerateScales("", "m / s", theme.highlightColor),
+      onHover: (event, chartElement) => {
+        chartHoverHandler(event, chartElement, chartRef, chartData);
+      },
+    };
+  }, [
+    theme,
+    props.settings,
+    configurations.weaponConfigurations,
+    chartHoverHandler,
+    chartData,
+  ]);
   return (
     <div className="chart-outer-container">
       <ChartHeader title="Velocity" description="Muzzle velocity." />
@@ -139,4 +163,9 @@ function VelocityChart(props: VelocityChartProps) {
   );
 }
 
-export default VelocityChart;
+export default memo(VelocityChart, (prevProps, nextProps) => {
+  return (
+    prevProps.settings.useAmmoColorsForGraph ===
+    nextProps.settings.useAmmoColorsForGraph
+  );
+});

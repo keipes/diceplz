@@ -6,7 +6,7 @@ import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useRef } from "react";
+import { useContext, useRef, memo } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import {
   GenerateScales,
@@ -157,4 +157,10 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
   );
 }
 
-export default KillsPerMagChart;
+export default memo(KillsPerMagChart, (prevProps, nextProps) => {
+  return (
+    prevProps.settings.useAmmoColorsForGraph ===
+      nextProps.settings.useAmmoColorsForGraph &&
+    JSON.stringify(prevProps.modifiers) === JSON.stringify(nextProps.modifiers)
+  );
+});

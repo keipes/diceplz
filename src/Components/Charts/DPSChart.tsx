@@ -9,7 +9,7 @@ import { Modifiers } from "../../Data/ConfigLoader.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, memo } from "react";
 import {
   GenerateScales,
   ConfigureChartColors,
@@ -177,4 +177,10 @@ function DPSChart(props: DPSChartProps) {
   );
 }
 
-export default DPSChart;
+export default memo(DPSChart, (prevProps, nextProps) => {
+  return (
+    prevProps.settings.useAmmoColorsForGraph ===
+      nextProps.settings.useAmmoColorsForGraph &&
+    JSON.stringify(prevProps.modifiers) === JSON.stringify(nextProps.modifiers)
+  );
+});

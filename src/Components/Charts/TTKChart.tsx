@@ -5,7 +5,7 @@ import {
   WeaponStats,
 } from "../../Data/WeaponData.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useMemo, memo } from "react";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { AverageTTK, TTK } from "../../Util/Conversions.ts";
 import ChartHeader from "./ChartHeader.tsx";
@@ -44,181 +44,215 @@ function TTKChart(props: TTKChartProps) {
   let [previousNumHeadshots, setPreviousNumHeadshots] = useState(numHeadshots);
   const { currentElementHoverLabels } = useHoverHighlight();
   const chartHoverHandler = useChartHoverHandler();
-  let rpmSelector: RPMSelectorFn = (_) => {
-    throw new Error("Undefined weapon selector.");
-  };
-  const datasets = [];
-  let seenAuto = false;
-  let seenBurst = false;
-  let seenSingle = false;
-  let selectedFireMode = _selectedFireMode;
   const configurations = useContext(ConfiguratorContext);
-  for (const [_id, config] of configurations.weaponConfigurations) {
-    const stats = GetStatsForConfiguration(config);
-    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
-    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
-    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
-  }
-  switch (_selectedFireMode) {
-    case FIREMODE_AUTO:
-      if (!seenAuto) {
-        if (seenBurst) {
-          selectedFireMode = FIREMODE_BURST;
-        } else if (seenSingle) {
-          selectedFireMode = FIREMODE_SINGLE;
-        }
-      }
-      break;
-    case FIREMODE_BURST:
-      if (!seenBurst) {
-        if (seenAuto) {
-          selectedFireMode = FIREMODE_AUTO;
-        } else if (seenSingle) {
-          selectedFireMode = FIREMODE_SINGLE;
-        }
-      }
-      break;
-    case FIREMODE_SINGLE:
-      if (!seenSingle) {
-        if (seenAuto) {
-          selectedFireMode = FIREMODE_AUTO;
-        } else if (seenBurst) {
-          selectedFireMode = FIREMODE_BURST;
-        }
-      }
-      break;
-  }
-  switch (selectedFireMode) {
-    case FIREMODE_AUTO:
-      rpmSelector = SELECTOR_AUTO;
-      break;
-    case FIREMODE_BURST:
-      rpmSelector = SELECTOR_BURST;
-      break;
-    case FIREMODE_SINGLE:
-      rpmSelector = SELECTOR_SINGLE;
-      break;
-  }
-  const requiredRanges = RequiredRanges(
-    configurations.weaponConfigurations,
-    (config, damage) => {
-      const stat = GetStatsForConfiguration(config);
-      // return TTK(config, props.modifiers, damage, rpmSelector(stat) || 0);
-      return AverageTTK(
-        config,
-        props.modifiers,
-        damage,
-        rpmSelector(stat) || 0,
-        numHeadshots,
-        false
-      );
+
+  // Memoize fire mode calculations
+  const fireModeData = useMemo(() => {
+    let seenAuto = false;
+    let seenBurst = false;
+    let seenSingle = false;
+
+    for (const [_id, config] of configurations.weaponConfigurations) {
+      const stats = GetStatsForConfiguration(config);
+      seenAuto = seenAuto || typeof stats.rpmAuto === "number";
+      seenBurst = seenBurst || typeof stats.rpmBurst === "number";
+      seenSingle = seenSingle || typeof stats.rpmSingle === "number";
     }
-  );
-  const highestRangeSeen = Math.max(...requiredRanges);
-  for (const [_id, config] of configurations.weaponConfigurations) {
-    if (!config.visible) continue;
-    const stats = GetStatsForConfiguration(config);
-    seenAuto = seenAuto || typeof stats.rpmAuto === "number";
-    seenBurst = seenBurst || typeof stats.rpmBurst === "number";
-    seenSingle = seenSingle || typeof stats.rpmSingle === "number";
-  }
-  for (const [_id, config] of configurations.weaponConfigurations) {
-    if (!config.visible) continue;
-    const stats = GetStatsForConfiguration(config);
-    const data = [];
-    let currentDropoff = -1;
-    let ttk = Infinity;
-    for (let i = 0; i <= highestRangeSeen; i++) {
-      if (stats.dropoffs.length > currentDropoff + 1) {
-        if (i >= stats.dropoffs[currentDropoff + 1].range) {
-          currentDropoff++;
-          ttk = TTK(
-            config,
-            props.modifiers,
-            stats.dropoffs[currentDropoff].damage,
-            rpmSelector(stats) || 0,
-            numHeadshots,
-            includeFirstShotDelay
-          );
+
+    return { seenAuto, seenBurst, seenSingle };
+  }, [configurations.weaponConfigurations]);
+
+  // Memoize selected fire mode
+  const selectedFireMode = useMemo(() => {
+    let mode = _selectedFireMode;
+    const { seenAuto, seenBurst, seenSingle } = fireModeData;
+
+    switch (_selectedFireMode) {
+      case FIREMODE_AUTO:
+        if (!seenAuto) {
+          if (seenBurst) mode = FIREMODE_BURST;
+          else if (seenSingle) mode = FIREMODE_SINGLE;
+        }
+        break;
+      case FIREMODE_BURST:
+        if (!seenBurst) {
+          if (seenAuto) mode = FIREMODE_AUTO;
+          else if (seenSingle) mode = FIREMODE_SINGLE;
+        }
+        break;
+      case FIREMODE_SINGLE:
+        if (!seenSingle) {
+          if (seenAuto) mode = FIREMODE_AUTO;
+          else if (seenBurst) mode = FIREMODE_BURST;
+        }
+        break;
+    }
+    return mode;
+  }, [_selectedFireMode, fireModeData]);
+
+  // Memoize RPM selector
+  const rpmSelector = useMemo((): RPMSelectorFn => {
+    switch (selectedFireMode) {
+      case FIREMODE_AUTO:
+        return SELECTOR_AUTO;
+      case FIREMODE_BURST:
+        return SELECTOR_BURST;
+      case FIREMODE_SINGLE:
+        return SELECTOR_SINGLE;
+      default:
+        return (_) => {
+          throw new Error("Undefined weapon selector.");
+        };
+    }
+  }, [selectedFireMode]);
+
+  // Memoize required ranges calculation
+  const requiredRanges = useMemo(() => {
+    return RequiredRanges(
+      configurations.weaponConfigurations,
+      (config, damage) => {
+        const stat = GetStatsForConfiguration(config);
+        return AverageTTK(
+          config,
+          props.modifiers,
+          damage,
+          rpmSelector(stat) || 0,
+          numHeadshots,
+          false
+        );
+      }
+    );
+  }, [
+    configurations.weaponConfigurations,
+    props.modifiers,
+    rpmSelector,
+    numHeadshots,
+  ]);
+
+  // Memoize chart data calculation
+  const chartData = useMemo((): ChartData<"line"> => {
+    const datasets = [];
+    const highestRangeSeen = Math.max(...requiredRanges);
+
+    for (const [_id, config] of configurations.weaponConfigurations) {
+      if (!config.visible) continue;
+
+      const stats = GetStatsForConfiguration(config);
+      const data = [];
+      let currentDropoff = -1;
+      let ttk = Infinity;
+
+      for (let i = 0; i <= highestRangeSeen; i++) {
+        if (stats.dropoffs.length > currentDropoff + 1) {
+          if (i >= stats.dropoffs[currentDropoff + 1].range) {
+            currentDropoff++;
+            ttk = TTK(
+              config,
+              props.modifiers,
+              stats.dropoffs[currentDropoff].damage,
+              rpmSelector(stats) || 0,
+              numHeadshots,
+              includeFirstShotDelay
+            );
+          }
+        }
+
+        if (requiredRanges.has(i)) {
+          if (includeTravelTime) {
+            let velocity = 600;
+            if (stats.velocity) {
+              velocity = stats.velocity;
+            }
+            data.push(ttk + (i / velocity) * 1000);
+          } else {
+            data.push(ttk);
+          }
+        } else {
+          data.push(null);
         }
       }
-      if (requiredRanges.has(i)) {
-        if (includeTravelTime) {
-          let velocity = 600;
-          if (stats.velocity) {
-            velocity = stats.velocity;
-          }
-          data.push(ttk + (i / velocity) * 1000);
-        } else {
-          data.push(ttk);
-        }
+
+      datasets.push({
+        label: config as unknown as string,
+        data: data,
+        fill: false,
+        borderColor: ConfigureChartColors(
+          config,
+          props.settings,
+          currentElementHoverLabels,
+          theme.highlightColor
+        ),
+        stepped: false,
+        temsion: 0,
+        borderWidth: 1.5,
+      });
+    }
+
+    const labels = [];
+    for (let i = 0; i <= Math.max(...requiredRanges); i++) {
+      if (requiredRanges.has(i) || i == Math.max(...requiredRanges)) {
+        labels.push(i);
       } else {
-        data.push(null);
+        labels.push("");
       }
     }
 
-    datasets.push({
-      label: config as unknown as string,
-      data: data,
-      fill: false,
-      borderColor: ConfigureChartColors(
-        config,
-        props.settings,
-        currentElementHoverLabels,
-        theme.highlightColor
-      ),
-      stepped: false,
-      temsion: 0,
-      borderWidth: 1.5,
-    });
-  }
-  const labels = [];
-  for (let i = 0; i <= highestRangeSeen; i++) {
-    if (requiredRanges.has(i) || i == highestRangeSeen) {
-      labels.push(i);
-    } else {
-      labels.push("");
-    }
-  }
-  const chartData: ChartData<"line"> = {
-    labels: labels,
-    datasets: datasets,
-  };
+    return {
+      labels: labels,
+      datasets: datasets,
+    };
+  }, [
+    configurations.weaponConfigurations,
+    props.modifiers,
+    props.settings,
+    rpmSelector,
+    numHeadshots,
+    includeFirstShotDelay,
+    includeTravelTime,
+    requiredRanges,
+    currentElementHoverLabels,
+    theme.highlightColor,
+  ]);
+
   let [tooltipHandler, setTooltipHandler] = useTooltipHandler();
   let chartRef = useRef<any>();
-  const options: ChartOptions<"line"> = {
-    maintainAspectRatio: false,
-    animation: false,
-    spanGaps: true,
-    interaction: {
-      intersect: false,
-      mode: "index",
-    },
-    elements: {
-      point: {
-        radius: 0,
+
+  // Memoize chart options
+  const options = useMemo((): ChartOptions<"line"> => {
+    return {
+      maintainAspectRatio: false,
+      animation: false,
+      spanGaps: true,
+      interaction: {
+        intersect: false,
+        mode: "index",
       },
-    },
-    plugins: {
-      tooltip: {
-        enabled: false,
-        external: tooltipHandler,
-        position: "eventXPositioner",
-        itemSort: function (a, b) {
-          return (b.raw as number) - (a.raw as number);
+      elements: {
+        point: {
+          radius: 0,
         },
-        callbacks: {
-          label: function (ctx) {
-            return [ctx.dataset.label, ctx.parsed.y] as unknown as string;
+      },
+      plugins: {
+        tooltip: {
+          enabled: false,
+          external: tooltipHandler,
+          position: "eventXPositioner",
+          itemSort: function (a, b) {
+            return (b.raw as number) - (a.raw as number);
+          },
+          callbacks: {
+            label: function (ctx) {
+              return [ctx.dataset.label, ctx.parsed.y] as unknown as string;
+            },
           },
         },
       },
-    },
-    scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
-    onHover: (event, chartElement) => {
-      chartHoverHandler(event, chartElement, chartRef, chartData);
-    },
-  };
+      scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
+      onHover: (event, chartElement) => {
+        chartHoverHandler(event, chartElement, chartRef, chartData);
+      },
+    };
+  }, [tooltipHandler, theme.highlightColor, chartHoverHandler, chartData]);
 
   return (
     <div className="chart-outer-container">
@@ -284,4 +318,11 @@ function TTKChart(props: TTKChartProps) {
 
 export type { RPMSelectorFn };
 export { SELECTOR_AUTO, SELECTOR_BURST, SELECTOR_SINGLE };
-export default TTKChart;
+export default memo(TTKChart, (prevProps, nextProps) => {
+  return (
+    prevProps.title === nextProps.title &&
+    prevProps.settings.useAmmoColorsForGraph ===
+      nextProps.settings.useAmmoColorsForGraph &&
+    JSON.stringify(prevProps.modifiers) === JSON.stringify(nextProps.modifiers)
+  );
+});

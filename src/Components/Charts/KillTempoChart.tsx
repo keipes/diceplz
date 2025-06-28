@@ -10,7 +10,7 @@ import { AverageBTK, AverageTTK, BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, memo } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import {
   GenerateScales,
@@ -525,4 +525,10 @@ export {
   getGlobalMinMaxScores,
   getValueFn,
 };
-export default KillTempoChart;
+export default memo(KillTempoChart, (prevProps, nextProps) => {
+  return (
+    prevProps.settings.useAmmoColorsForGraph ===
+      nextProps.settings.useAmmoColorsForGraph &&
+    JSON.stringify(prevProps.modifiers) === JSON.stringify(nextProps.modifiers)
+  );
+});

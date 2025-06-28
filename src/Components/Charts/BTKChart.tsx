@@ -6,7 +6,7 @@ import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useMemo, memo } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import {
   GenerateScales,
@@ -183,4 +183,10 @@ function BTKChart(props: BTKChartProps) {
   );
 }
 
-export default BTKChart;
+export default memo(BTKChart, (prevProps, nextProps) => {
+  return (
+    prevProps.settings.useAmmoColorsForGraph ===
+      nextProps.settings.useAmmoColorsForGraph &&
+    JSON.stringify(prevProps.modifiers) === JSON.stringify(nextProps.modifiers)
+  );
+});
