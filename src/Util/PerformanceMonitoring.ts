@@ -102,12 +102,10 @@ export const useMemoryMonitor = () => {
  * Debounced state to reduce rapid updates
  */
 export const useDebouncedState = <T>(initialValue: T, delay: number = 300): [T, (value: T) => void] => {
-  const [value, setValue] = useState<T>(initialValue);
   const [debouncedValue, setDebouncedValue] = useState<T>(initialValue);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const setDebouncedValueWrapper = (newValue: T) => {
-    setValue(newValue);
     
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);

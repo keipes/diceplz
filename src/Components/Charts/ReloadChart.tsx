@@ -4,7 +4,7 @@ import {
   GetStatsForConfiguration,
   GetWeaponByName,
 } from "../../Data/WeaponData.ts";
-import { useContext, useState, useRef, useMemo, memo } from "react";
+import { useContext, useState, useRef, memo } from "react";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 import StringHue, { ConfigAmmoColor } from "../../Util/StringColor.ts";
 import { SortableWeaponData } from "./SharedTypes.ts";

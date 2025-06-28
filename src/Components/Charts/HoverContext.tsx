@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useCallback,
-  useRef,
 } from "react";
 import { ConfigDisplayName } from "../../Util/LabelMaker";
 import type { ChartData } from "chart.js";
