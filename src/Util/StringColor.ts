@@ -32,6 +32,13 @@ const ConfigHSLFromName = function (name: string) {
 
 const ConfigAmmoColor = function (config: WeaponConfiguration) {
   let aT = config.ammoType;
+  if (aT === undefined) {
+    // alert
+    console.warn(
+      "ConfigAmmoColor called with undefined ammoType for config:",
+      config
+    );
+  }
   if (aT.endsWith(" Extended")) {
     aT = aT.substring(0, aT.length - 9);
   }

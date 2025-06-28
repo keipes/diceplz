@@ -185,7 +185,7 @@ function TTKChart(props: TTKChartProps) {
         ),
         stepped: false,
         temsion: 0,
-        borderWidth: currentElementHoverLabels.has(ConfigDisplayName(config)) ? 4 : 1.5,
+        borderWidth: 1.5,
         order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
       });
     }
