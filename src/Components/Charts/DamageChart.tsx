@@ -17,6 +17,7 @@ import {
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 
 interface DamageChartProps {
   modifiers: Modifiers;
@@ -100,7 +101,8 @@ function DamageChart(props: DamageChartProps) {
         ),
         tension: 0,
         stepped: false,
-        borderWidth: 1.5,
+        borderWidth: currentElementHoverLabels.has(ConfigDisplayName(config)) ? 4 : 1.5,
+        order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
       });
     }
 

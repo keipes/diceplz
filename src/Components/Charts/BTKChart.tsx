@@ -6,7 +6,7 @@ import { BTK } from "../../Util/Conversions.ts";
 import RequiredRanges from "../../Util/RequiredRanges.ts";
 import ChartHeader from "./ChartHeader.tsx";
 import { Settings } from "../../Data/SettingsLoader.ts";
-import { useContext, useState, useRef, useMemo, memo } from "react";
+import { useContext, useState, useRef, memo } from "react";
 import { ConfiguratorContext, ThemeContext } from "../App.tsx";
 import {
   GenerateScales,
@@ -14,6 +14,7 @@ import {
 } from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 
 interface BTKChartProps {
   modifiers: Modifiers;
@@ -86,8 +87,9 @@ function BTKChart(props: BTKChartProps) {
         theme.highlightColor
       ),
       tension: 0,
-      borderWidth: 1.5,
+      borderWidth: currentElementHoverLabels.has(ConfigDisplayName(config)) ? 4 : 1.5,
       stepped: false,
+      order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
     });
   }
 
@@ -99,6 +101,7 @@ function BTKChart(props: BTKChartProps) {
       labels.push("");
     }
   }
+  
   const chartData: ChartData<"line"> = {
     labels: labels,
     datasets: datasets,

@@ -17,6 +17,7 @@ import {
 } from "../../Util/ChartCommon.ts";
 import { CustomTooltip, useTooltipHandler } from "./CustomTooltip.tsx";
 import { useHoverHighlight, useChartHoverHandler } from "./HoverContext.tsx";
+import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
 
 interface TTKChartProps {
   title: string;
@@ -184,7 +185,8 @@ function TTKChart(props: TTKChartProps) {
         ),
         stepped: false,
         temsion: 0,
-        borderWidth: 1.5,
+        borderWidth: currentElementHoverLabels.has(ConfigDisplayName(config)) ? 4 : 1.5,
+        order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
       });
     }
 

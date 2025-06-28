@@ -398,7 +398,8 @@ function KillTempoChart(props: KillTempoChartProps) {
       ),
       tension: 0,
       stepped: false,
-      borderWidth: 1.5,
+      borderWidth: currentElementHoverLabels.has(ConfigDisplayName(config)) ? 4 : 1.5,
+      order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
     });
   }
 
@@ -410,6 +411,7 @@ function KillTempoChart(props: KillTempoChartProps) {
       labels.push("");
     }
   }
+
   const chartData: ChartData<"line"> = {
     labels: labels,
     datasets: datasets,
