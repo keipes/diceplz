@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useMemo } from "react";
 import "./App.css";
 import DamageChart from "./Charts/DamageChart.tsx";
 import TTKChart from "./Charts/TTKChart.tsx";
@@ -111,9 +111,10 @@ function App() {
       )
     );
   };
-  const wpnCfg: WeaponConfigurations = new WeaponConfigurations(
-    weaponConfigurations,
-    setWeaponConfigurations
+  const wpnCfg: WeaponConfigurations = useMemo(
+    () =>
+      new WeaponConfigurations(weaponConfigurations, setWeaponConfigurations),
+    [weaponConfigurations, setWeaponConfigurations]
   );
 
   const [darkMode, setDarkMode] = useState(
