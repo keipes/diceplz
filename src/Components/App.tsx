@@ -44,7 +44,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import TierList from "./TierList/TierList.tsx";
 import DPSChart from "./Charts/DPSChart.tsx";
 import { HoverHighlightProvider } from "./Charts/HoverContext.tsx";
-import { ChartContainer } from "./Charts/LazyChart.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -178,17 +177,15 @@ function App() {
         modifiers={modifiers}
       />
       <div className={mainContentClass} style={mainContentStyle}>
-        <ChartContainer maxConcurrentCharts={3}>
-          <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
-          <BTKChart modifiers={modifiers} settings={settings} />
-          <DamageChart modifiers={modifiers} settings={settings} />
-          <DPSChart modifiers={modifiers} settings={settings} />
-          <KillsPerMagChart settings={settings} modifiers={modifiers} />
-          <RPMChart settings={settings} />
-          <VelocityChart settings={settings} />
-          <ReloadChart settings={settings} />
-          <MagazineChart settings={settings} />
-        </ChartContainer>
+        <TTKChart settings={settings} modifiers={modifiers} title={"TTK"} />
+        <BTKChart modifiers={modifiers} settings={settings} />
+        <DamageChart modifiers={modifiers} settings={settings} />
+        <DPSChart modifiers={modifiers} settings={settings} />
+        <KillsPerMagChart settings={settings} modifiers={modifiers} />
+        <RPMChart settings={settings} />
+        <VelocityChart settings={settings} />
+        <ReloadChart settings={settings} />
+        <MagazineChart settings={settings} />
         {/* <KillTempoChart modifiers={modifiers} settings={settings} /> */}
         <div className={"blurb"}>
           <p>
