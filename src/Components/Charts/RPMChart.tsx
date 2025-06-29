@@ -200,20 +200,29 @@ function RPMChart(props: RPMChartProps) {
             },
             labelColor: function (ctx) {
               // Force the label color indicator to use the original color, not the highlight color
-              const config = ctx.dataset.label as any;
-              const label = ConfigDisplayName(config);
+              const hoveredLabel = chartData.labels?.[ctx.dataIndex] as string;
               if (props.settings.useAmmoColorsForGraph) {
-                return {
-                  borderColor: ConfigAmmoColor(config),
-                  backgroundColor: ConfigAmmoColor(config),
-                };
+                // Find the config by label to get the original color
+                for (const [_, config] of configurations.weaponConfigurations) {
+                  if (ConfigDisplayName(config) === hoveredLabel) {
+                    return {
+                      borderColor: ConfigAmmoColor(config),
+                      backgroundColor: ConfigAmmoColor(config),
+                    };
+                  }
+                }
               } else {
-                const originalColor = "hsl(" + StringHue(label) + ", 50%, 50%)";
+                const originalColor =
+                  "hsl(" + StringHue(hoveredLabel) + ", 50%, 50%)";
                 return {
                   borderColor: originalColor,
                   backgroundColor: originalColor,
                 };
               }
+              return {
+                borderColor: theme.tooltipBody,
+                backgroundColor: theme.tooltipBody,
+              };
             },
           },
         },
