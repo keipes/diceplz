@@ -112,7 +112,7 @@ export const useDebouncedState = <T>(
   delay: number = 300
 ): [T, (value: T) => void] => {
   const [debouncedValue, setDebouncedValue] = useState<T>(initialValue);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   const setDebouncedValueWrapper = (newValue: T) => {
     if (timeoutRef.current) {
@@ -121,7 +121,7 @@ export const useDebouncedState = <T>(
 
     timeoutRef.current = setTimeout(() => {
       setDebouncedValue(newValue);
-    }, delay);
+    }, delay) as unknown as number;
   };
 
   useEffect(() => {
