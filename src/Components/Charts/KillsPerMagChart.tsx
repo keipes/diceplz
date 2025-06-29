@@ -93,7 +93,9 @@ function KillsPerMagChart(props: KillsPerMagChartProps) {
       tension: 0,
       stepped: false,
       borderWidth: 1.5,
-      order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
+      order: currentElementHoverLabels.has(ConfigDisplayName(config))
+        ? -1000
+        : 0,
     });
   }
 

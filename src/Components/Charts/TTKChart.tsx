@@ -186,7 +186,9 @@ function TTKChart(props: TTKChartProps) {
         stepped: false,
         temsion: 0,
         borderWidth: 1.5,
-        order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
+        order: currentElementHoverLabels.has(ConfigDisplayName(config))
+          ? -1000
+          : 0,
       });
     }
 

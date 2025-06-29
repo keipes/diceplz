@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { ConfigDisplayName } from "../../Util/LabelMaker";
 import type { ChartData } from "chart.js";
 

@@ -182,10 +182,7 @@ function App() {
           <BTKChart modifiers={modifiers} settings={settings} />
           <DamageChart modifiers={modifiers} settings={settings} />
           <DPSChart modifiers={modifiers} settings={settings} />
-          <KillsPerMagChart
-            settings={settings}
-            modifiers={modifiers}
-          />
+          <KillsPerMagChart settings={settings} modifiers={modifiers} />
           <RPMChart settings={settings} />
           <VelocityChart settings={settings} />
           <ReloadChart settings={settings} />

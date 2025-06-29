@@ -89,7 +89,9 @@ function BTKChart(props: BTKChartProps) {
       tension: 0,
       borderWidth: 1.5,
       stepped: false,
-      order: currentElementHoverLabels.has(ConfigDisplayName(config)) ? -1000 : 0,
+      order: currentElementHoverLabels.has(ConfigDisplayName(config))
+        ? -1000
+        : 0,
     });
   }
 
@@ -101,7 +103,7 @@ function BTKChart(props: BTKChartProps) {
       labels.push("");
     }
   }
-  
+
   const chartData: ChartData<"line"> = {
     labels: labels,
     datasets: datasets,
