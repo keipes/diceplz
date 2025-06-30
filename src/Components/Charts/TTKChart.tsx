@@ -174,7 +174,7 @@ function TTKChart(props: TTKChartProps) {
       }
 
       datasets.push({
-        label: config as unknown as string,
+        label: ConfigDisplayName(config),
         data: data,
         fill: false,
         borderColor: ConfigureChartColors(
@@ -246,7 +246,7 @@ function TTKChart(props: TTKChartProps) {
           },
           callbacks: {
             label: function (ctx) {
-              return [ctx.dataset.label, ctx.parsed.y] as unknown as string;
+              return `${ctx.dataset.label}: ${ctx.parsed.y}`;
             },
           },
         },
@@ -311,8 +311,6 @@ function TTKChart(props: TTKChartProps) {
             data: chartData,
             options: options,
           }}
-          data={chartData}
-          options={options}
           chartRef={chartRef}
           enableHover={true}
           hoverHandler={chartHoverHandler}

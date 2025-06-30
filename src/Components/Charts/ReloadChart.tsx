@@ -1,4 +1,4 @@
-import { Bar } from "react-chartjs-2";
+import { Bar } from "../../Charts/chartjs/Bar";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetStatsForConfiguration,
@@ -209,9 +209,6 @@ function ReloadChart(props: ReloadChartProps) {
       },
     },
     scales: GenerateScales("", "seconds", theme.highlightColor),
-    onHover: (event, chartElement) => {
-      chartHoverHandler(event, chartElement, chartRef, chartData);
-    },
   };
   return (
     <div className="chart-outer-container">
@@ -238,7 +235,16 @@ function ReloadChart(props: ReloadChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Bar data={chartData} options={options} ref={chartRef} />
+        <Bar
+          config={{
+            type: "bar",
+            data: chartData,
+            options: options,
+          }}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
+        />
       </div>
     </div>
   );

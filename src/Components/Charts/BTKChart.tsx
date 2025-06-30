@@ -1,4 +1,4 @@
-import { Line } from "react-chartjs-2";
+import { Line } from "../../Charts/chartjs/Line";
 import type { ChartData, ChartOptions } from "chart.js";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { Modifiers } from "../../Data/ConfigLoader.ts";
@@ -77,7 +77,7 @@ function BTKChart(props: BTKChartProps) {
       }
     }
     datasets.push({
-      label: config as unknown as string,
+      label: ConfigDisplayName(config),
       data: data,
       fill: false,
       borderColor: ConfigureChartColors(
@@ -138,9 +138,6 @@ function BTKChart(props: BTKChartProps) {
       },
     },
     scales: GenerateScales("meters", "bullets", theme.highlightColor),
-    onHover: (event, chartElement) => {
-      chartHoverHandler(event, chartElement, chartRef, chartData);
-    },
   };
   return (
     <div className="chart-outer-container">
@@ -177,7 +174,16 @@ function BTKChart(props: BTKChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} ref={chartRef} />
+        <Line
+          config={{
+            type: "line",
+            data: chartData,
+            options: options,
+          }}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
+        />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           currentHighlightedLabels={currentElementHoverLabels}
