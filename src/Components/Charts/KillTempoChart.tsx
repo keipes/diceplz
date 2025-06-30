@@ -1,4 +1,4 @@
-import { Line } from "../../Charts/chartjs/Line";
+import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetStatsForConfiguration,
@@ -387,7 +387,7 @@ function KillTempoChart(props: KillTempoChartProps) {
     }
     const config = dataset[0].config;
     datasets.push({
-      label: ConfigDisplayName(config),
+      label: config as unknown as string,
       data: data,
       fill: false,
       borderColor: ConfigureChartColors(
@@ -455,6 +455,9 @@ function KillTempoChart(props: KillTempoChartProps) {
       },
     },
     scales,
+    onHover: (event, chartElement) => {
+      chartHoverHandler(event, chartElement, chartRef, chartData);
+    },
   };
   return (
     <div className="chart-outer-container">
@@ -498,16 +501,7 @@ function KillTempoChart(props: KillTempoChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line
-          config={{
-            type: "line",
-            data: chartData,
-            options: options,
-          }}
-          chartRef={chartRef}
-          enableHover={true}
-          hoverHandler={chartHoverHandler}
-        />
+        <Line data={chartData} options={options} ref={chartRef} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           currentHighlightedLabels={currentElementHoverLabels}

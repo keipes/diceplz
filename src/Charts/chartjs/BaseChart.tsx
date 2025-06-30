@@ -1,36 +1,5 @@
 import React from "react";
-import {
-  Chart,
-  ChartConfiguration,
-  ChartData,
-  ChartOptions,
-  LineController,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
-
-// Register Chart.js components
-Chart.register(
-  LineController,
-  BarController,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+import { Chart, ChartConfiguration, ChartData, ChartOptions } from "chart.js";
 
 export interface BaseChartRef {
   chart: Chart | null;
@@ -65,16 +34,6 @@ export class BaseChart extends React.Component<BaseChartProps, BaseChartState> {
     this.state = {};
   }
 
-  // Override this method in subclasses to provide default configuration
-  protected getDefaultConfig(): Partial<ChartConfiguration> {
-    return {
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
-  }
-
   // setRef(ref: React.Ref<BaseChartRef> | null) {
   //   this.chartRef = ref;
   // }
@@ -85,25 +44,12 @@ export class BaseChart extends React.Component<BaseChartProps, BaseChartState> {
   }
 
   componentDidUpdate(prevProps: BaseChartProps) {
-    // Check if we need to recreate the chart entirely
-    const needsRecreation =
-      prevProps.config !== this.props.config ||
-      prevProps.enableHover !== this.props.enableHover ||
-      prevProps.hoverHandler !== this.props.hoverHandler;
-
-    if (needsRecreation) {
-      // Recreate the chart if fundamental config changed
-      this.initializeChart();
-    } else if (
+    if (
       this.chart &&
       (prevProps.data !== this.props.data ||
         prevProps.options !== this.props.options)
     ) {
-      // Just update data/options if chart exists and only data/options changed
       this.updateChart();
-    } else if (!this.chart) {
-      // If chart doesn't exist for some reason, initialize it
-      this.initializeChart();
     }
     this.updateRef();
   }
@@ -122,36 +68,8 @@ export class BaseChart extends React.Component<BaseChartProps, BaseChartState> {
     if (this.canvasRef.current) {
       const ctx = this.canvasRef.current.getContext("2d");
       if (ctx) {
-        // Destroy existing chart if it exists to prevent "canvas already in use" error
-        if (this.chart) {
-          this.chart.destroy();
-          this.chart = null;
-        }
-
-        // Additional safety: Check if canvas already has a chart instance
-        // Chart.js attaches chart instances to canvas elements
-        const canvas = this.canvasRef.current;
-        if ((canvas as any).chart) {
-          (canvas as any).chart.destroy();
-          (canvas as any).chart = null;
-        }
-
-        // Even more safety: Use Chart.js registry to find and destroy any existing chart
-        const existingChart = Chart.getChart(canvas);
-        if (existingChart) {
-          existingChart.destroy();
-        }
-
-        // Get default config from subclass and merge with user config
-        const defaultConfig = this.getDefaultConfig();
-        const chartConfig: ChartConfiguration = {
-          ...defaultConfig,
-          ...this.props.config,
-          options: {
-            ...defaultConfig.options,
-            ...this.props.config.options,
-          },
-        };
+        // Clone the config to avoid mutating the original
+        const chartConfig = { ...this.props.config };
 
         // Add hover handler if enabled
         if (
@@ -204,22 +122,8 @@ export class BaseChart extends React.Component<BaseChartProps, BaseChartState> {
     if (this.chart) {
       this.chart.destroy();
       this.chart = null;
+      this.updateRef();
     }
-
-    // Additional cleanup: ensure canvas is clean
-    if (this.canvasRef.current) {
-      const canvas = this.canvasRef.current;
-      const existingChart = Chart.getChart(canvas);
-      if (existingChart) {
-        existingChart.destroy();
-      }
-      // Clear any attached chart reference
-      if ((canvas as any).chart) {
-        (canvas as any).chart = null;
-      }
-    }
-
-    this.updateRef();
   }
 
   render() {

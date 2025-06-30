@@ -1,4 +1,4 @@
-import { Line } from "../../Charts/chartjs/Line";
+import { Line } from "react-chartjs-2";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetAmmoStat,
@@ -90,7 +90,7 @@ function DamageChart(props: DamageChartProps) {
         }
       }
       datasets.push({
-        label: ConfigDisplayName(config),
+        label: config as unknown as string,
         data: data,
         fill: false,
         borderColor: ConfigureChartColors(
@@ -162,8 +162,11 @@ function DamageChart(props: DamageChartProps) {
         },
       },
       scales: GenerateScales("meters", "damage", theme.highlightColor),
+      onHover: (event, chartElement) => {
+        chartHoverHandler(event, chartElement, chartRef, chartData);
+      },
     };
-  }, [tooltipHandler, theme.highlightColor]);
+  }, [tooltipHandler, theme.highlightColor, chartHoverHandler, chartData]);
   return (
     <div className="chart-outer-container">
       <ChartHeader
@@ -181,16 +184,7 @@ function DamageChart(props: DamageChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line
-          config={{
-            type: "line",
-            data: chartData,
-            options: options,
-          }}
-          chartRef={chartRef}
-          enableHover={true}
-          hoverHandler={chartHoverHandler}
-        />
+        <Line data={chartData} options={options} ref={chartRef} />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           currentHighlightedLabels={currentElementHoverLabels}
