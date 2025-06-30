@@ -252,11 +252,8 @@ function TTKChart(props: TTKChartProps) {
         },
       },
       scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
-      onHover: (event, chartElement) => {
-        chartHoverHandler(event, chartElement, chartRef, chartData);
-      },
     };
-  }, [tooltipHandler, theme.highlightColor, chartHoverHandler, chartData]);
+  }, [tooltipHandler, theme.highlightColor]);
 
   return (
     <div className="chart-outer-container">
@@ -316,7 +313,9 @@ function TTKChart(props: TTKChartProps) {
           }}
           data={chartData}
           options={options}
-          ref={chartRef}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
         />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}

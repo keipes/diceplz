@@ -12,17 +12,21 @@ export interface BaseChartProps {
   width?: number;
   height?: number;
   className?: string;
+  chartRef?: React.MutableRefObject<Chart | null>;
+  enableHover?: boolean;
+  hoverHandler?: (
+    event: any,
+    chartElement: any[],
+    chartRef: React.MutableRefObject<Chart | null>,
+    chartData: ChartData
+  ) => void;
 }
 
 export interface BaseChartState {}
 
-export class BaseChartClass extends React.Component<
-  BaseChartProps,
-  BaseChartState
-> {
+export class BaseChart extends React.Component<BaseChartProps, BaseChartState> {
   protected chart: Chart | null = null;
   protected canvasRef: React.RefObject<HTMLCanvasElement>;
-  private chartRef: React.Ref<BaseChartRef> | null = null;
 
   constructor(props: BaseChartProps) {
     super(props);
@@ -30,9 +34,9 @@ export class BaseChartClass extends React.Component<
     this.state = {};
   }
 
-  setRef(ref: React.Ref<BaseChartRef> | null) {
-    this.chartRef = ref;
-  }
+  // setRef(ref: React.Ref<BaseChartRef> | null) {
+  //   this.chartRef = ref;
+  // }
 
   componentDidMount() {
     this.initializeChart();
@@ -55,12 +59,8 @@ export class BaseChartClass extends React.Component<
   }
 
   protected updateRef() {
-    if (this.chartRef && typeof this.chartRef === "function") {
-      this.chartRef({ chart: this.chart });
-    } else if (this.chartRef && "current" in this.chartRef) {
-      (this.chartRef as React.MutableRefObject<BaseChartRef>).current = {
-        chart: this.chart,
-      };
+    if (this.props.chartRef) {
+      this.props.chartRef.current = this.chart;
     }
   }
 
@@ -68,7 +68,38 @@ export class BaseChartClass extends React.Component<
     if (this.canvasRef.current) {
       const ctx = this.canvasRef.current.getContext("2d");
       if (ctx) {
-        this.chart = new Chart(ctx, this.props.config);
+        // Clone the config to avoid mutating the original
+        const chartConfig = { ...this.props.config };
+
+        // Add hover handler if enabled
+        if (
+          this.props.enableHover &&
+          this.props.hoverHandler &&
+          this.props.chartRef &&
+          this.props.data
+        ) {
+          if (!chartConfig.options) {
+            chartConfig.options = {};
+          }
+
+          const existingOnHover = chartConfig.options.onHover;
+          chartConfig.options.onHover = (event, chartElement, chart) => {
+            // Call the provided hover handler
+            this.props.hoverHandler!(
+              event,
+              chartElement,
+              this.props.chartRef!,
+              this.props.data!
+            );
+
+            // Also call any existing onHover handler
+            if (existingOnHover) {
+              existingOnHover.call(this.chart, event, chartElement, chart);
+            }
+          };
+        }
+
+        this.chart = new Chart(ctx, chartConfig);
         if (this.props.data) {
           this.updateChart();
         }
@@ -107,16 +138,4 @@ export class BaseChartClass extends React.Component<
   }
 }
 
-export const BaseChart = React.forwardRef<BaseChartRef, BaseChartProps>(
-  (props, ref) => {
-    const chartInstance = React.useRef<BaseChartClass>(null);
-
-    React.useEffect(() => {
-      if (chartInstance.current) {
-        chartInstance.current.setRef(ref);
-      }
-    }, [ref]);
-
-    return <BaseChartClass ref={chartInstance} {...props} />;
-  }
-);
+export default BaseChart;
