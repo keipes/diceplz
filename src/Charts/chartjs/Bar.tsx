@@ -1,25 +1,24 @@
 import { ChartConfiguration } from "chart.js";
 import { BaseChart, BaseChartProps } from "./BaseChart";
 
-export interface LineChartProps extends BaseChartProps {
-  // Additional props specific to line charts can be added here
+export interface BarChartProps extends BaseChartProps {
+  // Additional props specific to bar charts can be added here
 }
 
-export class Line extends BaseChart {
-  constructor(props: LineChartProps) {
+export class Bar extends BaseChart {
+  constructor(props: BarChartProps) {
     super(props);
   }
 
   protected getDefaultConfig(): Partial<ChartConfiguration> {
     return {
-      type: "line",
+      type: "bar",
       options: {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
           x: {
-            type: "linear",
-            position: "bottom",
+            type: "category",
           },
           y: {
             beginAtZero: true,
@@ -35,4 +34,4 @@ export class Line extends BaseChart {
   }
 }
 
-export default Line;
+export default Bar;

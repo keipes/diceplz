@@ -1,4 +1,4 @@
-import { Bar } from "react-chartjs-2";
+import { Bar } from "../../Charts/chartjs/Bar";
 import type { ChartData, ChartOptions } from "chart.js";
 import { GetStatsForConfiguration } from "../../Data/WeaponData.ts";
 import { ConfigDisplayName } from "../../Util/LabelMaker.ts";
@@ -157,7 +157,16 @@ function VelocityChart(props: VelocityChartProps) {
     <div className="chart-outer-container">
       <ChartHeader title="Velocity" description="Muzzle velocity." />
       <div className="chart-container">
-        <Bar data={chartData} options={options} ref={chartRef} />
+        <Bar
+          config={{
+            type: "bar",
+            data: chartData,
+            options: options,
+          }}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
+        />
       </div>
     </div>
   );
