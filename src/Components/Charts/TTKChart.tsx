@@ -1,4 +1,4 @@
-import { Line } from "react-chartjs-2";
+import { Line } from "../../Charts/chartjs/Line";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetStatsForConfiguration,
@@ -308,7 +308,16 @@ function TTKChart(props: TTKChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} ref={chartRef} />
+        <Line
+          config={{
+            type: "line",
+            data: chartData,
+            options: options,
+          }}
+          data={chartData}
+          options={options}
+          ref={chartRef}
+        />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           invertScaleColors={true}
