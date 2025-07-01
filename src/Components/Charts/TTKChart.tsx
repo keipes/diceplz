@@ -252,6 +252,9 @@ function TTKChart(props: TTKChartProps) {
         },
       },
       scales: GenerateScales("meters", "milliseconds", theme.highlightColor),
+      onHover: (event, chartElement) => {
+        chartHoverHandler(event, chartElement, chartRef, chartData);
+      },
     };
   }, [tooltipHandler, theme.highlightColor]);
 
