@@ -1,4 +1,4 @@
-import { Line } from "react-chartjs-2";
+import { Line } from "../../Charts/chartjs/Line";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetStatsForConfiguration,
@@ -256,7 +256,7 @@ function TTKChart(props: TTKChartProps) {
         chartHoverHandler(event, chartElement, chartRef, chartData);
       },
     };
-  }, [tooltipHandler, theme.highlightColor, chartHoverHandler, chartData]);
+  }, [tooltipHandler, theme.highlightColor]);
 
   return (
     <div className="chart-outer-container">
@@ -308,7 +308,18 @@ function TTKChart(props: TTKChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} ref={chartRef} />
+        <Line
+          config={{
+            type: "line",
+            data: chartData,
+            options: options,
+          }}
+          data={chartData}
+          options={options}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
+        />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           invertScaleColors={true}

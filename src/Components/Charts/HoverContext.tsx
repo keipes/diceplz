@@ -74,7 +74,7 @@ export const useChartHoverHandler = () => {
         event: any,
         chartElement: any[],
         chartRef: any,
-        chartData: ChartData<"line">
+        chartData: ChartData
       ) => {
         if (chartElement.length > 0 && chartRef.current) {
           const chartValueForMouseY =
@@ -139,7 +139,7 @@ export const useBarChartHoverHandler = () => {
         _event: any,
         chartElement: any[],
         chartRef: any,
-        chartData: ChartData<"bar">
+        chartData: ChartData
       ) => {
         if (chartElement.length > 0 && chartRef.current) {
           // For bar charts, we want to highlight based on the X-axis position (which weapon)

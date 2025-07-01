@@ -1,4 +1,4 @@
-import { Line } from "react-chartjs-2";
+import { Line } from "../../Charts/chartjs/Line";
 import type { ChartData, ChartOptions } from "chart.js";
 import {
   GetAmmoStat,
@@ -172,7 +172,16 @@ function DPSChart(props: DPSChartProps) {
         </label>
       </div>
       <div className="chart-container">
-        <Line data={chartData} options={options} ref={chartRef} />
+        <Line
+          config={{
+            type: "line",
+            data: chartData,
+            options: options,
+          }}
+          chartRef={chartRef}
+          enableHover={true}
+          hoverHandler={chartHoverHandler}
+        />
         <CustomTooltip
           setTooltipHandler={setTooltipHandler}
           currentHighlightedLabels={currentElementHoverLabels}
