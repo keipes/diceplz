@@ -13,7 +13,6 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
   Filler,
 } from "chart.js";
 
@@ -28,7 +27,6 @@ Chart.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
   Filler
 );
 
