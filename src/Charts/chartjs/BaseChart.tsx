@@ -75,27 +75,8 @@ export abstract class BaseChart extends React.Component<
     this.updateRef();
   }
 
-  componentDidUpdate(prevProps: BaseChartProps) {
-    // Check if we need to recreate the chart entirely
-    const needsRecreation =
-      prevProps.config !== this.props.config ||
-      prevProps.enableHover !== this.props.enableHover ||
-      prevProps.hoverHandler !== this.props.hoverHandler;
-
-    if (needsRecreation) {
-      // Recreate the chart if fundamental config changed
-      this.initializeChart();
-    } else if (
-      this.chart &&
-      (prevProps.data !== this.props.data ||
-        prevProps.options !== this.props.options)
-    ) {
-      // Just update data/options if chart exists and only data/options changed
-      this.updateChart();
-    } else if (!this.chart) {
-      // If chart doesn't exist for some reason, initialize it
-      this.initializeChart();
-    }
+  componentDidUpdate(_prevProps: BaseChartProps) {
+    this.updateChart();
     this.updateRef();
   }
 
