@@ -45,6 +45,7 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     weaponRange.endColumn - weaponRange.startColumn + 1
   );
   const values = range.getValues();
+  const backgroundColors = range.getBackgrounds();
   const weaponName = values[0][0];
 
   // headers
@@ -129,8 +130,6 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     ammoStats: {},
   };
   let curStat;
-  console.log("Weapon Name: " + weaponName);
-  //   console.log("Values: " + JSON.stringify(values));
   let barrelType = "";
   let ammoType = "";
   function pushStat() {
@@ -144,19 +143,29 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     }
   }
   for (let row = 1; row < values.length; row++) {
-    // check for a new weapon name
-    let newWeaponName = values[row][0];
-    if (newWeaponName) {
-      console.error(
-        "Possible overrun when scanning weapon: " +
-          weaponName +
-          " into: " +
-          newWeaponName
-      );
+    const backgroundColor = backgroundColors[row][0];
+    if (backgroundColor == "#cc0000") {
+      // console.log("ignoring informational message " + values[row][0]);
+      continue;
     }
+    // check for a new weapon name
+    // let newWeaponName = values[row][0];
+    // if (newWeaponName) {
+    //   let backgroundColor = backgroundColors[row][0];
+    //   if (backgroundColor == "#cc0000") {
+    //     console.log("ignoring informational message " + newWeaponName);
+    //   } else {
+    //     console.error(
+    //       "Possible overrun when scanning weapon: " +
+    //         weaponName +
+    //         " into: " +
+    //         newWeaponName
+    //     );
+    //   }
+    // }
     // check for a new ammo type
     let newAmmoType = values[row][0].toString();
-    if (newAmmoType && newAmmoType !== "CellImage") {
+    if (newAmmoType && newAmmoType !== "CellImage" && newAmmoType !== "...?") {
       if (ammoType == newAmmoType) {
         // end ammo type
         pushStat();
@@ -173,12 +182,10 @@ function processWeaponRange(weaponStatsSheet, weaponRange) {
     if (newBarrelType && newBarrelType !== "Barrel") {
       if (barrelType) {
         // end barrel type
-        console.log("End Barrel Type: " + barrelType);
         pushStat();
       }
       barrelType = getBarrelType(newBarrelType);
       if (barrelType) {
-        console.log("Barrel Type: " + barrelType);
         curStat = {
           barrelType: barrelType,
           dropoffs: [],
@@ -321,7 +328,8 @@ function getWeaponRanges(columns, weaponStatsSheet) {
         (backgroundColors[row][0] === "#000000" ||
           backgroundColors[row][0] === "#444444") &&
         weaponName &&
-        weaponName !== "CellImage"
+        weaponName !== "CellImage" &&
+        weaponName !== "...?"
       ) {
         console.log(
           "Found weapon name in black cell: " +
@@ -401,8 +409,8 @@ const AmmoTypeMap = {
   DEF: "Default",
   CC: "Close Combat",
   SS: "Subsonic",
-  AM: "Anti-Material",
-  AMHP: "Anti-Material High Power",
+  AM: "Anti-Materiel",
+  AMHP: "Anti-Materiel High Power",
   HP: "High Power",
   AP: "Armor Piercing",
   FL: "Flechette",
@@ -416,6 +424,7 @@ const AmmoTypeMap = {
   EB: "Explosive Bolt",
   SSCC: "Subsonic Close Combat",
   SSHP: "Subsonic High Power",
+  STU: "Standard Underloaded",
 };
 
 function getAmmoTypes(ammoTypeKey) {

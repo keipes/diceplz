@@ -58,9 +58,11 @@ const ConfigAmmoColor = function (config: WeaponConfiguration) {
     case "Subsonic":
       return "#7f7fff";
     case "Armor Piercing":
-    case "Anti-Material":
-    case "Anti-Material High Power":
+    case "Anti-Materiel":
+    case "Anti-Materiel High Power":
       return "#ffff7f";
+    case "Standard Underloaded":
+      return "#ff7fff";
     default:
       return "#fff";
   }

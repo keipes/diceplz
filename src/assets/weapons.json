@@ -775,6 +775,20 @@
               "velocity": 400,
               "rpmSingle": 449,
               "rpmBurst": 567,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 15 },
+                { "damage": 16, "range": 30 },
+                { "damage": 13, "range": 50 },
+                { "damage": 12, "range": 75 }
+              ],
+              "velocity": 400,
+              "rpmSingle": 449,
+              "rpmBurst": 567,
               "ammoType": "Standard"
             },
             {
@@ -790,6 +804,20 @@
               "rpmSingle": 449,
               "rpmBurst": 567,
               "ammoType": "Close Combat Extended"
+            },
+            {
+              "barrelType": "GAR45",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 15 },
+                { "damage": 14.4, "range": 30 },
+                { "damage": 11.7, "range": 50 },
+                { "damage": 10.8, "range": 75 }
+              ],
+              "velocity": 400,
+              "rpmSingle": 449,
+              "rpmBurst": 567,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "GAR45",
@@ -1995,8 +2023,8 @@
                 { "damage": 12, "range": 100 }
               ],
               "velocity": 420,
-              "rpmSingle": 1078,
-              "rpmAuto": 1078,
+              "rpmSingle": 1080,
+              "rpmAuto": 1080,
               "ammoType": "Close Combat"
             },
             {
@@ -2009,8 +2037,8 @@
                 { "damage": 12, "range": 100 }
               ],
               "velocity": 420,
-              "rpmSingle": 1078,
-              "rpmAuto": 1078,
+              "rpmSingle": 1080,
+              "rpmAuto": 1080,
               "ammoType": "Close Combat Extended"
             },
             {
@@ -2023,8 +2051,8 @@
                 { "damage": 11.04, "range": 100 }
               ],
               "velocity": 420,
-              "rpmSingle": 1078,
-              "rpmAuto": 1078,
+              "rpmSingle": 1080,
+              "rpmAuto": 1080,
               "ammoType": "Close Combat"
             },
             {
@@ -2037,8 +2065,8 @@
                 { "damage": 11.04, "range": 100 }
               ],
               "velocity": 420,
-              "rpmSingle": 1078,
-              "rpmAuto": 1078,
+              "rpmSingle": 1080,
+              "rpmAuto": 1080,
               "ammoType": "Close Combat Extended"
             },
             {
@@ -2108,7 +2136,7 @@
               ],
               "velocity": 355,
               "rpmSingle": 980,
-              "rpmAuto": 1078,
+              "rpmAuto": 1080,
               "ammoType": "Subsonic"
             },
             {
@@ -2122,7 +2150,7 @@
               ],
               "velocity": 355,
               "rpmSingle": 980,
-              "rpmAuto": 1078,
+              "rpmAuto": 1080,
               "ammoType": "Subsonic"
             }
           ],
@@ -2552,7 +2580,33 @@
               "velocity": 420,
               "rpmSingle": 599,
               "rpmAuto": 898,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 30 },
+                { "damage": 16, "range": 50 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 420,
+              "rpmSingle": 599,
+              "rpmAuto": 898,
               "ammoType": "Standard"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 30 },
+                { "damage": 14.72, "range": 50 },
+                { "damage": 11.96, "range": 75 }
+              ],
+              "velocity": 420,
+              "rpmSingle": 599,
+              "rpmAuto": 898,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -2597,6 +2651,19 @@
               "velocity": 480,
               "rpmSingle": 675,
               "rpmAuto": 675,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 28, "range": 0 },
+                { "damage": 22, "range": 30 },
+                { "damage": 18, "range": 75 },
+                { "damage": 16, "range": 100 }
+              ],
+              "velocity": 480,
+              "rpmSingle": 675,
+              "rpmAuto": 675,
               "ammoType": "Standard"
             },
             {
@@ -2611,6 +2678,19 @@
               "rpmSingle": 675,
               "rpmAuto": 675,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 25.76, "range": 0 },
+                { "damage": 20.24, "range": 30 },
+                { "damage": 16.56, "range": 75 },
+                { "damage": 14.72, "range": 100 }
+              ],
+              "velocity": 480,
+              "rpmSingle": 675,
+              "rpmAuto": 675,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -3721,8 +3801,8 @@
                 { "damage": 15, "range": 150 }
               ],
               "velocity": 845,
-              "rpmSingle": 475,
-              "rpmBurst": 539,
+              "rpmSingle": 476,
+              "rpmBurst": 505,
               "ammoType": "Standard"
             },
             {
@@ -3735,8 +3815,8 @@
                 { "damage": 15, "range": 150 }
               ],
               "velocity": 845,
-              "rpmSingle": 475,
-              "rpmBurst": 539,
+              "rpmSingle": 476,
+              "rpmBurst": 505,
               "ammoType": "Standard Extended"
             },
             {
@@ -3833,7 +3913,7 @@
               ],
               "velocity": 965,
               "rpmSingle": 505,
-              "rpmBurst": 539,
+              "rpmBurst": 505,
               "ammoType": "High Power"
             },
             {
@@ -3845,8 +3925,8 @@
                 { "damage": 17, "range": 150 }
               ],
               "velocity": 1125,
-              "rpmSingle": 505,
-              "rpmBurst": 539,
+              "rpmSingle": 476,
+              "rpmBurst": 476,
               "ammoType": "High Power"
             },
             {
@@ -3859,7 +3939,7 @@
               ],
               "velocity": 965,
               "rpmSingle": 505,
-              "rpmBurst": 539,
+              "rpmBurst": 505,
               "ammoType": "High Power"
             },
             {
@@ -3872,7 +3952,7 @@
               ],
               "velocity": 750,
               "rpmSingle": 505,
-              "rpmBurst": 539,
+              "rpmBurst": 505,
               "ammoType": "High Power"
             },
             {
@@ -3885,7 +3965,7 @@
               ],
               "velocity": 750,
               "rpmSingle": 505,
-              "rpmBurst": 539,
+              "rpmBurst": 505,
               "ammoType": "High Power"
             },
             {
@@ -3913,7 +3993,7 @@
               ],
               "velocity": 750,
               "rpmSingle": 475,
-              "rpmBurst": 539,
+              "rpmBurst": 505,
               "ammoType": "Subsonic"
             },
             {
@@ -5056,6 +5136,349 @@
           }
         },
         {
+          "name": "KFS2000",
+          "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 20, "range": 50 },
+                { "damage": 17, "range": 100 },
+                { "damage": 15, "range": 150 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 20, "range": 50 },
+                { "damage": 17, "range": 100 },
+                { "damage": 15, "range": 150 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 20, "range": 50 },
+                { "damage": 17, "range": 100 },
+                { "damage": 15, "range": 150 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 980,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 20, "range": 50 },
+                { "damage": 17, "range": 100 },
+                { "damage": 15, "range": 150 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 980,
+              "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15.3, "range": 100 },
+                { "damage": 13.5, "range": 150 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15.3, "range": 100 },
+                { "damage": 13.5, "range": 150 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 1350,
+              "rpmSingle": 515,
+              "rpmAuto": 830,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 1350,
+              "rpmSingle": 515,
+              "rpmAuto": 830,
+              "ammoType": "High Power Extended"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "High Power Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 830,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 515,
+              "rpmAuto": 830,
+              "ammoType": "High Power Extended"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15, "range": 75 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Subsonic"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15, "range": 75 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Subsonic Extended"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 515,
+              "rpmAuto": 980,
+              "ammoType": "Subsonic"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 50 },
+                { "damage": 15, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 515,
+              "rpmAuto": 980,
+              "ammoType": "Subsonic Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 50 },
+                { "damage": 13.5, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Subsonic"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 50 },
+                { "damage": 13.5, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 515,
+              "rpmAuto": 900,
+              "ammoType": "Subsonic Extended"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 18, "range": 0 },
+                { "damage": 15, "range": 50 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 1350,
+              "rpmSingle": 675,
+              "rpmAuto": 845,
+              "ammoType": "Armor Piercing"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 18, "range": 0 },
+                { "damage": 15, "range": 50 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 1350,
+              "rpmSingle": 675,
+              "rpmAuto": 845,
+              "ammoType": "Armor Piercing Extended"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 18, "range": 0 },
+                { "damage": 15, "range": 50 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 675,
+              "rpmAuto": 965,
+              "ammoType": "Armor Piercing"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 18, "range": 0 },
+                { "damage": 15, "range": 50 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 675,
+              "rpmAuto": 965,
+              "ammoType": "Armor Piercing Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 16.2, "range": 0 },
+                { "damage": 13.5, "range": 50 },
+                { "damage": 11.7, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 675,
+              "rpmAuto": 845,
+              "ammoType": "Armor Piercing"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 16.2, "range": 0 },
+                { "damage": 13.5, "range": 50 },
+                { "damage": 11.7, "range": 75 }
+              ],
+              "velocity": 1125,
+              "rpmSingle": 675,
+              "rpmAuto": 845,
+              "ammoType": "Armor Piercing Extended"
+            }
+          ],
+          "ammoStats": {
+            "Standard": {
+              "magSize": 31,
+              "headshotMultiplier": 1,
+              "emptyReload": 2.87,
+              "tacticalReload": 2.33
+            },
+            "Standard Extended": {
+              "magSize": 41,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.15,
+              "tacticalReload": 2.57
+            },
+            "High Power": {
+              "magSize": 21,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.15,
+              "tacticalReload": 2.57
+            },
+            "High Power Extended": {
+              "magSize": 31,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.55,
+              "tacticalReload": 2.88
+            },
+            "Subsonic": {
+              "magSize": 31,
+              "headshotMultiplier": 1,
+              "emptyReload": 2.87,
+              "tacticalReload": 2.33
+            },
+            "Subsonic Extended": {
+              "magSize": 41,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.15,
+              "tacticalReload": 2.57
+            },
+            "Armor Piercing": {
+              "magSize": 16,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.15,
+              "tacticalReload": 2.57
+            },
+            "Armor Piercing Extended": {
+              "magSize": 26,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.55,
+              "tacticalReload": 2.88
+            }
+          }
+        },
+        {
           "name": "M16A3",
           "stats": [
             {
@@ -5068,6 +5491,18 @@
               "rpmSingle": 449,
               "rpmBurst": 634,
               "rpmAuto": 829,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 449,
+              "rpmBurst": 634,
+              "rpmAuto": 829,
               "ammoType": "Standard"
             },
             {
@@ -5092,6 +5527,18 @@
               "rpmSingle": 449,
               "rpmBurst": 634,
               "rpmAuto": 829,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 449,
+              "rpmBurst": 634,
+              "rpmAuto": 829,
               "ammoType": "Standard"
             },
             {
@@ -5116,6 +5563,18 @@
               "rpmSingle": 449,
               "rpmBurst": 634,
               "rpmAuto": 829,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Type 4",
+              "dropoffs": [
+                { "damage": 20.9, "range": 0 },
+                { "damage": 17.1, "range": 75 }
+              ],
+              "velocity": 615,
+              "rpmSingle": 449,
+              "rpmBurst": 634,
+              "rpmAuto": 829,
               "ammoType": "Standard"
             },
             {
@@ -5129,6 +5588,18 @@
               "rpmBurst": 634,
               "rpmAuto": 829,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 449,
+              "rpmBurst": 634,
+              "rpmAuto": 829,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "PB",
@@ -5190,6 +5661,19 @@
               "rpmSingle": 735,
               "rpmBurst": 540,
               "rpmAuto": 735,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 26, "range": 0 },
+                { "damage": 22, "range": 20 },
+                { "damage": 18, "range": 70 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 735,
+              "rpmBurst": 540,
+              "rpmAuto": 735,
               "ammoType": "Standard"
             },
             {
@@ -5204,6 +5688,19 @@
               "rpmBurst": 540,
               "rpmAuto": 735,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 23.92, "range": 0 },
+                { "damage": 20.240000000000002, "range": 20 },
+                { "damage": 16.560000000000002, "range": 70 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 735,
+              "rpmBurst": 540,
+              "rpmAuto": 735,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -5267,6 +5764,19 @@
               "rpmSingle": 450,
               "rpmBurst": 635,
               "rpmAuto": 830,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 40 },
+                { "damage": 16, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 450,
+              "rpmBurst": 635,
+              "rpmAuto": 830,
               "ammoType": "Standard"
             },
             {
@@ -5281,6 +5791,19 @@
               "rpmBurst": 635,
               "rpmAuto": 830,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 40 },
+                { "damage": 14.72, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 450,
+              "rpmBurst": 635,
+              "rpmAuto": 830,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -5342,6 +5865,17 @@
               "velocity": 675,
               "rpmSingle": 513,
               "rpmAuto": 770,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 513,
+              "rpmAuto": 770,
               "ammoType": "Standard"
             },
             {
@@ -5364,6 +5898,17 @@
               "velocity": 565,
               "rpmSingle": 513,
               "rpmAuto": 830,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 565,
+              "rpmSingle": 513,
+              "rpmAuto": 830,
               "ammoType": "Standard"
             },
             {
@@ -5376,6 +5921,17 @@
               "rpmSingle": 513,
               "rpmAuto": 830,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 513,
+              "rpmAuto": 770,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -5435,6 +5991,19 @@
               "rpmSingle": 515,
               "rpmBurst": 600,
               "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 40 },
+                { "damage": 15, "range": 100 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
               "ammoType": "Standard"
             },
             {
@@ -5461,6 +6030,19 @@
               "rpmSingle": 515,
               "rpmBurst": 600,
               "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 40 },
+                { "damage": 13.8, "range": 100 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
               "ammoType": "Standard"
             },
             {
@@ -5487,6 +6069,19 @@
               "rpmSingle": 515,
               "rpmBurst": 600,
               "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Type 4",
+              "dropoffs": [
+                { "damage": 20.9, "range": 0 },
+                { "damage": 17.1, "range": 40 },
+                { "damage": 14.25, "range": 100 }
+              ],
+              "velocity": 560,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
               "ammoType": "Standard"
             },
             {
@@ -5501,6 +6096,19 @@
               "rpmBurst": 600,
               "rpmAuto": 900,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "PB",
+              "dropoffs": [
+                { "damage": 19.8, "range": 0 },
+                { "damage": 16.2, "range": 40 },
+                { "damage": 13.5, "range": 100 }
+              ],
+              "velocity": 615,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "PB",
@@ -5564,6 +6172,19 @@
               "rpmSingle": 515,
               "rpmBurst": 600,
               "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 22, "range": 0 },
+                { "damage": 18, "range": 40 },
+                { "damage": 15, "range": 75 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
               "ammoType": "Standard"
             },
             {
@@ -5578,6 +6199,19 @@
               "rpmBurst": 600,
               "rpmAuto": 900,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 20.24, "range": 0 },
+                { "damage": 16.56, "range": 40 },
+                { "damage": 13.8, "range": 75 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 515,
+              "rpmBurst": 600,
+              "rpmAuto": 900,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -6792,6 +7426,19 @@
               ],
               "velocity": 850,
               "rpmAuto": 575,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 26, "range": 0 },
+                { "damage": 24, "range": 40 },
+                { "damage": 22, "range": 75 },
+                { "damage": 20, "range": 100 },
+                { "damage": 18, "range": 150 }
+              ],
+              "velocity": 850,
+              "rpmAuto": 575,
               "ammoType": "Standard"
             },
             {
@@ -6844,7 +7491,35 @@
               "velocity": 845,
               "rpmSingle": 515,
               "rpmAuto": 770,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 24, "range": 0 },
+                { "damage": 22, "range": 20 },
+                { "damage": 21, "range": 40 },
+                { "damage": 19, "range": 50 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 515,
+              "rpmAuto": 770,
               "ammoType": "Standard"
+            },
+            {
+              "barrelType": "Shortened",
+              "dropoffs": [
+                { "damage": 24, "range": 0 },
+                { "damage": 22, "range": 20 },
+                { "damage": 21, "range": 40 },
+                { "damage": 19, "range": 50 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 515,
+              "rpmAuto": 830,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "Shortened",
@@ -6879,6 +7554,20 @@
         {
           "name": "M240B",
           "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 26, "range": 0 },
+                { "damage": 24, "range": 10 },
+                { "damage": 22, "range": 30 },
+                { "damage": 20, "range": 75 },
+                { "damage": 19, "range": 100 },
+                { "damage": 18, "range": 150 }
+              ],
+              "velocity": 975,
+              "rpmAuto": 675,
+              "ammoType": "Standard Underloaded"
+            },
             {
               "barrelType": "Factory",
               "dropoffs": [
@@ -6932,6 +7621,20 @@
         {
           "name": "TYPE 88 LMG",
           "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 24, "range": 0 },
+                { "damage": 22, "range": 20 },
+                { "damage": 21, "range": 40 },
+                { "damage": 20, "range": 50 },
+                { "damage": 19, "range": 100 },
+                { "damage": 18, "range": 150 }
+              ],
+              "velocity": 975,
+              "rpmAuto": 675,
+              "ammoType": "Standard Underloaded"
+            },
             {
               "barrelType": "Factory",
               "dropoffs": [
@@ -8130,6 +8833,17 @@
               ],
               "velocity": 975,
               "rpmSingle": 300,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 60, "range": 0 },
+                { "damage": 38, "range": 40 },
+                { "damage": 35, "range": 50 }
+              ],
+              "velocity": 975,
+              "rpmSingle": 300,
               "ammoType": "Standard"
             },
             {
@@ -8176,6 +8890,16 @@
               ],
               "velocity": 850,
               "rpmSingle": 270,
+              "ammoType": "Standard Underloaded"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 60, "range": 0 },
+                { "damage": 35, "range": 75 }
+              ],
+              "velocity": 850,
+              "rpmSingle": 270,
               "ammoType": "Standard"
             },
             {
@@ -8187,6 +8911,16 @@
               "velocity": 850,
               "rpmSingle": 270,
               "ammoType": "Standard Extended"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 55.2, "range": 0 },
+                { "damage": 32.2, "range": 75 }
+              ],
+              "velocity": 850,
+              "rpmSingle": 270,
+              "ammoType": "Standard Underloaded"
             },
             {
               "barrelType": "6KU",
@@ -8815,7 +9549,7 @@
               ],
               "velocity": 485,
               "rpmSingle": 21,
-              "ammoType": "Anti-Material"
+              "ammoType": "Anti-Materiel"
             },
             {
               "barrelType": "Factory",
@@ -8825,17 +9559,17 @@
               ],
               "velocity": 525,
               "rpmSingle": 21,
-              "ammoType": "Anti-Material High Power"
+              "ammoType": "Anti-Materiel High Power"
             }
           ],
           "ammoStats": {
-            "Anti-Material": {
+            "Anti-Materiel": {
               "magSize": 5,
               "headshotMultiplier": 3,
               "emptyReload": 5.45,
               "tacticalReload": 4.09
             },
-            "Anti-Material High Power": {
+            "Anti-Materiel High Power": {
               "magSize": 4,
               "headshotMultiplier": 3,
               "emptyReload": 5.45,
@@ -9115,8 +9849,73 @@
           }
         },
         {
+          "name": "LYNX",
+          "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 90, "range": 0 },
+                { "damage": 75, "range": 150 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 100,
+              "ammoType": "Anti-Materiel"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 90, "range": 0 },
+                { "damage": 75, "range": 150 }
+              ],
+              "velocity": 675,
+              "rpmSingle": 100,
+              "ammoType": "Anti-Materiel Extended"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 65, "range": 0 },
+                { "damage": 55, "range": 150 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 100,
+              "ammoType": "Anti-Materiel High Power"
+            }
+          ],
+          "ammoStats": {
+            "Anti-Materiel": {
+              "magSize": 6,
+              "headshotMultiplier": 3,
+              "emptyReload": 4.28,
+              "tacticalReload": 5.03
+            },
+            "Anti-Materiel Extended": {
+              "magSize": 11,
+              "headshotMultiplier": 3,
+              "emptyReload": 6.95,
+              "tacticalReload": 5.88
+            },
+            "Anti-Materiel High Power": {
+              "magSize": 5,
+              "headshotMultiplier": 3,
+              "emptyReload": 5.08,
+              "tacticalReload": 4.27
+            }
+          }
+        },
+        {
           "name": "GOL",
           "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 75, "range": 0 },
+                { "damage": 60, "range": 30 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 43,
+              "ammoType": "Standard Underloaded"
+            },
             {
               "barrelType": "Factory",
               "dropoffs": [
@@ -9144,7 +9943,7 @@
                 { "damage": 60, "range": 50 }
               ],
               "velocity": 1125,
-              "rpmSingle": 55,
+              "rpmSingle": 36,
               "ammoType": "High Power"
             },
             {
