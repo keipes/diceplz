@@ -27,7 +27,7 @@ interface DamageChartProps {
 function DamageChart(props: DamageChartProps) {
   const theme = useContext(ThemeContext);
   const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
-  const [headshot, setHeadshot] = useState(false);
+  const [_headshot, _setHeadshot] = useState(false);
   const { currentElementHoverLabels } = useHoverHighlight();
   const chartHoverHandler = useChartHoverHandler();
   const chartRef = useRef<any>();
@@ -49,7 +49,7 @@ function DamageChart(props: DamageChartProps) {
       if (!config.visible) continue;
       const stats = GetStatsForConfiguration(config);
       const ammoStat = GetAmmoStat(GetWeaponByName(config.name), stats);
-      const headshotMultiplier = headshot
+      const headshotMultiplier = _headshot
         ? ammoStat?.headshotMultiplier ?? 1
         : 1;
       const data = [];
@@ -125,7 +125,7 @@ function DamageChart(props: DamageChartProps) {
     configurations.weaponConfigurations,
     props.modifiers,
     props.settings,
-    headshot,
+    _headshot,
     requiredRanges,
     currentElementHoverLabels,
     theme.highlightColor,
@@ -174,14 +174,14 @@ function DamageChart(props: DamageChartProps) {
         description="Weapon damage changes with distance through a step-function damage drop-off, altering values at distinct ranges instead of a gradual decrease or increase."
       />
       <div>
-        <label>
+        {/* <label>
           <input
             type="checkbox"
             checked={headshot}
             onChange={(e) => setHeadshot(e.target.checked)}
           />
           Headshot
-        </label>
+        </label> */}
       </div>
       <div className="chart-container">
         <Line

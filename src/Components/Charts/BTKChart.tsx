@@ -35,8 +35,8 @@ function BTKChart(props: BTKChartProps) {
     }
   );
   const highestRangeSeen = Math.max(...requiredRanges);
-  const [numHeadshots, setNumHeadshots] = useState(0);
-  const [previousNumHeadshots, setPreviousNumHeadshots] =
+  const [numHeadshots, _setNumHeadshots] = useState(0);
+  const [_previousNumHeadshots, _setPreviousNumHeadshots] =
     useState(numHeadshots);
   for (const [_id, config] of configurations.weaponConfigurations) {
     if (!config.visible) continue;
@@ -154,7 +154,7 @@ function BTKChart(props: BTKChartProps) {
           bullet and the target has 100 health points, the BTK would be 4."
       />
       <div>
-        <label>
+        {/* <label>
           {"Num Headshots "}
           <input
             type="number"
@@ -175,7 +175,7 @@ function BTKChart(props: BTKChartProps) {
             }}
           />
           {"All Headshots"}
-        </label>
+        </label> */}
       </div>
       <div className="chart-container">
         <Line

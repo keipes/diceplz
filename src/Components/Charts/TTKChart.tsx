@@ -41,8 +41,9 @@ function TTKChart(props: TTKChartProps) {
   const theme = useContext(ThemeContext);
   let [includeTravelTime, setIncludeTravelTime] = useState(false);
   let [includeFirstShotDelay, _setIncludeFirstShotDelay] = useState(false);
-  let [numHeadshots, setNumHeadshots] = useState(0);
-  let [previousNumHeadshots, setPreviousNumHeadshots] = useState(numHeadshots);
+  let [numHeadshots, _setNumHeadshots] = useState(0);
+  let [_previousNumHeadshots, _setPreviousNumHeadshots] =
+    useState(numHeadshots);
   const { currentElementHoverLabels } = useHoverHighlight();
   const chartHoverHandler = useChartHoverHandler();
   const configurations = useContext(ConfiguratorContext);
@@ -276,7 +277,7 @@ function TTKChart(props: TTKChartProps) {
             {<option value={FIREMODE_SINGLE}>{"Single"}</option>}
           </select>
         </label>
-        <label>
+        {/* <label>
           {" Num Headshots "}
           <input
             type="number"
@@ -297,7 +298,7 @@ function TTKChart(props: TTKChartProps) {
             }}
           />
           {"All Headshots"}
-        </label>
+        </label> */}
         <label>
           <input
             type="checkbox"

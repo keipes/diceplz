@@ -27,7 +27,7 @@ interface DPSChartProps {
 function DPSChart(props: DPSChartProps) {
   const theme = useContext(ThemeContext);
   const [tooltipHandler, setTooltipHandler] = useTooltipHandler();
-  const [headshot, setHeadshot] = useState(false);
+  const [_headshot, _setHeadshot] = useState(false);
   const { currentElementHoverLabels } = useHoverHighlight();
   const chartHoverHandler = useChartHoverHandler();
   const chartRef = useRef<any>();
@@ -44,7 +44,9 @@ function DPSChart(props: DPSChartProps) {
     if (!config.visible) continue;
     const stats = GetStatsForConfiguration(config);
     const ammoStat = GetAmmoStat(GetWeaponByName(config.name), stats);
-    const headshotMultiplier = headshot ? ammoStat?.headshotMultiplier ?? 1 : 1;
+    const headshotMultiplier = _headshot
+      ? ammoStat?.headshotMultiplier ?? 1
+      : 1;
     const data = [];
     let lastDamage = 0;
     let lastRange = 0;
@@ -162,14 +164,14 @@ function DPSChart(props: DPSChartProps) {
         description="Weapon damage changes with distance through a step-function damage drop-off, altering values at distinct ranges instead of a gradual decrease or increase."
       />
       <div>
-        <label>
+        {/* <label>
           <input
             type="checkbox"
             checked={headshot}
             onChange={(e) => setHeadshot(e.target.checked)}
           />
           Headshot
-        </label>
+        </label> */}
       </div>
       <div className="chart-container">
         <Line
