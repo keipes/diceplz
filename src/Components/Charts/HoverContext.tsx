@@ -82,6 +82,8 @@ export const useHoverHighlight = () => {
   return context;
 };
 
+const disabled = true;
+
 export const useChartHoverHandler = () => {
   const { setCurrentElementHoverLabels } = useHoverHighlight();
 
@@ -94,6 +96,9 @@ export const useChartHoverHandler = () => {
     chartRef: any,
     chartData: ChartData
   ) => {
+    if (disabled) {
+      return;
+    }
     if (chartData == null) {
       return;
     }
