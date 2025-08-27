@@ -58,7 +58,6 @@ function ConfigureChartColors(
   highlightColor: string
 ): string {
   const label = ConfigDisplayName(config);
-
   if (currentElementHoverLabels.has(label)) {
     return highlightColor;
   } else if (settings.useAmmoColorsForGraph) {

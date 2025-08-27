@@ -184,7 +184,7 @@ function TTKChart(props: TTKChartProps) {
           theme.highlightColor
         ),
         stepped: false,
-        temsion: 0,
+        tension: 0,
         borderWidth: 1.5,
         order: currentElementHoverLabels.has(ConfigDisplayName(config))
           ? -1000
@@ -314,8 +314,6 @@ function TTKChart(props: TTKChartProps) {
             data: chartData,
             options: options,
           }}
-          data={chartData}
-          options={options}
           chartRef={chartRef}
           enableHover={true}
           hoverHandler={chartHoverHandler}

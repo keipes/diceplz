@@ -76,6 +76,7 @@ function BTKChart(props: BTKChartProps) {
         data.push(damage);
       }
     }
+    // console.log("current hover labels", Array.from(currentElementHoverLabels));
     datasets.push({
       label: config as unknown as string,
       data: data,

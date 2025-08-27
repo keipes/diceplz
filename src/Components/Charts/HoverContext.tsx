@@ -38,16 +38,34 @@ const HoverHighlightContext = createContext<HoverHighlightContextType | null>(
   null
 );
 
+const setsAreEqual = (setA: Set<string>, setB: Set<string>): boolean => {
+  if (setA.size !== setB.size) return false;
+  for (const item of setA) {
+    if (!setB.has(item)) return false;
+  }
+  return true;
+};
+
 export const HoverHighlightProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [currentElementHoverLabels, setCurrentElementHoverLabels] = useState(
     new Set<string>()
   );
-
+  const updateHoverLabels = (newLabels: Set<string>) => {
+    setCurrentElementHoverLabels((currentLabels) => {
+      if (setsAreEqual(currentLabels, newLabels)) {
+        return currentLabels;
+      }
+      return newLabels;
+    });
+  };
   return (
     <HoverHighlightContext.Provider
-      value={{ currentElementHoverLabels, setCurrentElementHoverLabels }}
+      value={{
+        currentElementHoverLabels,
+        setCurrentElementHoverLabels: updateHoverLabels,
+      }}
     >
       {children}
     </HoverHighlightContext.Provider>
@@ -68,65 +86,68 @@ export const useChartHoverHandler = () => {
   const { setCurrentElementHoverLabels } = useHoverHighlight();
 
   // Create a throttled version of the hover handler
-  const throttledHandler = useCallback(
-    throttle(
-      (
-        event: any,
-        chartElement: any[],
-        chartRef: any,
-        chartData: ChartData
-      ) => {
-        if (chartElement.length > 0 && chartRef.current) {
-          const chartValueForMouseY =
-            chartRef.current.scales.y.getValueForPixel(event.y);
+  // const throttledHandler = useCallback(
+  //   throttle(
+  return (
+    event: any,
+    chartElement: any[],
+    chartRef: any,
+    chartData: ChartData
+  ) => {
+    if (chartData == null) {
+      return;
+    }
+    if (chartElement.length > 0 && chartRef.current) {
+      const chartValueForMouseY = chartRef.current.scales.y.getValueForPixel(
+        event.y
+      );
 
-          // Find the element(s) with the closest y value to chartValueForMouseY
-          let closestDistance = Infinity;
-          const closestElements: typeof chartElement = [];
+      // Find the element(s) with the closest y value to chartValueForMouseY
+      let closestDistance = Infinity;
+      const closestElements: typeof chartElement = [];
 
-          for (const element of chartElement) {
-            // Access the element's parsed data through the chart
-            const chart = chartRef.current;
-            const datasetIndex = element.datasetIndex;
-            const index = element.index;
+      for (const element of chartElement) {
+        // Access the element's parsed data through the chart
+        const chart = chartRef.current;
+        const datasetIndex = element.datasetIndex;
+        const index = element.index;
 
-            if (chart && chart.data.datasets[datasetIndex]) {
-              const dataset = chart.data.datasets[datasetIndex];
-              const dataPoint = dataset.data[index];
+        if (chart && chart.data.datasets[datasetIndex]) {
+          const dataset = chart.data.datasets[datasetIndex];
+          const dataPoint = dataset.data[index];
 
-              if (typeof dataPoint === "number") {
-                const distance = Math.abs(dataPoint - chartValueForMouseY);
+          if (typeof dataPoint === "number") {
+            const distance = Math.abs(dataPoint - chartValueForMouseY);
 
-                if (distance < closestDistance) {
-                  closestDistance = distance;
-                  closestElements.length = 0; // Clear array
-                  closestElements.push(element);
-                } else if (distance === closestDistance) {
-                  closestElements.push(element);
-                }
-              }
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestElements.length = 0; // Clear array
+              closestElements.push(element);
+            } else if (distance === closestDistance) {
+              closestElements.push(element);
             }
           }
-
-          setCurrentElementHoverLabels(
-            new Set(
-              closestElements.map((el) =>
-                ConfigDisplayName(
-                  chartData.datasets[el.datasetIndex].label as any
-                )
-              )
-            )
-          );
-        } else {
-          setCurrentElementHoverLabels(new Set());
         }
-      },
-      16
-    ), // Throttle to ~60fps
-    [setCurrentElementHoverLabels]
-  );
+      }
+      // console.log("closest elements:", closestElements);
+      setCurrentElementHoverLabels(
+        new Set(
+          closestElements.map((el) =>
+            ConfigDisplayName(chartData.datasets[el.datasetIndex].label as any)
+          )
+        )
+      );
+    } else {
+      setCurrentElementHoverLabels(new Set());
+    }
+  };
+  //     ,
+  //     16
+  //   ), // Throttle to ~60fps
+  //   [setCurrentElementHoverLabels]
+  // );
 
-  return throttledHandler;
+  // return throttledHandler;
 };
 
 export const useBarChartHoverHandler = () => {
