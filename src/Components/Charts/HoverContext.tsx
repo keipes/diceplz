@@ -167,6 +167,9 @@ export const useBarChartHoverHandler = () => {
         chartRef: any,
         chartData: ChartData
       ) => {
+        if (disabled) {
+          return;
+        }
         if (chartElement.length > 0 && chartRef.current) {
           // For bar charts, we want to highlight based on the X-axis position (which weapon)
           // Get the index of the x-axis item being hovered
