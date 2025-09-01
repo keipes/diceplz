@@ -10630,6 +10630,145 @@
               "emptyReload": 8.36
             }
           }
+        },
+        {
+          "name": "PROTOTYPE",
+          "stats": [
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 26, "range": 0 },
+                { "damage": 22, "range": 30 },
+                { "damage": 18, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 475,
+              "rpmBurst": 580,
+              "rpmAuto": 580,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 23.92, "range": 0 },
+                { "damage": 20.24, "range": 30 },
+                { "damage": 16.56, "range": 75 }
+              ],
+              "velocity": 845,
+              "rpmSingle": 475,
+              "rpmBurst": 580,
+              "rpmAuto": 580,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "Type 4",
+              "dropoffs": [
+                { "damage": 24.7, "range": 0 },
+                { "damage": 20.9, "range": 30 },
+                { "damage": 17.1, "range": 75 }
+              ],
+              "velocity": 615,
+              "rpmSingle": 475,
+              "rpmBurst": 580,
+              "rpmAuto": 580,
+              "ammoType": "Standard"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 26, "range": 0 },
+                { "damage": 22, "range": 50 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 475,
+              "rpmBurst": 540,
+              "rpmAuto": 540,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 23.92, "range": 0 },
+                { "damage": 20.24, "range": 50 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 475,
+              "rpmBurst": 540,
+              "rpmAuto": 540,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "Type 4",
+              "dropoffs": [
+                { "damage": 24.7, "range": 0 },
+                { "damage": 20.9, "range": 50 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 475,
+              "rpmBurst": 540,
+              "rpmAuto": 540,
+              "ammoType": "High Power"
+            },
+            {
+              "barrelType": "Factory",
+              "dropoffs": [
+                { "damage": 18, "range": 0 },
+                { "damage": 15, "range": 30 },
+                { "damage": 13, "range": 75 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 435,
+              "rpmBurst": 540,
+              "rpmAuto": 540,
+              "ammoType": "Armor Piercing"
+            },
+            {
+              "barrelType": "6KU",
+              "dropoffs": [
+                { "damage": 16.56, "range": 0 },
+                { "damage": 13.8, "range": 30 },
+                { "damage": 11.96, "range": 75 }
+              ],
+              "velocity": 965,
+              "rpmSingle": 435,
+              "rpmBurst": 540,
+              "rpmAuto": 540,
+              "ammoType": "Armor Piercing"
+            },
+            {
+              "barrelType": "Type 4",
+              "dropoffs": [
+                { "damage": 17.1, "range": 0 },
+                { "damage": 14.25, "range": 30 },
+                { "damage": 12.35, "range": 75 }
+              ],
+              "velocity": 750,
+              "rpmSingle": 475,
+              "rpmBurst": 580,
+              "rpmAuto": 580,
+              "ammoType": "Armor Piercing"
+            }
+          ],
+          "ammoStats": {
+            "Standard": {
+              "magSize": 31,
+              "headshotMultiplier": 1,
+              "emptyReload": 2.78,
+              "tacticalReload": 2.38
+            },
+            "High Power": {
+              "magSize": 21,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.1,
+              "tacticalReload": 2.62
+            },
+            "Armor Piercing": {
+              "magSize": 21,
+              "headshotMultiplier": 1,
+              "emptyReload": 3.1,
+              "tacticalReload": 2.62
+            }
+          }
         }
       ]
     }
